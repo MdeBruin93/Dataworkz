@@ -1,8 +1,12 @@
+if: branch = master
+
 language: java
 # use Java 8
 jdk:
 - openjdk8
 
+before_script:
+  - cd api/
 sudo: false
 
 # Run the mvn install command
@@ -16,7 +20,8 @@ cache:
 
 notifications:
   email:
-    - 0947704@hr.nl # michael
-    - 0942185@hr.nl # tim
-    - 0947381@hr.nl # ricky
-    - 0902790@hr.nl # kevin
+    recipients:
+      - 0947704@hr.nl # michael
+      - 0942185@hr.nl # tim
+      - 0947381@hr.nl # ricky
+      - 0902790@hr.nl # kevin
