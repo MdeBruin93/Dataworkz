@@ -7,7 +7,6 @@ jdk:
 
 before_script:
   - cd api/
-sudo: false
 
 # Run the mvn install command
 install:
