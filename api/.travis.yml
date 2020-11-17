@@ -13,3 +13,10 @@ install:
 cache:
   directories:
   - $HOME/.m2
+
+notifications:
+  email:
+    - 0947704@hr.nl # michael
+    - 0942185@hr.nl # tim
+    - 0947381@hr.nl # ricky
+    - 0902790@hr.nl # kevin
