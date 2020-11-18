@@ -1,4 +1,4 @@
-if: branch = master
+if: branch = main
 
 language: java
 # use Java 8
@@ -6,7 +6,7 @@ jdk:
 - openjdk8
 
 before_script:
-  - cd api/
+  - cd api
 
 # Run the mvn install command
 install:
