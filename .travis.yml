@@ -5,8 +5,8 @@ language: java
 jdk:
 - openjdk8
 
-before_script:
-  - cd api/
+script:
+  - mvn -f api/pom.xml
 
 # Run the mvn install command
 install:
