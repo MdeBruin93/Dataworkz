@@ -1,0 +1,33 @@
+matrix:
+  include:
+    - language: java
+      # use Java 11
+      jdk:
+      - openjdk11
+
+      before_install: cd api
+
+      # Run the mvn install command
+      install:
+      - mvn install
+
+      # cache the build tool's caches
+      cache:
+        directories:
+        - $HOME/.m2
+    - language: node_js
+      node_js: node
+
+      before_install: cd frontend/eventsubscriber
+
+      cache:
+        directories:
+        - ./node_modules
+
+      install:
+        - npm install --save-dev @angular-devkit/build-angular
+        - npm install -g npm@latest
+        - npm install -g @angular/cli
+
+      script:
+        - ng build
