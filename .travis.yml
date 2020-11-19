@@ -16,7 +16,7 @@ matrix:
         directories:
         - $HOME/.m2
     - language: node_js
-      node_js: 14
+      node_js: node
 
       before_install: cd frontend/eventsubscriber
 
@@ -28,5 +28,4 @@ matrix:
         - npm install -g @angular/cli
 
       script:
-        - ng lint
         - ng build
