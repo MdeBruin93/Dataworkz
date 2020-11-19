@@ -25,6 +25,7 @@ matrix:
         - ./node_modules
 
       install:
+        - npm install --save-dev @angular-devkit/build-angular
         - npm install -g npm@latest
         - npm install -g @angular/cli
 
