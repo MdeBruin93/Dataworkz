@@ -16,7 +16,7 @@ matrix:
         directories:
         - $HOME/.m2
     - language: node_js
-      node_js: node
+      node_js: 14
 
       before_install: cd frontend/eventsubscriber
 
@@ -30,11 +30,3 @@ matrix:
       script:
         - ng lint
         - ng build
-
-notifications:
-  email:
-    recipients:
-      - 0947704@hr.nl # michael
-      - 0942185@hr.nl # tim
-      - 0947381@hr.nl # ricky
-      - 0902790@hr.nl # kevin
