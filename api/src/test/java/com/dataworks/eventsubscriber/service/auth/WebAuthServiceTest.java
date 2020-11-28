@@ -11,43 +11,65 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
 class WebAuthServiceTest {
+
+    @Mock
+    User user;
+    @Mock
+    UserDto userDto;
+    @Mock
+    RegisterDto registerDto;
+
+
     @Mock
     UserRepository userRepository;
     @Mock
-    User userMock;
+    RegisterMapper registerMapper;
     @Mock
-    RegisterDto registerDto;
+    UserMapper userMapper;
     @InjectMocks
     WebAuthService webAuthService;
 
     @Test
     public void registerWhenUserIsFoundByGivenEmail_ThrowUserAlreadyExistException() {
         //arrange
-        when(registerDto.getEmail()).thenReturn("ricky");
-        when(userRepository.findByEmail(registerDto.getEmail())).thenReturn(userMock);
-
-        var foundEmail = userRepository.findByEmail("ricky");
+        var email = "ricky@hr.nl";
+        when(registerDto.getEmail()).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
         //act & assert
         assertThatExceptionOfType(UserAlreadyExistException.class)
             .isThrownBy(() -> {
                 webAuthService.register(registerDto);
             });
+    }
+
+    @Test
+    public void registerWhenUserIsNotFoundByGivenEmail_Save() {
+        //arrange
+        var email = "ricky@hr.nl";
+        when(registerDto.getEmail()).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        when(registerMapper.mapToUserSource(registerDto)).thenReturn(user);
+        when(userMapper.mapToDestination(user)).thenReturn(userDto);
+        when(userRepository.save(user)).thenReturn(user);
+
+        //act
+        var result = webAuthService.register(registerDto);
+
+        //assert
+        assertThat(result).isInstanceOf(UserDto.class);
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(registerMapper, times(1)).mapToUserSource(registerDto);
+        verify(userRepository, times(1)).save(user);
     }
 }
