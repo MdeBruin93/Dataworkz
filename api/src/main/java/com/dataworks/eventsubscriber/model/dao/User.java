@@ -1,9 +1,13 @@
 package com.dataworks.eventsubscriber.model.dao;
 
-import lombok.Data;
+import javax.persistence.Entity;
 
-@Data
-public class User {
-    private int id;
-    private String username;
+@Entity
+public class User extends BaseDao {
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+    private boolean emailVerified;
+    private String role;
 }

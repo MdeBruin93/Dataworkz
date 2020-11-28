@@ -1,14 +1,12 @@
-package com.dataworks.eventsubscriber.model.dao;
+package com.dataworks.eventsubscriber.model.dto;
 
+import com.dataworks.eventsubscriber.model.dao.TokenType;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class UserToken extends BaseDao {
-
+public class UserTokenDto {
     private int userId;
     private String token;
     private TokenType type;
