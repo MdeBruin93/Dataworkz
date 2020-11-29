@@ -3,6 +3,7 @@ package com.dataworks.eventsubscriber.controller;
 import com.dataworks.eventsubscriber.exception.user.UserAlreadyExistException;
 import com.dataworks.eventsubscriber.model.dto.RegisterDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
+import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import com.dataworks.eventsubscriber.service.auth.WebAuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,8 @@ class AuthControllerTest {
     BindingResult bindingResult;
     @MockBean
     WebAuthService webAuthService;
+    @MockBean
+    WebAuthDetailService webAuthDetailService;
     @Autowired
     private MockMvc mockMvc;
 
