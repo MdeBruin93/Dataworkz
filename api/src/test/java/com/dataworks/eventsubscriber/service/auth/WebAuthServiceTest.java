@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
@@ -18,7 +20,7 @@ class WebAuthServiceTest {
     @Mock
     UserRepository userRepository;
     @Mock
-    User userMock;
+    User user;
     @Mock
     RegisterDto registerDto;
     @InjectMocks
@@ -28,7 +30,7 @@ class WebAuthServiceTest {
     public void registerWhenUserIsFoundByGivenEmail_ThrowUserAlreadyExistException() {
         //arrange
         when(registerDto.getEmail()).thenReturn("ricky");
-        when(userRepository.findByEmail(registerDto.getEmail())).thenReturn(userMock);
+        when(userRepository.findByEmail(registerDto.getEmail())).thenReturn(Optional.of(user));
 
         var foundEmail = userRepository.findByEmail("ricky");
 

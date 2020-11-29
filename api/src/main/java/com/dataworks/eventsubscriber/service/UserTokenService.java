@@ -35,7 +35,7 @@ public class UserTokenService implements TokenService {
 
     @Override
     public UserTokenDto createEmailTokenForUser(String email) {
-        var user = userRepository.findByEmail(email);
+        var user = userRepository.findByEmail(email).get();
 
         var token = email + "-split-" + UUID.randomUUID();
         var userToken = new UserToken();
@@ -49,16 +49,17 @@ public class UserTokenService implements TokenService {
 
     @Override
     public boolean verifyEmailTokenForUser(String token) {
-        var splitted = token.split("\\-split-");
-        var user = userRepository.findByEmail(splitted[0]);
-
-        if (user == null) {
-            throw new UserNotFoundException(splitted[0]);
-        }
-        var foundToken = userTokenRepository.findByToken(splitted[1], TokenType.EmailConfirmation);
-        if (foundToken == null) {
-             throw new UserTokenNotFoundException();
-        }
+        var tmp = Arrays.toString(Base64.getDecoder().decode(token.getBytes()));
+//        var splitted = token.split("\\-split-");
+//        var user = userRepository.findByEmail(splitted[0]);
+//
+//        if (user == null) {
+//            throw new UserNotFoundException(splitted[0]);
+//        }
+//        var foundToken = userTokenRepository.findByToken(splitted[1], TokenType.EmailConfirmation);
+//        if (foundToken == null) {
+//             throw new UserTokenNotFoundException();
+//        }
         return true;
     }
 

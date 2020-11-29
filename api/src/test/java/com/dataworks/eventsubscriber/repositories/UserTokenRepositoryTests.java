@@ -31,7 +31,7 @@ public class UserTokenRepositoryTests {
         userTokenRepository.save(userToken);
 
         // Assert
-        var found = userTokenRepository.findByToken(token, TokenType.EmailConfirmation);
+        var found = userTokenRepository.findByToken(token).get();
         Assert.hasText(found.getToken(), token);
     }
 }

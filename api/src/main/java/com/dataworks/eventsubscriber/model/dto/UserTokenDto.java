@@ -2,9 +2,11 @@ package com.dataworks.eventsubscriber.model.dto;
 
 import com.dataworks.eventsubscriber.model.dao.TokenType;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+@Component
 @Data
 public class UserTokenDto {
     private int userId;
