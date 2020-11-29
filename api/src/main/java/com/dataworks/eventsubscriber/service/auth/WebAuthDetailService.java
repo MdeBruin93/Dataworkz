@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class WebAuthDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
@@ -24,3 +24,4 @@ public class WebAuthDetailService implements UserDetailsService {
         return new UserToUserDetailsAdapter(user.get());
     }
 }
+
