@@ -7,6 +7,7 @@ import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.RegisterDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
+import com.dataworks.eventsubscriber.service.UserTokenService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -14,6 +15,7 @@ public class WebAuthService implements AuthService {
     private final UserRepository userRepository;
     private final RegisterMapper registerMapper;
     private final UserMapper userMapper;
+    private final UserTokenService userTokenService;
 
     @Override
     public UserDto register(RegisterDto registerDto) {
@@ -26,6 +28,8 @@ public class WebAuthService implements AuthService {
 
         var mappedUser = registerMapper.mapToUserSource(registerDto);
         var savedUser = userRepository.save(mappedUser);
+
+        userTokenService.createEmailTokenForUser(registerDto.getEmail());
 
         return userMapper.mapToDestination(savedUser);
     }

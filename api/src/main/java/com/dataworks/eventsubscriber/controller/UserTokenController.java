@@ -26,7 +26,7 @@ public class UserTokenController {
         }
     }
 
-    @GetMapping("/GetToken")
+    @GetMapping("/verifyuseremail")
     public boolean verifyUserEmail(@RequestParam String token) {
         if (token.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Need an email in order to verify it.");
