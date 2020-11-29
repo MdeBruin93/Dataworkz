@@ -49,7 +49,7 @@ class AuthControllerTest {
 
         // act & assert
         mockMvc.perform(
-                post("/auth/register")
+                post("/api/auth/register")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
                 .andDo(print())
@@ -71,7 +71,7 @@ class AuthControllerTest {
 
         // then
         mockMvc.perform(
-                post("/auth/register")
+                post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andDo(print())
@@ -88,7 +88,7 @@ class AuthControllerTest {
 
         // then
         mockMvc.perform(
-                post("/auth/register")
+                post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andDo(print())
