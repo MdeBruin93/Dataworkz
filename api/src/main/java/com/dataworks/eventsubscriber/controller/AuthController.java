@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -20,6 +17,12 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+
+    @GetMapping("/my")
+    public ResponseEntity my() {
+        UserDto userDto = authService.my();
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
 
     @PostMapping("/register")
     public ResponseEntity register(@Valid @RequestBody RegisterDto registerDto, BindingResult bindingResult) {

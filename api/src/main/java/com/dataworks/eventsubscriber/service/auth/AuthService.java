@@ -5,4 +5,6 @@ import com.dataworks.eventsubscriber.model.dto.UserDto;
 
 public interface AuthService {
     UserDto register(RegisterDto registerDto);
+
+    UserDto my();
 }
