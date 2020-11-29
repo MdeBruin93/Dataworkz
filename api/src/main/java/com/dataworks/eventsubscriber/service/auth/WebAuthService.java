@@ -7,12 +7,14 @@ import com.dataworks.eventsubscriber.model.dto.RegisterDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
 public class WebAuthService implements AuthService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final RegisterMapper registerMapper;
     private final UserMapper userMapper;
 
@@ -26,8 +28,8 @@ public class WebAuthService implements AuthService {
         }
 
         var mappedUser = registerMapper.mapToUserSource(registerDto);
+        mappedUser.setPassword(this.passwordEncoder.encode(mappedUser.getPassword()));
         mappedUser.setRole("ROLE_USER");
-        //@todo hash password when spring security is installed
 
         var savedUser = userRepository.save(mappedUser);
 
