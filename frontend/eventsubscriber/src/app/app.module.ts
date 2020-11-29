@@ -13,10 +13,13 @@ import { CoreModule } from './core/core.module';
 
 import { states } from './states';
 import { environment } from '../environments/environment';
+import { AuthModule } from './auth/auth.module';
+import { AuthRoutingModule } from './auth/auth-routing.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,6 +28,9 @@ import { environment } from '../environments/environment';
     MaterialModule,
     LayoutModule,
     CoreModule,
+    AuthModule,
+    AuthRoutingModule,
+    HttpClientModule,
     NgxsModule.forRoot(states, {
       developmentMode: !environment.production
     })
