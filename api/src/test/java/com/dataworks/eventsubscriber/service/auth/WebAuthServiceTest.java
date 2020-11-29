@@ -72,5 +72,6 @@ class WebAuthServiceTest {
         verify(userRepository, times(1)).findByEmail(email);
         verify(registerMapper, times(1)).mapToUserSource(registerDto);
         verify(userRepository, times(1)).save(user);
+        verify(passwordEncoder, times(1)).encode(any());
     }
 }
