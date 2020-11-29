@@ -10,6 +10,8 @@ import com.dataworks.eventsubscriber.repository.UserRepository;
 import com.dataworks.eventsubscriber.repository.UserTokenRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 public class UserTokenService implements TokenService {
 
@@ -21,7 +23,7 @@ public class UserTokenService implements TokenService {
     public UserTokenDto createEmailTokenForUser(String email) {
         var user = userRepository.findByEmail(email);
 
-        var token = email + ".email";
+        var token = email + "-split-" + UUID.randomUUID();
         var userToken = new UserToken();
         userToken.setUserId(user.getId());
         userToken.setToken(token);
@@ -32,7 +34,7 @@ public class UserTokenService implements TokenService {
 
     @Override
     public boolean verifyEmailTokenForUser(String token) {
-        var splitted = token.split("\\.");
+        var splitted = token.split("\\-split-");
         var user = userRepository.findByEmail(splitted[0]);
 
         if (user == null) {
