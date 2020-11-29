@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -16,6 +17,7 @@ public class RegisterDto {
     @NotNull
     private String lastName;
     @NotNull
+    @Email
     private String email;
     @NotNull
     private String password;

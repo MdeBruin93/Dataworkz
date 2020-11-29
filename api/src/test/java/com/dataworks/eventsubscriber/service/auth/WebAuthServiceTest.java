@@ -28,8 +28,6 @@ class WebAuthServiceTest {
     UserDto userDto;
     @Mock
     RegisterDto registerDto;
-
-
     @Mock
     UserRepository userRepository;
     @Mock
