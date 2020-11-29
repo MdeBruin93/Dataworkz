@@ -100,9 +100,8 @@ class AuthControllerTest {
     void myWithExistingUser_My() throws Exception {
         // arrange
 
-
         // act & assert
-        mockMvc.perform(get("/auth/my"))
+        mockMvc.perform(get("/api/auth/my"))
                 .andExpect(status().isOk());
     }
 }
