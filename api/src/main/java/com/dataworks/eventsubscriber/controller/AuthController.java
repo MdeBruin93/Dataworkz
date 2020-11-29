@@ -18,6 +18,12 @@ import javax.validation.Valid;
 public class AuthController {
     private final AuthService authService;
 
+    @GetMapping("/my")
+    public ResponseEntity my() {
+        UserDto userDto = authService.my();
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
     @PostMapping("/register")
     public ResponseEntity register(@Valid @RequestBody RegisterDto registerDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);

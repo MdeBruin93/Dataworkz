@@ -12,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -37,17 +39,23 @@ class WebAuthServiceTest {
     UserMapper userMapper;
     @Mock
     PasswordEncoder passwordEncoder;
+    @Mock
+    Authentication authentication;
+    @Mock
+    SecurityContext securityContext;
     @InjectMocks
     WebAuthService webAuthService;
 
     @Test
     public void registerWhenUserIsFoundByGivenEmail_ThrowUserAlreadyExistException() {
-        //arrange
+        //given
         var email = "ricky@hr.nl";
+
+        //when
         when(registerDto.getEmail()).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
-        //act & assert
+        //then
         assertThatExceptionOfType(UserAlreadyExistException.class)
             .isThrownBy(() -> {
                 webAuthService.register(registerDto);
@@ -56,21 +64,51 @@ class WebAuthServiceTest {
 
     @Test
     public void registerWhenUserIsNotFoundByGivenEmail_Save() {
-        //arrange
+        //given
         var email = "ricky@hr.nl";
+
+        //when
         when(registerDto.getEmail()).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
         when(registerMapper.mapToUserSource(registerDto)).thenReturn(user);
         when(userMapper.mapToDestination(user)).thenReturn(userDto);
         when(userRepository.save(user)).thenReturn(user);
 
-        //act
+        //then
         var result = webAuthService.register(registerDto);
-
-        //assert
         assertThat(result).isInstanceOf(UserDto.class);
         verify(userRepository, times(1)).findByEmail(email);
         verify(registerMapper, times(1)).mapToUserSource(registerDto);
         verify(userRepository, times(1)).save(user);
+        verify(passwordEncoder, times(1)).encode(any());
+    }
+
+    @Test
+    public void myWhenUserIsNotAuthenticated_ReturnNull() {
+        //given
+        var authenticated = false;
+
+        //when
+        when(authentication.isAuthenticated()).thenReturn(authenticated);
+
+        //than
+        var result = webAuthService.my();
+        assertThat(result).isNull();
+    }
+
+    @Test
+    public void myWhenUserIsAuthenticated_ReturnUser() {
+        //given
+        var authenticated = true;
+        var user = Optional.of(this.user);
+
+        //when
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(userRepository.findByEmail(any())).thenReturn(user);
+        when(userMapper.mapToDestination(user.get())).thenReturn(userDto);
+
+        //than
+        var result = webAuthService.my();
+        assertThat(result).isInstanceOf(UserDto.class);
     }
 }

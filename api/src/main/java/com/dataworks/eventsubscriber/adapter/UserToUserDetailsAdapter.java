@@ -27,7 +27,6 @@ public class UserToUserDetailsAdapter implements UserDetails {
         }
 
         return authorities;
-
     }
 
     @Override
