@@ -1,0 +1,3 @@
+export {
+  DashboardComponent
+} from './pages';

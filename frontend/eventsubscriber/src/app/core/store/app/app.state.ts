@@ -9,8 +9,7 @@ import { SetTitle, ToggleSidebar } from './app.actions';
   defaults: {
     initialized: false,
     sidebarVisible: true,
-    title: 'Dashboard',
-    navigationItems: []
+    title: 'Dashboard'
   },
 })
 @Injectable()

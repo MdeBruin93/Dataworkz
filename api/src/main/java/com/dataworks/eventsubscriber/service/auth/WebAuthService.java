@@ -9,11 +9,12 @@ import com.dataworks.eventsubscriber.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
+import java.util.Collection;
 
 @RequiredArgsConstructor
 @Service
@@ -22,7 +23,7 @@ public class WebAuthService implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RegisterMapper registerMapper;
     private final UserMapper userMapper;
-    private final Authentication authentication;
+//    private final Authentication authentication;
 
     @Override
     public UserDto register(RegisterDto registerDto) {
@@ -44,7 +45,7 @@ public class WebAuthService implements AuthService {
 
     @Override
     public UserDto my() {
-        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         var isAuthenticated = authentication.isAuthenticated();
 
         if (!isAuthenticated) {

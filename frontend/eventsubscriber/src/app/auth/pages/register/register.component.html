@@ -34,6 +34,7 @@
     <br>
     <br>
     <mat-card-actions>
-        <button mat-raised-button type="submit" color="primary" [disabled]="!registerForm.valid">LOGIN</button>
+        <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!registerForm.valid">REGISTER</button>
+        <button mat-raised-button type="button" color="primary" [routerLink]="['/login']" routerLinkActive="router-link-active" >LOGIN</button>
     </mat-card-actions>
 </form>
