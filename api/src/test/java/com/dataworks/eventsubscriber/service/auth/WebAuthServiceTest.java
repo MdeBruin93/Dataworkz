@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -85,6 +86,9 @@ class WebAuthServiceTest {
 
 //    @Test
 //    public void myWhenUserIsNotAuthenticated_ReturnNull() {
+//
+//        when(SecurityContextHolder.getContext()).thenReturn(securityContext);
+
 //        //given
 //        var authenticated = false;
 //
