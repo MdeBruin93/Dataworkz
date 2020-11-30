@@ -1,37 +1,24 @@
 package com.dataworks.eventsubscriber.repositories;
 
-import com.dataworks.eventsubscriber.exception.user.UserTokenNotFoundException;
-import com.dataworks.eventsubscriber.model.dao.TokenType;
-import com.dataworks.eventsubscriber.model.dao.UserToken;
 import com.dataworks.eventsubscriber.repository.UserTokenRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Example;
-import org.springframework.util.Assert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.Authentication;
 
-@ExtendWith(MockitoExtension.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
 public class UserTokenRepositoryTests {
-
-    @Mock
+    @MockBean
+    Authentication authentication;
+    @Autowired
     UserTokenRepository userTokenRepository;
 
-    @Mock
-    UserToken userToken;
-
     @Test
-    public void registerNewEmailVerificationToken_ShouldSucceed() {
-        // Arrange
-        var token = "EmailToken";
-        userToken.setToken(token);
-        userToken.setType(TokenType.EmailConfirmation);
-
-        // Act
-        userTokenRepository.save(userToken);
-
-        // Assert
-        var found = userTokenRepository.findByToken(token).get();
-        Assert.hasText(found.getToken(), token);
+    public void loadUserTokenRepository() {
+        assertThat(userTokenRepository).isNotNull();
+        assertThat(userTokenRepository).isInstanceOf(UserTokenRepository.class);
     }
 }

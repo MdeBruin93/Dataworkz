@@ -40,7 +40,7 @@ public class UserTokenService implements TokenService {
         var user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
 
         var token = UUID.randomUUID().toString();
-        var encryptedToken = new String(Base64.getEncoder().encode((email + "::" + token).getBytes()));
+        var encryptedToken = new String(Base64.getEncoder().encode((email + ":" + token).getBytes()));
         var userToken = new UserToken();
         userToken.setUserId(user.getId());
         userToken.setToken(token);
@@ -53,7 +53,7 @@ public class UserTokenService implements TokenService {
     @Override
     public boolean verifyEmailTokenForUser(String token) {
         var decrypted = new String(Base64.getDecoder().decode(token.getBytes()));
-        var splitted = decrypted.split("\\::");
+        var splitted = decrypted.split("\\:");
         var user = userRepository.findByEmail(splitted[0]).orElseThrow(() -> new UserNotFoundException(splitted[0]));
         userTokenRepository.findByToken(splitted[1]).orElseThrow(UserTokenNotFoundException::new);
 
