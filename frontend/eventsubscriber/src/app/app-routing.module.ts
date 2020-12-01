@@ -26,11 +26,11 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'login',
+    path: '',
     component: UnauthenticatedLayoutComponent,
     children: [
       {
-        path: '',
+        path: 'login',
         component: LoginComponent
       },
       {
