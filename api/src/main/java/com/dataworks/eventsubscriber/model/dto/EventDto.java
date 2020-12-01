@@ -14,6 +14,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class EventDto {
     @NotNull
+    private int id;
+    @NotNull
     private String title;
     @NotNull
     private String description;

@@ -7,4 +7,6 @@ public interface AuthService {
     UserDto register(RegisterDto registerDto);
 
     UserDto my();
+
+    UserDto myOrFail();
 }

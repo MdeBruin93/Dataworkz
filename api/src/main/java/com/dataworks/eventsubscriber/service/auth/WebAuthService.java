@@ -1,6 +1,7 @@
 package com.dataworks.eventsubscriber.service.auth;
 
 import com.dataworks.eventsubscriber.exception.user.UserAlreadyExistException;
+import com.dataworks.eventsubscriber.exception.user.UserNotLoggedIn;
 import com.dataworks.eventsubscriber.mapper.RegisterMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dto.RegisterDto;
@@ -55,5 +56,16 @@ public class WebAuthService implements AuthService {
         var foundUser = userRepository.findByEmail(authentication.getName());
 
         return userMapper.mapToDestination(foundUser.get());
+    }
+
+    @Override
+    public UserDto myOrFail() {
+        var authenticatedUser = this.my();
+
+        if (authenticatedUser == null) {
+            throw new UserNotLoggedIn();
+        }
+
+        return authenticatedUser;
     }
 }
