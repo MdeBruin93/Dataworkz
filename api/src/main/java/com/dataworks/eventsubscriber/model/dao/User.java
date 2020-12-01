@@ -4,8 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,4 +26,6 @@ public class User extends BaseDao {
     private boolean emailVerified;
     @NotNull
     private String role;
+    @OneToMany(mappedBy = "user")
+    private List<Event> events;
 }

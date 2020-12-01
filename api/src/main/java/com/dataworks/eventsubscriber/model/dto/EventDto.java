@@ -5,22 +5,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
-@Component
-@NoArgsConstructor
 @Getter
 @Setter
-public class RegisterDto {
+@Component
+@NoArgsConstructor
+public class EventDto {
     @NotNull
-    private String firstName;
+    private String title;
     @NotNull
-    private String lastName;
+    private String description;
     @NotNull
-    @Email
-    private String email;
+    private Date date;
     @NotNull
-    private String password;
+    private int maxAmountOfAttendees;
+    @NotNull
+    private double euroAmount;
 }
