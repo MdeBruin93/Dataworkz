@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { AuthService } from '@auth/services';
 
 @Component({
   selector: 'app-login',
@@ -21,13 +24,25 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private snackBar: MatSnackBar,
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
   }
 
   onSubmit() {
-    this.snackBar.open('Login!');
+    this.authService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
+      next: response => {
+        this.router.navigate(['./dashboard']);
+        this.snackBar.open('Login succesfull');
+      },
+      error: error => {
+        this.loginForm.reset();
+        this.snackBar.open('Login failed');
+        console.error('There was an error!', error);
+      }
+  });
   }
 
 }

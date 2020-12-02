@@ -1,7 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { AuthService } from '@auth/services';
 
 @Component({
   selector: 'app-register',
@@ -23,8 +25,9 @@ export class RegisterComponent implements OnInit {
   passwordHide: boolean = true;
 
   constructor(
-    private http: HttpClient,
     private snackBar: MatSnackBar,
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -32,12 +35,13 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    //TODO: add model
-    this.http.post<any>('http://localhost:8080/api/auth/register', this.registerForm.value).subscribe({
+    this.authService.register(this.registerForm.value).subscribe({
         next: _response => {
+          this.router.navigate(['/login']);
           this.snackBar.open('Registration Successfull');
         },
         error: error => {
+          this.registerForm.reset();
           this.snackBar.open('Registration Failed');
           console.error('There was an error!', error);
         }

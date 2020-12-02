@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import {
   LoginComponent,
@@ -12,10 +13,14 @@ import {
 } from './pages';
 
 import {
-  AuthService
+  AuthService,
+  StorageService
 } from './services';
 
-
+import {
+  BasicAuthInterceptor,
+  ErrorHandlingInterceptor
+} from './interceptors';
 
 @NgModule({
   declarations: [
@@ -27,7 +32,8 @@ import {
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    HttpClientModule
   ],
   exports: [
     LoginComponent,
@@ -35,7 +41,10 @@ import {
     ForgotPasswordComponent
   ],
   providers: [
-    AuthService
+    { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlingInterceptor, multi: true },
+    AuthService,
+    StorageService
   ]
 })
 export class AuthModule { }

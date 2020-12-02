@@ -1,24 +1,38 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { environment } from '@environments/environment';
+
+import { StorageService } from './storage.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor() { }
+  constructor(
+    private http: HttpClient,
+    private storageService: StorageService,
+    private router: Router
+  ) { }
 
   public isAuthenticated(): boolean {
-    // TODO: check if user is authenticated
-    return false;
+    return this.storageService.get() != null;
+  }
+
+  public register(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/api/auth/register`, data);
   }
 
   public login(email: string, password: string): Observable<any> {
-    // TODO: add POST request to authenticate user
-    return new Observable();
+    this.storageService.setToken(email, password);
+    return this.http.get(`${environment.apiUrl}/api/auth/my`);
   }
 
   public logout(): void {
-    // TODO: add logic to logout user 
+    this.storageService.remove();
+    this.router.navigate(['./login']);
   }
 }
