@@ -7,4 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
     public abstract UserDto mapToDestination(User source);
+    public abstract User mapToSource(UserDto destination);
 }
