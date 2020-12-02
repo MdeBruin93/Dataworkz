@@ -1,11 +1,9 @@
 package com.dataworks.eventsubscriber.service.auth;
 
 import com.dataworks.eventsubscriber.exception.user.UserAlreadyExistException;
-import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.RegisterMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.User;
-import com.dataworks.eventsubscriber.model.dto.AuthenticatedUserDto;
 import com.dataworks.eventsubscriber.model.dto.RegisterDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
