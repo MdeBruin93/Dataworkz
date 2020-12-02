@@ -1,6 +1,6 @@
 package com.dataworks.eventsubscriber.service.event;
 
-import com.dataworks.eventsubscriber.exception.user.UserNotLoggedIn;
+import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.Event;
@@ -43,15 +43,15 @@ class EventImplServiceTest {
     @Test
     public void storeWhenUserIsNotLoggedIn_ThrowUserIsNotLoggedInException() {
         //given
-        UserDto foundLoggedInUser = null;
+        User foundLoggedInUser = null;
 
         //when
-        when(authService.my()).thenReturn(foundLoggedInUser);
+        when(authService.myDao()).thenReturn(foundLoggedInUser);
 
         //then
-        assertThatExceptionOfType(UserNotLoggedIn.class)
+        assertThatExceptionOfType(UserNotFoundException.class)
                 .isThrownBy(() -> eventImplService.store(eventDto));
-        verify(authService, times(1)).my();
+        verify(authService, times(1)).myDao();
         verify(userMapper, times(0)).mapToSource(userDto);
         verify(eventMapper, times(0)).mapToEventSource(eventDto);
         verify(event, times(0)).setUser(user);
@@ -62,11 +62,10 @@ class EventImplServiceTest {
     @Test
     public void storeWhenUserIsLoggedIn_Store() {
         //given
-        UserDto foundLoggedInUser = userDto;
+        User foundLoggedInUser = user;
 
         //when
-        when(authService.my()).thenReturn(foundLoggedInUser);
-        when(userMapper.mapToSource(foundLoggedInUser)).thenReturn(user);
+        when(authService.myDao()).thenReturn(foundLoggedInUser);
         when(eventMapper.mapToEventSource(eventDto)).thenReturn(event);
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
@@ -74,8 +73,7 @@ class EventImplServiceTest {
         //then
         var result = eventImplService.store(eventDto);
         assertThat(result).isInstanceOf(EventDto.class);
-        verify(authService, times(1)).my();
-        verify(userMapper, times(1)).mapToSource(userDto);
+        verify(authService, times(1)).myDao();
         verify(eventMapper, times(1)).mapToEventSource(eventDto);
         verify(event, times(1)).setUser(user);
         verify(eventRepository, times(1)).save(event);
