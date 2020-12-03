@@ -1,6 +1,5 @@
 package com.dataworks.eventsubscriber.model.dto;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
