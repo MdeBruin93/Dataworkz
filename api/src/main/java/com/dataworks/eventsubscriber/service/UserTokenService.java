@@ -8,19 +8,9 @@ import com.dataworks.eventsubscriber.model.dao.UserToken;
 import com.dataworks.eventsubscriber.model.dto.UserTokenDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import com.dataworks.eventsubscriber.repository.UserTokenRepository;
-import com.sendgrid.Method;
-import com.sendgrid.Request;
-import com.sendgrid.Response;
-import com.sendgrid.SendGrid;
-import com.sendgrid.helpers.mail.Mail;
-import com.sendgrid.helpers.mail.objects.Content;
-import com.sendgrid.helpers.mail.objects.Email;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -31,9 +21,7 @@ public class UserTokenService implements TokenService {
     private final UserRepository userRepository;
     private final UserTokenRepository userTokenRepository;
     private final UserTokenMapper userTokenMapper;
-
-    @Value("${spring.sendgrid.api-key}")
-    private String sendGridApi;
+    private final EmailProvider emailProvider;
 
     @Override
     public UserTokenDto createEmailTokenForUser(String email) {
@@ -46,7 +34,8 @@ public class UserTokenService implements TokenService {
         userToken.setToken(token);
         userToken.setType(TokenType.EmailConfirmation);
         userTokenRepository.save(userToken);
-        sendSendGridEmail(email, encryptedToken);
+
+        emailProvider.send(email, encryptedToken);
         return userTokenMapper.mapToDestination(userToken);
     }
 
@@ -60,29 +49,5 @@ public class UserTokenService implements TokenService {
         user.setEmailVerified(true);
         userRepository.save(user);
         return true;
-    }
-
-    private void sendSendGridEmail(String email, String token) {
-
-        SendGrid sg = new SendGrid(sendGridApi);
-        Email from = new Email("0942185@hr.nl");
-        Email to = new Email(email);
-        String subject = "Verify your email";
-        System.out.println("token: " + token);
-        var format = String.format("<a href=\"http://localhost:8080/usertokens/verifyuseremail/%s\">Verify your email</a>", token);
-        Content content = new Content("text/html", format);
-
-        Mail mail = new Mail(from, subject, to, content);
-        Request request = new Request();
-        try {
-            request.setMethod(Method.POST);
-            request.setEndpoint("mail/send");
-            request.setBody(mail.build());
-            Response response = sg.api(request);
-            System.out.println(response.getBody());
-        } catch (IOException ioe) {
-            System.out.println(ioe.getMessage());
-            System.out.println(Arrays.toString(ioe.getStackTrace()));
-        }
     }
 }
