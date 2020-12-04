@@ -5,4 +5,5 @@ import com.dataworks.eventsubscriber.model.dto.EventDto;
 
 public interface EventService {
     public EventDto store(EventDto eventDto);
+    public EventDto update(int id, EventDto eventDto);
 }

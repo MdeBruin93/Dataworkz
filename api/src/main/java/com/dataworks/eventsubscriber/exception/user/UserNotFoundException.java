@@ -1,7 +1,9 @@
 package com.dataworks.eventsubscriber.exception.user;
 
-public class UserNotFoundException extends RuntimeException {
+import com.dataworks.eventsubscriber.exception.NotFoundException;
+
+public class UserNotFoundException extends NotFoundException {
     public UserNotFoundException() {
-        super("User not found!");
+        super("User");
     }
 }
