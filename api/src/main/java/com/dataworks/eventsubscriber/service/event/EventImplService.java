@@ -1,5 +1,6 @@
 package com.dataworks.eventsubscriber.service.event;
 
+import com.dataworks.eventsubscriber.exception.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
@@ -46,5 +47,11 @@ public class EventImplService implements EventService {
                 .stream()
                 .map(eventMapper::mapToEventDestination)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public EventDto findById(int id) {
+        var event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
+        return eventMapper.mapToEventDestination(event);
     }
 }

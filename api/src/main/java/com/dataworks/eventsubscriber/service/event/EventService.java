@@ -7,4 +7,5 @@ import java.util.List;
 public interface EventService {
     EventDto store(EventDto eventDto);
     List<EventDto> findAll();
+    EventDto findById(int id);
 }
