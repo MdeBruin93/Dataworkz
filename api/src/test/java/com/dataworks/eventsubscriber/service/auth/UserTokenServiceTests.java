@@ -8,6 +8,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.Assert;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ExtendWith(MockitoExtension.class)
 public class UserTokenServiceTests {
 
@@ -26,6 +28,6 @@ public class UserTokenServiceTests {
         var token = userTokenService.createEmailTokenForUser(email);
 
         // Assert
-//        Assert.notNull(token.getToken(), "0947704@hr.nl:email");
+        assertThat(token.getToken()).isNotEmpty();
     }
 }
