@@ -14,6 +14,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import com.dataworks.eventsubscriber.model.dao.User;
+import org.springframework.data.domain.Sort;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -78,5 +87,32 @@ class EventImplServiceTest {
         verify(event, times(1)).setUser(user);
         verify(eventRepository, times(1)).save(event);
         verify(eventMapper, times(1)).mapToEventDestination(event);
+    }
+
+    @Test
+    public void retrieveAllEventSortedOnDate() {
+        // Given
+        var events = new ArrayList<Event>();
+        var dateOne = LocalDate.of(2020, 2, 1);
+        var dateTwo = LocalDate.of(2020, 2, 2);
+
+        var eventOne = new Event();
+        eventOne.setId(1);
+        // Don't ask. Java needs a shit ton of help to convert.
+        eventOne.setDate(Date.from(dateOne.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+        events.add(eventOne);
+
+        var eventTwo = new Event();
+        eventTwo.setId(2);
+        eventTwo.setDate(Date.from(dateTwo.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+        events.add(eventTwo);
+
+        // when
+        when(eventRepository.findAll(Sort.by("date").descending())).thenReturn(events);
+
+        // then
+        var result = eventImplService.findAll();
+        assertThat(result.size() == 2).isTrue();
+        verify(eventRepository, times(1)).findAll(Sort.by("date").descending());
     }
 }
