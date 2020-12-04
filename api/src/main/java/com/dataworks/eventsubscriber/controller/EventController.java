@@ -1,20 +1,13 @@
 package com.dataworks.eventsubscriber.controller;
 
-import com.dataworks.eventsubscriber.exception.user.UserAlreadyExistException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
-import com.dataworks.eventsubscriber.model.dto.RegisterDto;
-import com.dataworks.eventsubscriber.model.dto.UserDto;
-import com.dataworks.eventsubscriber.service.event.EventImplService;
 import com.dataworks.eventsubscriber.service.event.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -34,5 +27,10 @@ public class EventController {
         } catch (UserNotFoundException userAlreadyExistException) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity all() {
+        return new ResponseEntity<>(eventService.findAll(), HttpStatus.OK);
     }
 }
