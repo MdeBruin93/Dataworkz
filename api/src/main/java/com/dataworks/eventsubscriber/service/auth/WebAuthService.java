@@ -3,6 +3,7 @@ package com.dataworks.eventsubscriber.service.auth;
 import com.dataworks.eventsubscriber.exception.user.UserAlreadyExistException;
 import com.dataworks.eventsubscriber.mapper.RegisterMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
+import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.RegisterDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
@@ -44,6 +45,13 @@ public class WebAuthService implements AuthService {
 
     @Override
     public UserDto my() {
+        var foundResult = this.myDao();
+
+        return userMapper.mapToDestination(foundResult);
+    }
+
+    @Override
+    public User myDao() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         var isAuthenticated = authentication.isAuthenticated();
 
@@ -51,8 +59,6 @@ public class WebAuthService implements AuthService {
             return null;
         }
 
-        var foundUser = userRepository.findByEmail(authentication.getName());
-
-        return userMapper.mapToDestination(foundUser.get());
+        return userRepository.findByEmail(authentication.getName()).get();
     }
 }
