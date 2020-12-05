@@ -1,5 +1,6 @@
 package com.dataworks.eventsubscriber.service.event;
 
+import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
@@ -54,15 +55,14 @@ class EventImplServiceTest {
     @Test
     public void storeWhenUserIsNotLoggedIn_ThrowUserIsNotLoggedInException() {
         //given
-        User foundLoggedInUser = null;
 
         //when
-        when(authService.myDao()).thenReturn(foundLoggedInUser);
+        when(authService.myDaoOrFail()).thenThrow(UserNotFoundException.class);
 
         //then
         assertThatExceptionOfType(UserNotFoundException.class)
                 .isThrownBy(() -> eventImplService.store(eventDto));
-        verify(authService, times(1)).myDao();
+        verify(authService, times(1)).myDaoOrFail();
         verify(userMapper, times(0)).mapToSource(userDto);
         verify(eventMapper, times(0)).mapToEventSource(eventDto);
         verify(event, times(0)).setUser(user);
@@ -76,7 +76,7 @@ class EventImplServiceTest {
         User foundLoggedInUser = user;
 
         //when
-        when(authService.myDao()).thenReturn(foundLoggedInUser);
+        when(authService.myDaoOrFail()).thenReturn(foundLoggedInUser);
         when(eventMapper.mapToEventSource(eventDto)).thenReturn(event);
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
@@ -84,7 +84,7 @@ class EventImplServiceTest {
         //then
         var result = eventImplService.store(eventDto);
         assertThat(result).isInstanceOf(EventDto.class);
-        verify(authService, times(1)).myDao();
+        verify(authService, times(1)).myDaoOrFail();
         verify(eventMapper, times(1)).mapToEventSource(eventDto);
         verify(event, times(1)).setUser(user);
         verify(eventRepository, times(1)).save(event);
