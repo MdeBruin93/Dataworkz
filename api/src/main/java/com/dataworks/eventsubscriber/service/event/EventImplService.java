@@ -24,8 +24,7 @@ public class EventImplService implements EventService {
 
     @Override
     public EventDto store(EventDto eventDto) {
-        var loggedInUser = authService.myDao();
-
+        var loggedInUser = authService.myDaoOrFail();
         var mappedEvent = eventMapper.mapToEventSource(eventDto);
         mappedEvent.setUser(loggedInUser);
 
@@ -36,7 +35,7 @@ public class EventImplService implements EventService {
 
     @Override
     public EventDto update(int id, EventDto eventDto) {
-        User loggedInUser = authService.myDao();
+        User loggedInUser = authService.myDaoOrFail();
         Optional<Event> eventFromRepo = loggedInUser.isAdmin() ?
                 eventRepository.findById(id) :
                 eventRepository.findByIdAndUser_Id(id, loggedInUser.getId());

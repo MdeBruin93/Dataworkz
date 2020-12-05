@@ -46,15 +46,15 @@ class EventImplServiceTest {
     @Test
     public void storeWhenUserIsNotLoggedIn_ThrowUserIsNotLoggedInException() {
         //given
-        User foundLoggedInUser = null;
+        var exception = UserNotFoundException.class;
 
         //when
-        when(authService.myDao()).thenReturn(foundLoggedInUser);
+        when(authService.myDaoOrFail()).thenThrow(exception);
 
         //then
-        assertThatExceptionOfType(UserNotFoundException.class)
+        assertThatExceptionOfType(exception)
                 .isThrownBy(() -> eventImplService.store(eventDto));
-        verify(authService, times(1)).myDao();
+        verify(authService, times(1)).myDaoOrFail();
         verify(userMapper, times(0)).mapToSource(userDto);
         verify(eventMapper, times(0)).mapToEventSource(eventDto);
         verify(event, times(0)).setUser(user);
@@ -68,7 +68,7 @@ class EventImplServiceTest {
         User foundLoggedInUser = user;
 
         //when
-        when(authService.myDao()).thenReturn(foundLoggedInUser);
+        when(authService.myDaoOrFail()).thenReturn(foundLoggedInUser);
         when(eventMapper.mapToEventSource(eventDto)).thenReturn(event);
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
@@ -76,7 +76,7 @@ class EventImplServiceTest {
         //then
         var result = eventImplService.store(eventDto);
         assertThat(result).isInstanceOf(EventDto.class);
-        verify(authService, times(1)).myDao();
+        verify(authService, times(1)).myDaoOrFail();
         verify(eventMapper, times(1)).mapToEventSource(eventDto);
         verify(event, times(1)).setUser(user);
         verify(eventRepository, times(1)).save(event);
@@ -90,9 +90,8 @@ class EventImplServiceTest {
         var userId = 1;
 
         //when
-        when(authService.myDao()).thenReturn(user);
+        when(authService.myDaoOrFail()).thenReturn(user);
         when(user.isAdmin()).thenReturn(true);
-        when(eventDto.getId()).thenReturn(eventId);
         when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
 
         //then
@@ -109,10 +108,9 @@ class EventImplServiceTest {
         var userId = 1;
 
         //when
-        when(authService.myDao()).thenReturn(user);
+        when(authService.myDaoOrFail()).thenReturn(user);
         when(user.isAdmin()).thenReturn(false);
         when(user.getId()).thenReturn(1);
-        when(eventDto.getId()).thenReturn(eventId);
         when(eventRepository.findByIdAndUser_Id(eventId, userId)).thenReturn(Optional.empty());
 
         //then
@@ -130,9 +128,8 @@ class EventImplServiceTest {
         var userId = 1;
 
         //when
-        when(authService.myDao()).thenReturn(user);
+        when(authService.myDaoOrFail()).thenReturn(user);
         when(user.isAdmin()).thenReturn(true);
-        when(eventDto.getId()).thenReturn(eventId);
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
@@ -152,10 +149,9 @@ class EventImplServiceTest {
         var userId = 1;
 
         //when
-        when(authService.myDao()).thenReturn(user);
+        when(authService.myDaoOrFail()).thenReturn(user);
         when(user.isAdmin()).thenReturn(false);
         when(user.getId()).thenReturn(userId);
-        when(eventDto.getId()).thenReturn(eventId);
         when(eventRepository.findByIdAndUser_Id(eventId, userId)).thenReturn(Optional.of(event));
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);

@@ -55,9 +55,20 @@ public class WebAuthService implements AuthService {
         var isAuthenticated = authentication.isAuthenticated();
 
         if (!isAuthenticated) {
-            throw new UserNotFoundException();
+            return null;
         }
 
         return userRepository.findByEmail(authentication.getName()).get();
+    }
+
+    @Override
+    public User myDaoOrFail() {
+        var dao = this.myDao();
+
+        if (dao == null) {
+            throw new UserNotFoundException();
+        }
+
+        return dao;
     }
 }
