@@ -18,26 +18,26 @@ import javax.validation.Valid;
 public class EventController {
     private final EventService eventService;
 
-    @PostMapping("/store")
+    @PostMapping("/")
     public ResponseEntity store(@Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
 
         try {
             var event = eventService.store(eventDto);
             return new ResponseEntity<>(event, HttpStatus.CREATED);
-        } catch (UserNotFoundException userAlreadyExistException) {
+        } catch (UserNotFoundException userNotFoundException) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("/{id}/update")
+    @PutMapping("/{id}")
     public ResponseEntity update(@PathVariable("id") int id, @Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
 
         try {
             var event = eventService.update(id, eventDto);
             return new ResponseEntity<>(event, HttpStatus.OK);
-        } catch (EventNotFoundException eventNotFoundException) {
+        } catch (EventNotFoundException | UserNotFoundException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
