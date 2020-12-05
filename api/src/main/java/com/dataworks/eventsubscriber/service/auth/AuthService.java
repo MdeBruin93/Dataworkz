@@ -10,4 +10,6 @@ public interface AuthService {
     UserDto my();
 
     User myDao();
+
+    User myDaoOrFail();
 }
