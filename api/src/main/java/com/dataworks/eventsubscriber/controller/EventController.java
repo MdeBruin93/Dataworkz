@@ -1,6 +1,5 @@
 package com.dataworks.eventsubscriber.controller;
 
-import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.service.event.EventService;
@@ -40,5 +39,10 @@ public class EventController {
         } catch (EventNotFoundException | UserNotFoundException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity all() {
+        return new ResponseEntity<>(eventService.findAll(), HttpStatus.OK);
     }
 }
