@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
-    Optional<Event> findByIdAndUserId(int id, int userId);
+    Optional<Event> findByIdAndUser_Id(int id, int userId);
 }

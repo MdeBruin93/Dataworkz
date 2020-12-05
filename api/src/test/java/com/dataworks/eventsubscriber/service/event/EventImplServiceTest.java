@@ -99,7 +99,7 @@ class EventImplServiceTest {
         assertThatExceptionOfType(EventNotFoundException.class)
                 .isThrownBy(() -> eventImplService.update(eventId, eventDto));
         verify(eventRepository, times(1)).findById(eventId);
-        verify(eventRepository, times(0)).findByIdAndUserId(eventId, userId);
+        verify(eventRepository, times(0)).findByIdAndUser_Id(eventId, userId);
     }
 
     @Test
@@ -113,13 +113,13 @@ class EventImplServiceTest {
         when(user.isAdmin()).thenReturn(false);
         when(user.getId()).thenReturn(1);
         when(eventDto.getId()).thenReturn(eventId);
-        when(eventRepository.findByIdAndUserId(eventId, userId)).thenReturn(Optional.empty());
+        when(eventRepository.findByIdAndUser_Id(eventId, userId)).thenReturn(Optional.empty());
 
         //then
         assertThatExceptionOfType(EventNotFoundException.class)
                 .isThrownBy(() -> eventImplService.update(eventId, eventDto));
         verify(eventRepository, times(0)).findById(eventId);
-        verify(eventRepository, times(1)).findByIdAndUserId(eventId, userId);
+        verify(eventRepository, times(1)).findByIdAndUser_Id(eventId, userId);
     }
 
 
@@ -142,7 +142,7 @@ class EventImplServiceTest {
         var result = eventImplService.update(eventId, eventDto);
         assertThat(result).isInstanceOf(EventDto.class);
         verify(eventRepository, times(1)).findById(eventId);
-        verify(eventRepository, times(0)).findByIdAndUserId(eventId, userId);
+        verify(eventRepository, times(0)).findByIdAndUser_Id(eventId, userId);
     }
 
     @Test
@@ -156,7 +156,7 @@ class EventImplServiceTest {
         when(user.isAdmin()).thenReturn(false);
         when(user.getId()).thenReturn(userId);
         when(eventDto.getId()).thenReturn(eventId);
-        when(eventRepository.findByIdAndUserId(eventId, userId)).thenReturn(Optional.of(event));
+        when(eventRepository.findByIdAndUser_Id(eventId, userId)).thenReturn(Optional.of(event));
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
 
@@ -165,6 +165,6 @@ class EventImplServiceTest {
         var result = eventImplService.update(eventId, eventDto);
         assertThat(result).isInstanceOf(EventDto.class);
         verify(eventRepository, times(0)).findById(eventId);
-        verify(eventRepository, times(1)).findByIdAndUserId(eventId, userId);
+        verify(eventRepository, times(1)).findByIdAndUser_Id(eventId, userId);
     }
 }

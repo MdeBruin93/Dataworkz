@@ -26,10 +26,6 @@ public class EventImplService implements EventService {
     public EventDto store(EventDto eventDto) {
         var loggedInUser = authService.myDao();
 
-        if (loggedInUser == null) {
-            throw new UserNotFoundException();
-        }
-
         var mappedEvent = eventMapper.mapToEventSource(eventDto);
         mappedEvent.setUser(loggedInUser);
 
@@ -42,8 +38,8 @@ public class EventImplService implements EventService {
     public EventDto update(int id, EventDto eventDto) {
         User loggedInUser = authService.myDao();
         Optional<Event> eventFromRepo = loggedInUser.isAdmin() ?
-                eventRepository.findById(eventDto.getId()) :
-                eventRepository.findByIdAndUserId(eventDto.getId(), loggedInUser.getId());
+                eventRepository.findById(id) :
+                eventRepository.findByIdAndUser_Id(id, loggedInUser.getId());
 
         if (eventFromRepo.isEmpty()) {
             throw new EventNotFoundException();
