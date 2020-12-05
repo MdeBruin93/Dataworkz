@@ -17,6 +17,7 @@ import {
 import {
   DashboardComponent
 } from './dashboard'; 
+import { CreateComponent, EditComponent } from './events';
 
 
 const routes: Routes = [
@@ -52,6 +53,22 @@ const routes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent
+      }
+    ]
+  },
+  {
+    path: 'events',
+    component: AuthenticatedLayoutComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'create',
+        component: CreateComponent
+      },
+      {
+        path: 'edit',
+        component: EditComponent
       }
     ]
   }
