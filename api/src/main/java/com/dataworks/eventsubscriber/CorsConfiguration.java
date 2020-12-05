@@ -20,8 +20,9 @@ public class CorsConfiguration {
             public void addCorsMappings(CorsRegistry registry) {
 
                 String path = env.getProperty("spring.client.host");
-
-                registry.addMapping("/**").allowedOrigins(path);
+                registry.addMapping("/**")
+                        .allowedOrigins(path)
+                        .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS");
             }
         };
     }
