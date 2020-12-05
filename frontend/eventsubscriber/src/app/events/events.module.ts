@@ -12,7 +12,10 @@ import { BasicAuthInterceptor, ErrorHandlingInterceptor } from '@auth/intercepto
 
 
 @NgModule({
-  declarations: [CreateComponent, EditComponent],
+  declarations: [
+    CreateComponent,
+    EditComponent
+  ],
   imports: [
     CommonModule,
     EventsRoutingModule,
