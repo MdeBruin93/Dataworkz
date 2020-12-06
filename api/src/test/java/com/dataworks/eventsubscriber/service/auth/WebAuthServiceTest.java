@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -90,36 +89,4 @@ class WebAuthServiceTest {
         verify(userRepository, times(1)).save(user);
         verify(passwordEncoder, times(1)).encode(any());
     }
-
-//    @Test
-//    public void myWhenUserIsNotAuthenticated_ReturnNull() {
-//
-//        when(SecurityContextHolder.getContext()).thenReturn(securityContext);
-
-//        //given
-//        var authenticated = false;
-//
-//        //when
-//        when(authentication.isAuthenticated()).thenReturn(authenticated);
-//
-//        //than
-//        var result = webAuthService.my();
-//        assertThat(result).isNull();
-//    }
-
-//    @Test
-//    public void myWhenUserIsAuthenticated_ReturnUser() {
-//        //given
-//        var authenticated = true;
-//        var user = Optional.of(this.user);
-//
-//        //when
-//        when(authentication.isAuthenticated()).thenReturn(true);
-//        when(userRepository.findByEmail(any())).thenReturn(user);
-//        when(userMapper.mapToDestination(user.get())).thenReturn(userDto);
-//
-//        //than
-//        var result = webAuthService.my();
-//        assertThat(result).isInstanceOf(UserDto.class);
-//    }
 }
