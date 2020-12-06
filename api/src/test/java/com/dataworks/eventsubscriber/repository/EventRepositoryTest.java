@@ -7,15 +7,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class UserRepositoryTest {
+class EventRepositoryTest {
     @Autowired
-    UserRepository userRepository;
+    EventRepository eventRepository;
 
     @Test
-    void userRepositoryLoads() {
-        assertThat(userRepository).isNotNull();
-        assertThat(userRepository).isInstanceOf(UserRepository.class);
+    void eventRepositoryLoads() {
+        assertThat(eventRepository).isNotNull();
+        assertThat(eventRepository).isInstanceOf(EventRepository.class);
     }
 }

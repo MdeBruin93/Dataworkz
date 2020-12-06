@@ -6,7 +6,9 @@ import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.RegisterDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
+import com.dataworks.eventsubscriber.model.dto.UserTokenDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
+import com.dataworks.eventsubscriber.service.UserTokenService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -33,6 +34,8 @@ class WebAuthServiceTest {
     @Mock
     RegisterDto registerDto;
     @Mock
+    UserTokenDto userTokenDto;
+    @Mock
     UserRepository userRepository;
     @Mock
     RegisterMapper registerMapper;
@@ -40,6 +43,8 @@ class WebAuthServiceTest {
     UserMapper userMapper;
     @Mock
     PasswordEncoder passwordEncoder;
+    @Mock
+    UserTokenService userTokenService;
     @Mock
     Authentication authentication;
     @Mock
@@ -74,6 +79,7 @@ class WebAuthServiceTest {
         when(registerMapper.mapToUserSource(registerDto)).thenReturn(user);
         when(userMapper.mapToDestination(user)).thenReturn(userDto);
         when(userRepository.save(user)).thenReturn(user);
+        when(userTokenService.createEmailTokenForUser(email)).thenReturn(userTokenDto);
 
         //then
         var result = webAuthService.register(registerDto);
@@ -83,36 +89,4 @@ class WebAuthServiceTest {
         verify(userRepository, times(1)).save(user);
         verify(passwordEncoder, times(1)).encode(any());
     }
-
-//    @Test
-//    public void myWhenUserIsNotAuthenticated_ReturnNull() {
-//
-//        when(SecurityContextHolder.getContext()).thenReturn(securityContext);
-
-//        //given
-//        var authenticated = false;
-//
-//        //when
-//        when(authentication.isAuthenticated()).thenReturn(authenticated);
-//
-//        //than
-//        var result = webAuthService.my();
-//        assertThat(result).isNull();
-//    }
-
-//    @Test
-//    public void myWhenUserIsAuthenticated_ReturnUser() {
-//        //given
-//        var authenticated = true;
-//        var user = Optional.of(this.user);
-//
-//        //when
-//        when(authentication.isAuthenticated()).thenReturn(true);
-//        when(userRepository.findByEmail(any())).thenReturn(user);
-//        when(userMapper.mapToDestination(user.get())).thenReturn(userDto);
-//
-//        //than
-//        var result = webAuthService.my();
-//        assertThat(result).isInstanceOf(UserDto.class);
-//    }
 }

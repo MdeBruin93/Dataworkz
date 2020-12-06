@@ -33,6 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/auth/register").permitAll()
                 .antMatchers("/events/store").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/events/{id}/update").hasAnyRole("USER", "ADMIN")
                 .antMatchers("auth/my").authenticated()
                 .antMatchers("/test/user").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/test/admin").hasRole("ADMIN")
