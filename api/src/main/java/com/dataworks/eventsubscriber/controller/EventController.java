@@ -35,7 +35,7 @@ public class EventController {
         return new ResponseEntity<>(eventService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/findById/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable int id) {
         try {
             return new ResponseEntity(eventService.findById(id), HttpStatus.OK);
