@@ -16,4 +16,8 @@ export class EventsService {
   public create(event: IEvent): Observable<IEventResponse> {
     return this.http.post<IEventResponse>(`${environment.apiUrl}/api/events/store`, event);
   }
+
+  public getAll(): Observable<IEvent[]> {
+    return this.http.get<IEvent[]>(`${environment.apiUrl}/api/events/all`);
+  }
 }

@@ -1,11 +1,17 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { 
   CreateComponent,
-  EditComponent 
+  EditComponent,
+  OverviewComponent,
+  DetailComponent
 } from './pages';
 
 const routes: Routes = [
+  {
+    path: '',
+    component: OverviewComponent
+  },
   {
     path: 'create',
     component: CreateComponent
@@ -13,7 +19,11 @@ const routes: Routes = [
   {
     path: 'edit/:eventId',
     component: EditComponent
-  }
+  },
+  {
+    path:':id',
+    component: DetailComponent
+  }  
 ];
 
 @NgModule({

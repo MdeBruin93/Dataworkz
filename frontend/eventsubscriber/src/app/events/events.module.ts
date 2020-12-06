@@ -9,12 +9,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BasicAuthInterceptor, ErrorHandlingInterceptor } from '@auth/interceptors';
+import { DetailComponent } from './pages/detail/detail.component';
+import { OverviewComponent } from './pages/overview/overview.component';
 
 
 @NgModule({
   declarations: [
     CreateComponent,
-    EditComponent
+    EditComponent,
+    DetailComponent,
+    OverviewComponent
   ],
   imports: [
     CommonModule,

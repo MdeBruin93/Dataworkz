@@ -1,0 +1,34 @@
+.events-overview {
+  background-color: rgb(241, 241, 241);
+  height: 100%;
+  width: 100%;
+
+  button {
+    margin-left: 220px;
+    margin-top: 20px;
+  }
+
+  mat-grid-list {
+    margin-left: 200px;
+    margin-top: 20px;
+  }
+
+  mat-grid-tile {
+    margin: 2px;
+
+    mat-card {
+      width: 100%;
+      height: 80%;
+      margin: 20px;
+
+      mat-card-title {
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+
+      mat-card-footer {
+        margin-left: 1px;
+      }
+    }
+  }
+}
