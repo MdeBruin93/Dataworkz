@@ -1,0 +1,21 @@
+<div class="events-overview">
+  <button mat-raised-button routerLink="create" color="primary">Add</button>
+  <mat-grid-list cols="4" rowHeight="2:1">
+    <mat-grid-tile *ngFor="let event of events">
+      <mat-card (click)="navigateToDetail(event)">
+        <mat-card-title>
+          {{event.title}}
+        </mat-card-title>
+
+        <mat-card-content>
+          {{event.description}}
+        </mat-card-content>
+
+        <mat-card-footer>
+          <span><strong>Maximum number of participants:</strong> {{event.maxAmountOfAttendees}}</span><br>
+          <span><strong>Costs of participation:</strong> €{{event.euroAmount}}</span>
+        </mat-card-footer>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>
