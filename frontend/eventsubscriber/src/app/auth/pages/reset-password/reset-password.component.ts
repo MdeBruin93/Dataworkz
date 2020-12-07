@@ -27,6 +27,10 @@ export class ResetPasswordComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  isPasswordsEqual(): boolean {
+    return this.resetPasswordForm.value.newPassword == this.resetPasswordForm.value.repeatNewPassword;
+  }
+
   onSubmit() {
     this.authService.resetPassword(this.resetPasswordForm.value);
   }
