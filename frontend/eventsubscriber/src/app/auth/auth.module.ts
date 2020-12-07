@@ -26,7 +26,8 @@ import {
   declarations: [
     LoginComponent,
     RegisterComponent,
-    ForgotPasswordComponent],
+    ForgotPasswordComponent
+  ],
   imports: [
     CommonModule,
     MaterialModule,

@@ -1,0 +1,19 @@
+<div class="event-detail">
+  <div class="event-detail-container">
+    <mat-card *ngIf="event">
+      <mat-card-title>
+        {{event.title}}
+      </mat-card-title>
+    
+      <mat-card-content>
+        {{event.description}}
+      </mat-card-content>
+    
+      <mat-card-footer>
+        <span><strong>Maximum number of participants:</strong> {{event.maxAmountOfAttendees}}</span><br>
+        <span><strong>Costs of participation:</strong> €{{event.euroAmount}}</span>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+</div>
+

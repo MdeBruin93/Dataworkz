@@ -18,7 +18,7 @@ import javax.validation.Valid;
 public class EventController {
     private final EventService eventService;
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity store(@Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
 
@@ -42,7 +42,7 @@ public class EventController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity all() {
         return new ResponseEntity<>(eventService.findAll(), HttpStatus.OK);
     }
