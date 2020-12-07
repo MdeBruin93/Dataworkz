@@ -10,4 +10,5 @@ public interface EventService {
     EventDto update(int id, EventDto eventDto);
     List<EventDto> findAll();
     EventDto findById(int id);
+    EventDto subscribe(int id);
 }
