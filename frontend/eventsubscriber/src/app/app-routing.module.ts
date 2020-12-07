@@ -16,8 +16,7 @@ import {
 
 import {
   DashboardComponent
-} from './dashboard'; 
-import { CreateComponent, EditComponent } from './events';
+} from './dashboard';
 
 
 const routes: Routes = [

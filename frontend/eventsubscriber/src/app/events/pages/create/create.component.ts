@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { EventsService } from '../../services';
+import { Event } from '../../models';
 
 @Component({
   selector: 'app-create',
@@ -10,26 +11,7 @@ import { EventsService } from '../../services';
   styleUrls: ['./create.component.scss']
 })
 export class CreateComponent implements OnInit {
-  eventCreateForm: FormGroup = new FormGroup({
-    title: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(100)
-    ]),
-    description: new FormControl('', [Validators.required]),
-    date: new FormControl('', [
-      Validators.required,
-    ]),
-    maxAmountOfAttendees: new FormControl('', [
-      Validators.required,
-      Validators.pattern("^[0-9]*$"),
-      Validators.min(1),
-    ]),
-    euroAmount: new FormControl('', [
-      Validators.required,
-      Validators.pattern("^[0-9]*$"),
-      Validators.min(0),
-    ])
-  });
+  eventCreateForm: FormGroup = Event.getFormGroup();
 
   constructor(
     private eventService: EventsService,
