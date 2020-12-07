@@ -42,8 +42,17 @@ public class EventController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity all() {
         return new ResponseEntity<>(eventService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity findById(@PathVariable int id) {
+        try {
+            return new ResponseEntity(eventService.findById(id), HttpStatus.OK);
+        } catch (EventNotFoundException nnfe) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 }

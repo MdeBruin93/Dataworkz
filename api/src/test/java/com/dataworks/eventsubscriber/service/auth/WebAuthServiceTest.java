@@ -6,7 +6,9 @@ import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.RegisterDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
+import com.dataworks.eventsubscriber.model.dto.UserTokenDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
+import com.dataworks.eventsubscriber.service.UserTokenService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,6 +34,8 @@ class WebAuthServiceTest {
     @Mock
     RegisterDto registerDto;
     @Mock
+    UserTokenDto userTokenDto;
+    @Mock
     UserRepository userRepository;
     @Mock
     RegisterMapper registerMapper;
@@ -39,6 +43,8 @@ class WebAuthServiceTest {
     UserMapper userMapper;
     @Mock
     PasswordEncoder passwordEncoder;
+    @Mock
+    UserTokenService userTokenService;
     @Mock
     Authentication authentication;
     @Mock
@@ -73,6 +79,7 @@ class WebAuthServiceTest {
         when(registerMapper.mapToUserSource(registerDto)).thenReturn(user);
         when(userMapper.mapToDestination(user)).thenReturn(userDto);
         when(userRepository.save(user)).thenReturn(user);
+        when(userTokenService.createEmailTokenForUser(email)).thenReturn(userTokenDto);
 
         //then
         var result = webAuthService.register(registerDto);

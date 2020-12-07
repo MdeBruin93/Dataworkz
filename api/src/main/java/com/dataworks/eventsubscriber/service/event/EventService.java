@@ -9,4 +9,5 @@ public interface EventService {
     EventDto store(EventDto eventDto);
     EventDto update(int id, EventDto eventDto);
     List<EventDto> findAll();
+    EventDto findById(int id);
 }

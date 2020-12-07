@@ -12,11 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -65,5 +62,11 @@ public class EventImplService implements EventService {
                 .stream()
                 .map(eventMapper::mapToEventDestination)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public EventDto findById(int id) {
+        var event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
+        return eventMapper.mapToEventDestination(event);
     }
 }
