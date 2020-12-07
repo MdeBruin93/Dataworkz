@@ -14,7 +14,11 @@ export class EventsService {
   ) { }
 
   public create(event: IEvent): Observable<IEventResponse> {
-    return this.http.post<IEventResponse>(`${environment.apiUrl}/api/events/store`, event);
+    return this.http.post<IEventResponse>(`${environment.apiUrl}/api/events/`, event);
+  }
+
+  public getOneWithId(id: string): Observable<IEventResponse> {
+    return this.http.get<IEventResponse>(`${environment.apiUrl}/api/events/${id}`);
   }
 
   public getAll(): Observable<IEvent[]> {
