@@ -32,4 +32,8 @@ export class EventsService {
   public findById(id: number): Observable<IEventResponse> {
     return this.http.get<IEventResponse>(`${environment.apiUrl}/api/events/${id}`);
   }
+
+  public subscribe(id: number): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/api/events/${id}/subscribe`, {});
+  }
 }

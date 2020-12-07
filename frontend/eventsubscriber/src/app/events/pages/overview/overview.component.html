@@ -13,7 +13,9 @@
 
         <mat-card-footer>
           <span><strong>Maximum number of participants:</strong> {{event.maxAmountOfAttendees}}</span><br>
-          <span><strong>Costs of participation:</strong> €{{event.euroAmount}}</span>
+          <span><strong>Costs of participation:</strong> €{{event.euroAmount}}</span><br>
+          <button type="button" mat-raised-button color="primary" [routerLink]="['edit', event.id]">Edit</button>
+          <button type="button" mat-raised-button color="primary" (click)="subscribeToEvent(event.id, $event)">Subscribe</button>
         </mat-card-footer>
       </mat-card>
     </mat-grid-tile>
