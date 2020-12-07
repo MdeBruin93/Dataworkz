@@ -1,1 +1,19 @@
-<p>detail works!</p>
+<div class="event-detail">
+  <div class="event-detail-container">
+    <mat-card *ngIf="event">
+      <mat-card-title>
+        {{event.title}}
+      </mat-card-title>
+    
+      <mat-card-content>
+        {{event.description}}
+      </mat-card-content>
+    
+      <mat-card-footer>
+        <span><strong>Max aantal deelnemers:</strong> {{event.maxAmountOfAttendees}}</span><br>
+        <span><strong>Kosten deelname:</strong> €{{event.euroAmount}}</span>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+</div>
+

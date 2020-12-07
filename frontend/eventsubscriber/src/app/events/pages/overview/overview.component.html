@@ -2,7 +2,7 @@
   <button mat-raised-button routerLink="create" color="primary">Add</button>
   <mat-grid-list cols="4" rowHeight="2:1">
     <mat-grid-tile *ngFor="let event of events">
-      <mat-card>
+      <mat-card (click)="navigateToDetail(event)">
         <mat-card-title>
           {{event.title}}
         </mat-card-title>

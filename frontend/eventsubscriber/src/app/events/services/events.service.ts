@@ -14,10 +14,14 @@ export class EventsService {
   ) { }
 
   public create(event: IEvent): Observable<IEventResponse> {
-    return this.http.post<IEventResponse>(`${environment.apiUrl}/api/events/store`, event);
+    return this.http.post<IEventResponse>(`${environment.apiUrl}/api/events`, event);
   }
 
-  public getAll(): Observable<IEvent[]> {
-    return this.http.get<IEvent[]>(`${environment.apiUrl}/api/events/all`);
+  public getAll(): Observable<IEventResponse[]> {
+    return this.http.get<IEventResponse[]>(`${environment.apiUrl}/api/events`);
+  }
+
+  public findById(id: number): Observable<IEventResponse> {
+    return this.http.get<IEventResponse>(`${environment.apiUrl}/api/events/${id}`);
   }
 }
