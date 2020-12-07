@@ -1,1 +1,1 @@
-export { IEvent, IEventResponse } from './event.model';
+export { IEvent, IEventResponse, Event } from './event.model';
