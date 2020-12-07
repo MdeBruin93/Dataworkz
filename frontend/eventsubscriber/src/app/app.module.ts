@@ -16,6 +16,8 @@ import { environment } from '../environments/environment';
 import { AuthModule } from './auth/auth.module';
 import { AuthRoutingModule } from './auth/auth-routing.module';
 import { HttpClientModule } from '@angular/common/http';
+import { EventsModule } from './events/events.module';
+import { EventsRoutingModule } from './events/events-routing.module';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { HttpClientModule } from '@angular/common/http';
     CoreModule,
     AuthModule,
     AuthRoutingModule,
+    EventsModule,
+    EventsRoutingModule,
     HttpClientModule,
     NgxsModule.forRoot(states, {
       developmentMode: !environment.production

@@ -16,7 +16,7 @@ import {
 
 import {
   DashboardComponent
-} from './dashboard'; 
+} from './dashboard';
 
 
 const routes: Routes = [
@@ -52,7 +52,11 @@ const routes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent
-      }
+      },
+      {
+        path: 'events',
+        loadChildren: () => import('./events/events.module').then((m) => m.EventsModule),
+      },
     ]
   }
 ];

@@ -1,0 +1,42 @@
+<form [formGroup]="eventCreateForm" (ngSubmit)="onSubmit()">
+    <h3>Create Event</h3>
+    <mat-form-field appearance="fill">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" required>
+        <mat-error *ngIf="eventCreateForm.controls.title.errors && eventCreateForm.controls.title.errors.required">Title is required</mat-error>
+    </mat-form-field>
+    <br>
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" required></textarea>
+      <mat-error *ngIf="eventCreateForm.controls.description.errors && eventCreateForm.controls.description.errors.required">Description is required</mat-error>
+    </mat-form-field>
+    <br>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="picker1" formControlName="date" required>
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+    </mat-form-field>
+    <br>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Max Attendees</mat-label>
+        <input type="number" matInput formControlName="maxAmountOfAttendees" required>
+        <mat-error *ngIf="eventCreateForm.controls.maxAmountOfAttendees.errors && eventCreateForm.controls.maxAmountOfAttendees.errors.required">Max Attendees is required</mat-error>
+    </mat-form-field>
+    <br>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-label>Cost in euro's</mat-label>
+        <input type="number" matInput formControlName="euroAmount" required>
+        <mat-error *ngIf="eventCreateForm.controls.euroAmount.errors && eventCreateForm.controls.euroAmount.errors.required">Cost in euro's is required</mat-error>
+    </mat-form-field>
+    <br>
+    <br>
+    <mat-card-actions>
+        <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!eventCreateForm.valid">CREATE</button>
+    </mat-card-actions>
+</form>

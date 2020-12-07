@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("api/usertokens")
+@RequestMapping("/usertokens")
 @RequiredArgsConstructor
 public class UserTokenController {
     private final UserTokenService userTokenService;
