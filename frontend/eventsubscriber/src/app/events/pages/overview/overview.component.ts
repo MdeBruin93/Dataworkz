@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { EventsService } from '../../services';
+import { IEventResponse } from '../../models/event.model';
 
 @Component({
   selector: 'app-overview',
@@ -10,7 +12,8 @@ export class OverviewComponent implements OnInit {
   public events: any;
 
   constructor(
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -22,7 +25,10 @@ export class OverviewComponent implements OnInit {
       error: error => {
         console.error('There was an error!', error);
       }
-  });
+    });
   }
 
+  navigateToDetail(event: IEventResponse) {
+    this.router.navigate(['/events', event.id]);
+  }
 }
