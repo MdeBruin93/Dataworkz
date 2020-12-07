@@ -12,11 +12,13 @@
   <mat-form-field appearance="fill">
       <mat-label>Password</mat-label>
       <input matInput formControlName="password" [type]="passwordHide ? 'password' : 'text'" required>
-      <button mat-icon-button matSuffix (click)="passwordHide = !passwordHide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="passwordHide">
+      <button type="button" mat-icon-button matSuffix (click)="passwordHide = !passwordHide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="passwordHide">
           <mat-icon>{{passwordHide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
       <mat-error *ngIf="loginForm.controls.password.errors && loginForm.controls.password.errors.required">Password is required</mat-error>
   </mat-form-field>
+  <br>
+  <a class="forgot-password-link" [routerLink]="['/forgot-password']" routerLinkActive="router-link-active" >Forgot password?</a>
   <br>
   <br>
   <mat-card-actions>

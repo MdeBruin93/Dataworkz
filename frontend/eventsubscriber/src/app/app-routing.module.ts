@@ -11,7 +11,8 @@ import {
 import {
   LoginComponent,
   RegisterComponent,
-  ForgotPasswordComponent
+  ForgotPasswordComponent,
+  ResetPasswordComponent
 } from './auth';
 
 import {
@@ -40,6 +41,10 @@ const routes: Routes = [
       {
         path: 'forgot-password',
         component: ForgotPasswordComponent
+      },
+      {
+        path: 'reset-password',
+        component: ResetPasswordComponent
       }
     ]
   },
