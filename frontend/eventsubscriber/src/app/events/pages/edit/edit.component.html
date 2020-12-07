@@ -1,6 +1,6 @@
 <div *ngIf="event">
 <form [formGroup]="eventCreateForm" (ngSubmit)="onSubmit()">
-    <h3>Create Event</h3>
+    <h3>Edit Event</h3>
     <mat-form-field appearance="fill">
         <mat-label>Title</mat-label>
         <input matInput formControlName="title" required [(ngModel)]="event.title">
