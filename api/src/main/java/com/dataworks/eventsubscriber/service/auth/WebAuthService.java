@@ -1,6 +1,5 @@
 package com.dataworks.eventsubscriber.service.auth;
 
-import com.dataworks.eventsubscriber.exception.EmailSendFailedException;
 import com.dataworks.eventsubscriber.exception.user.UserAlreadyExistException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.RegisterMapper;
@@ -37,15 +36,11 @@ public class WebAuthService implements AuthService {
         var mappedUser = registerMapper.mapToUserSource(registerDto);
         mappedUser.setPassword(this.passwordEncoder.encode(mappedUser.getPassword()));
         mappedUser.setRole("ROLE_USER");
+        mappedUser.setEmailVerified(true);
 
         var savedUser = userRepository.save(mappedUser);
-
-        try {
-            userTokenService.createEmailTokenForUser(registerDto.getEmail());
-        } catch (EmailSendFailedException esfe) {
-            System.out.println(esfe.getMessage());
-            userRepository.delete(savedUser);
-        }
+        
+        userTokenService.createEmailTokenForUser(registerDto.getEmail());
 
         return userMapper.mapToDestination(savedUser);
     }
