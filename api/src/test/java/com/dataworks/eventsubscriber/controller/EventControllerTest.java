@@ -1,6 +1,8 @@
 package com.dataworks.eventsubscriber.controller;
 
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
+import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedException;
+import com.dataworks.eventsubscriber.exception.user.UserAlreadyExistException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.model.dto.RegisterDto;
@@ -181,6 +183,58 @@ class EventControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void subscribeEvent_EventNotFound() throws Exception {
+        //given
+        var eventId = 1;
+        //when
+        when(eventImplService.subscribe(eventId)).thenThrow(EventNotFoundException.class);
+
+        //then
+        mockMvc.perform(
+                post("/api/events/" + eventId + "/subscribe"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void subscribeEvent_UserNotFound() throws Exception {
+        //given
+        var eventId = 1;
+        //when
+        when(eventImplService.subscribe(eventId)).thenThrow(EventNotFoundException.class);
+
+        //then
+        mockMvc.perform(
+                post("/api/events/" + eventId + "/subscribe"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void subscribeEvent_UserAlreadySubscribed() throws Exception {
+        //given
+        var eventId = 1;
+        //when
+        when(eventImplService.subscribe(eventId)).thenThrow(EventUserAlreadySubscribedException.class);
+
+        //then
+        mockMvc.perform(
+                post("/api/events/" + eventId + "/subscribe"))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    void subscribeEvent_Subscribe() throws Exception {
+        //given
+        var eventId = 1;
+        //when
+        when(eventImplService.subscribe(eventId)).thenReturn(new EventDto());
+
+        //then
+        mockMvc.perform(
+                post("/api/events/" + eventId + "/subscribe"))
                 .andExpect(status().isOk());
     }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventsService } from '../../services/events.service';
+import { IEventResponse } from '../../models/event.model';
 
 
 @Component({
@@ -29,6 +30,17 @@ export class DetailComponent implements OnInit {
         }
       });
     }
+  }
+
+  subscribeToEvent(event: IEventResponse) {
+    this.eventsService.subscribe(event.id).subscribe({
+      next: _response => {
+        console.log(_response);
+      },
+      error: error => {
+        console.error('There was an error!', error);
+      }
+    });
   }
 
 }
