@@ -39,12 +39,12 @@ export class EditComponent implements OnInit {
   onSubmit() {
     this.eventService.update(this.eventId, this.eventCreateForm.value).subscribe({
         next: _response => {
-          this.snackBar.open('Event successfully created');
+          this.snackBar.open('Event successfully edited');
           this.router.navigate(['/events']);
         },
         error: error => {
           this.eventCreateForm.reset();
-          this.snackBar.open('Failed to create your event');
+          this.snackBar.open('Failed to edit your event');
           console.error('There was an error!', error);
         }
     });

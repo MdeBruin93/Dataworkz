@@ -31,4 +31,17 @@ export class OverviewComponent implements OnInit {
   navigateToDetail(event: IEventResponse) {
     this.router.navigate(['/events', event.id]);
   }
+
+  subscribeToEvent(id: number, event: any) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.eventsService.subscribe(id).subscribe({
+      next: _response => {
+        console.log(_response);
+      },
+      error: error => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
 }
