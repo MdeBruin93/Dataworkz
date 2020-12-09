@@ -5,7 +5,9 @@ matrix:
       jdk:
       - openjdk11
 
-      before_install: cd api
+      before_install:
+        - cd api
+        - mysql -e 'CREATE DATABASE java_minor;'
 
       # Run the mvn install command
       install:
