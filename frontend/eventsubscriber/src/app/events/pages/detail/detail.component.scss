@@ -1,0 +1,29 @@
+.event-detail {
+  height: 100%;
+  width: 100%;
+  background-color: rgb(241, 241, 241);
+
+  .event-detail-container {
+    
+    padding: 40px 0px 40px 220px;
+    align-content: center;
+  
+    mat-card {
+      width: 60%;
+      margin: auto;
+  
+      mat-card-title {
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+  
+      mat-card-footer {
+        margin-left: 1px;
+
+        button {
+          margin: 10px 5px 10px 0px;
+        }
+      }
+    }
+  }
+}

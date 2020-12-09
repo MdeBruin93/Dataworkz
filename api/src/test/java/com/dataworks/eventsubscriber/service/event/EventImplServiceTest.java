@@ -1,6 +1,7 @@
 package com.dataworks.eventsubscriber.service.event;
 
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
+import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
@@ -197,5 +198,55 @@ class EventImplServiceTest {
         var result = eventImplService.findAll();
         assertThat(result.size() == 2).isTrue();
         verify(eventRepository, times(1)).findAll(Sort.by("date").descending());
+    }
+
+    @Test
+    public void subscribeWhenEventIsNotFound_ThrowEventNotFoundException() {
+        //given
+        var eventId = 1;
+        //when
+        when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
+
+        //then
+        assertThatExceptionOfType(EventNotFoundException.class)
+                .isThrownBy(() -> eventImplService.subscribe(eventId));
+        verify(authService, times(1)).myDaoOrFail();
+    }
+
+    @Test
+    public void subscribeWhenUserIsAlreadySubscribedToEvent_ThrowUserAlreadySubscribedException() {
+        //given
+        var eventId = 1;
+        var userId = 1;
+        //when
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(authService.myDaoOrFail()).thenReturn(user);
+        when(user.getId()).thenReturn(userId);
+        when(eventRepository.findByIdAndSubscribedUsers_Id(eventId, userId)).thenReturn(Optional.of(event));
+
+        //then
+        assertThatExceptionOfType(EventUserAlreadySubscribedException.class)
+                .isThrownBy(() -> eventImplService.subscribe(eventId));
+        verify(authService, times(1)).myDaoOrFail();
+        verify(eventRepository, times(1)).findByIdAndSubscribedUsers_Id(eventId, userId);
+    }
+
+    @Test
+    public void subscribeWhenEventIsFound_Subscribe() {
+        //given
+        var eventId = 1;
+        var userId = 1;
+        //when
+        when(authService.myDaoOrFail()).thenReturn(user);
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(user.getId()).thenReturn(userId);
+        when(eventRepository.findByIdAndSubscribedUsers_Id(eventId, userId)).thenReturn(Optional.empty());
+        when(eventRepository.save(event)).thenReturn(event);
+        when(eventMapper.mapToEventDestination(event)).thenReturn(new EventDto());
+
+        //then
+        var result = eventImplService.subscribe(eventId);
+        assertThat(result).isInstanceOf(EventDto.class);
+        verify(authService, times(1)).myDaoOrFail();
     }
 }

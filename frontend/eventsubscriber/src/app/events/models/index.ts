@@ -1,0 +1,1 @@
+export { IEvent, IEventResponse, Event } from './event.model';

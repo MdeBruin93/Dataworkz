@@ -1,6 +1,7 @@
 package com.dataworks.eventsubscriber.controller;
 
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
+import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.service.event.EventService;
@@ -18,7 +19,7 @@ import javax.validation.Valid;
 public class EventController {
     private final EventService eventService;
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity store(@Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
 
@@ -42,7 +43,7 @@ public class EventController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity all() {
         return new ResponseEntity<>(eventService.findAll(), HttpStatus.OK);
     }
@@ -51,8 +52,19 @@ public class EventController {
     public ResponseEntity findById(@PathVariable int id) {
         try {
             return new ResponseEntity(eventService.findById(id), HttpStatus.OK);
-        } catch (EventNotFoundException nnfe) {
+        } catch (EventNotFoundException exception) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/{id}/subscribe")
+    public ResponseEntity subscribe(@PathVariable int id) {
+        try {
+            return new ResponseEntity(eventService.subscribe(id), HttpStatus.OK);
+        } catch (EventNotFoundException | UserNotFoundException exception) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } catch (EventUserAlreadySubscribedException exception) {
+            return new ResponseEntity(HttpStatus.CONFLICT);
         }
     }
 }
