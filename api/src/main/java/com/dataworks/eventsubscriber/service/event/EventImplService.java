@@ -1,6 +1,7 @@
 package com.dataworks.eventsubscriber.service.event;
 
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
+import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedException;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.Event;
@@ -68,5 +69,20 @@ public class EventImplService implements EventService {
     public EventDto findById(int id) {
         var event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
         return eventMapper.mapToEventDestination(event);
+    }
+
+    @Override
+    public EventDto subscribe(int id) {
+        var loggedInUser = authService.myDaoOrFail();
+        var event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
+        var isUserSubscribed = eventRepository.findByIdAndSubscribedUsers_Id(id, loggedInUser.getId());
+
+        if (isUserSubscribed.isPresent()) {
+            throw new EventUserAlreadySubscribedException();
+        }
+
+        event.getSubscribedUsers().add(loggedInUser);
+
+        return eventMapper.mapToEventDestination(eventRepository.save(event));
     }
 }

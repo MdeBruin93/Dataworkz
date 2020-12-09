@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -29,6 +28,12 @@ public class User extends BaseDao {
     private String role;
     @OneToMany(mappedBy = "user")
     private List<Event> events;
+    @ManyToMany
+    @JoinTable(
+            name = "participant",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
+    private List<Event> subscribedEvents;
 
     public boolean isAdmin() {
         return this.getRole()
