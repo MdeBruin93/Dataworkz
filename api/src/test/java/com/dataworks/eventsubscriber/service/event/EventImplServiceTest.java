@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.dataworks.eventsubscriber.model.dao.User;
 import org.springframework.data.domain.Sort;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -248,5 +249,26 @@ class EventImplServiceTest {
         var result = eventImplService.subscribe(eventId);
         assertThat(result).isInstanceOf(EventDto.class);
         verify(authService, times(1)).myDaoOrFail();
+    }
+
+    @Test
+    public void getAllEventsUserHasSubscribedUpon_SubscribedEvents() {
+        // given
+        var userId = 1;
+        var eventId = 1;
+        user.setId(userId);
+        var event = new Event();
+        event.setId(eventId);
+        var events = new ArrayList<Event>();
+        events.add(event);
+
+        // when
+        when(authService.myDaoOrFail()).thenReturn(user);
+        when(user.getId()).thenReturn(userId);
+        when(eventRepository.findByUserId(userId)).thenReturn(events);
+
+        // then
+        var result = eventImplService.findByUserId();
+        assertThat(result.stream().count()).isOne();
     }
 }

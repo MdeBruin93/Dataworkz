@@ -85,4 +85,13 @@ public class EventImplService implements EventService {
 
         return eventMapper.mapToEventDestination(eventRepository.save(event));
     }
+
+    @Override
+    public List<EventDto> findByUserId() {
+        var loggedInUser = authService.myDaoOrFail();
+        return eventRepository.findByUserId(loggedInUser.getId())
+                .stream()
+                .map(eventMapper::mapToEventDestination)
+                .collect(Collectors.toList());
+    }
 }
