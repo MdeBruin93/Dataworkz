@@ -29,8 +29,8 @@ import java.util.Date;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -270,5 +270,15 @@ class EventImplServiceTest {
         // then
         var result = eventImplService.findByUserId();
         assertThat(result.stream().count()).isOne();
+    }
+  
+    public void deleteWhenEventIsFound_Delete(){
+        // given
+        var eventId = 1;
+
+        // when
+
+        // then
+        assertDoesNotThrow(() -> eventImplService.delete(eventId));
     }
 }

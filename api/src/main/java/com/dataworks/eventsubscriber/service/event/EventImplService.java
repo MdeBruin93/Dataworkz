@@ -94,4 +94,9 @@ public class EventImplService implements EventService {
                 .map(eventMapper::mapToEventDestination)
                 .collect(Collectors.toList());
     }
+    
+    @Override
+    public void delete(int eventId) {
+        eventRepository.deleteById(eventId);
+    }
 }
