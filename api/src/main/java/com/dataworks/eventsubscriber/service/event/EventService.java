@@ -1,6 +1,5 @@
 package com.dataworks.eventsubscriber.service.event;
 
-import com.dataworks.eventsubscriber.model.dao.Event;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 
 import java.util.List;
@@ -11,4 +10,5 @@ public interface EventService {
     List<EventDto> findAll();
     EventDto findById(int id);
     EventDto subscribe(int id);
+    void delete(int eventId);
 }
