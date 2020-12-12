@@ -79,7 +79,7 @@ class WebAuthServiceTest {
         when(registerMapper.mapToUserSource(registerDto)).thenReturn(user);
         when(userMapper.mapToDestination(user)).thenReturn(userDto);
         when(userRepository.save(user)).thenReturn(user);
-        when(userTokenService.createEmailTokenForUser(email)).thenReturn(userTokenDto);
+        doNothing().when(userTokenService).createEmailTokenForUser(email);
 
         //then
         var result = webAuthService.register(registerDto);
