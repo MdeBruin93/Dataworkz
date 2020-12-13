@@ -5,7 +5,9 @@ matrix:
       jdk:
       - openjdk11
 
-      before_install: cd api
+      before_install:
+        - cd api
+        - mysql -e 'CREATE DATABASE java_minor;'
 
       # Run the mvn install command
       install:
@@ -15,6 +17,9 @@ matrix:
       cache:
         directories:
         - $HOME/.m2
+      services:
+        - mysql
+
     - language: node_js
       node_js: node
 
