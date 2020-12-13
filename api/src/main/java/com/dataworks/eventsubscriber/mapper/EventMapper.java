@@ -9,8 +9,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public abstract class EventMapper {
     public abstract Event mapToEventSource(EventDto destination);
-
     public abstract EventDto mapToEventDestination(Event savedEvent);
-
     public abstract List<EventDto> mapToEventDestinationCollection(List<Event> savedEvents);
 }

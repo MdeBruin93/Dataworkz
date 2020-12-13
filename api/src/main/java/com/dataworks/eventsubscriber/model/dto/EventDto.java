@@ -3,7 +3,9 @@ package com.dataworks.eventsubscriber.model.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -20,6 +22,7 @@ public class EventDto {
     private String title;
     @NotNull
     private String description;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
     private Date date;
     @NotNull
@@ -28,4 +31,6 @@ public class EventDto {
     @NotNull
     @Min(0)
     private double euroAmount;
+    private MultipartFile image;
+    private String imageUrl;
 }
