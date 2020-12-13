@@ -34,7 +34,7 @@ public class LocalStorageService implements StorageService {
             return file.getOriginalFilename();
         } catch (IOException e) {
 
-            var msg = String.format("Failed to store file %f", file.getName());
+            var msg = String.format("Failed to store file %s", file.getName());
 
             throw new StorageException(msg, e);
         }
