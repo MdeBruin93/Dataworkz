@@ -5,3 +5,4 @@ public class NotFoundException extends RuntimeException {
         super(entity + " not found!");
     }
 }
+
