@@ -34,6 +34,8 @@ public class User extends BaseDao {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id"))
     private List<Event> subscribedEvents;
+    @OneToMany(mappedBy = "user")
+    private List<UserToken> tokens;
 
     public boolean isAdmin() {
         return this.getRole()
