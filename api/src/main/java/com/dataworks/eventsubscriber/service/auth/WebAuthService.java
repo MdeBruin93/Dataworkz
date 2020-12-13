@@ -1,12 +1,14 @@
 package com.dataworks.eventsubscriber.service.auth;
 
 import com.dataworks.eventsubscriber.exception.EmailSendFailedException;
+import com.dataworks.eventsubscriber.exception.PasswordDontMatchException;
 import com.dataworks.eventsubscriber.exception.user.UserAlreadyExistException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.RegisterMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.RegisterDto;
+import com.dataworks.eventsubscriber.model.dto.ResetPasswordDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import com.dataworks.eventsubscriber.service.UserTokenService;
@@ -48,6 +50,19 @@ public class WebAuthService implements AuthService {
             userRepository.delete(savedUser);
         }
         return userMapper.mapToDestination(savedUser);
+    }
+
+    @Override
+    public UserDto resetPassword(ResetPasswordDto resetPasswordDto) {
+        var user = userRepository.findByEmail(resetPasswordDto.getEmail()).orElseThrow(UserNotFoundException::new);
+
+        if (!resetPasswordDto.getNewPassword().equals(resetPasswordDto.getRepeatNewPassword())) {
+            throw new PasswordDontMatchException();
+        }
+        user.setPassword(passwordEncoder.encode(resetPasswordDto.getNewPassword()));
+        userRepository.save(user);
+
+        return userMapper.mapToDestination(user);
     }
 
     @Override
