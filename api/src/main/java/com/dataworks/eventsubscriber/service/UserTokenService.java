@@ -2,10 +2,8 @@ package com.dataworks.eventsubscriber.service;
 
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserTokenNotFoundException;
-import com.dataworks.eventsubscriber.mapper.UserTokenMapper;
 import com.dataworks.eventsubscriber.model.dao.TokenType;
 import com.dataworks.eventsubscriber.model.dao.UserToken;
-import com.dataworks.eventsubscriber.model.dto.UserTokenDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import com.dataworks.eventsubscriber.repository.UserTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,21 +34,21 @@ public class UserTokenService implements TokenService {
     }
 
     @Override
-    public void createPasswordResetTokenForUser(String email) {
+    public String createPasswordResetTokenForUser(String email) {
         var token = createTokenForUser(email, TokenType.PasswordReset);
-        var content = String.format("<a href=" +host + "api/usertokens/verifypasswordreset/%s>Reset your password</a>", token);
+        var content = String.format("<a href=" +host + "Auth/reset-password/%s>Reset your password</a>", token);
 
         emailProvider.send(email, "Reset your password", content, true);
+        return token;
     }
 
     @Override
     public boolean verifyTokenForUser(String token) {
-        var decrypted = new String(Base64.getDecoder().decode(token.getBytes()));
-        var splitted = decrypted.split("\\:");
-        var user = userRepository.findByEmail(splitted[0]).orElseThrow(() -> new UserNotFoundException(splitted[0]));
-        var userToken = userTokenRepository.findByToken(splitted[1]).orElseThrow(UserTokenNotFoundException::new);
+        var decoded = new UserTokenDecoder(token).getDecodedToken();
+        var user = userRepository.findByEmail(decoded.getEmail()).orElseThrow(() -> new UserNotFoundException(decoded.getEmail()));
+        var userToken = userTokenRepository.findByToken(decoded.getToken()).orElseThrow(UserTokenNotFoundException::new);
 
-        if (splitted[2].equals(TokenType.EmailConfirmation.toString())) {
+        if (decoded.getTokenType() == TokenType.EmailConfirmation) {
             user.setEmailVerified(true);
             userRepository.save(user);
         }

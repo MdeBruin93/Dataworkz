@@ -5,10 +5,7 @@ import com.dataworks.eventsubscriber.service.UserTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -44,28 +41,14 @@ public class UserTokenController {
         }
     }
 
-    @GetMapping("/verifypasswordreset/{token}")
-    public ResponseEntity verifyPasswordReset(@PathVariable String token) {
-        verifyTokenOrThrowBadRequest(token);
-
-        try {
-            return new ResponseEntity(userTokenService.verifyTokenForUser(token), HttpStatus.OK);
-        } catch (UserTokenNotFoundException utnfe) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserToken was either not found or incorrect.");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/resetpassword/{email}")
-    public ResponseEntity resetPassword(@PathVariable String email) {
+    @PostMapping("/resetpassword/{email}")
+    public ResponseEntity resetPassword(@RequestBody String email) {
         if (email.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Need an email to send reset password link to.");
         }
 
         try {
-            userTokenService.createPasswordResetTokenForUser(email);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity(userTokenService.createPasswordResetTokenForUser(email), HttpStatus.OK);
         } catch (UserTokenNotFoundException utnfe) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserToken was either not found or incorrect.");
         } catch (Exception e) {
