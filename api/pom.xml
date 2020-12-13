@@ -13,7 +13,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>event-subscriber</name>
     <description>Demo project for Spring Boot</description>
-
     <properties>
         <java.version>11</java.version>
         <org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
@@ -149,6 +148,9 @@
                             <version>1.3.1.Final</version>
                         </path>
                     </annotationProcessorPaths>
+                    <excludes>
+                        <exclude>**/service/storage/LocalStorageServiceTest.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
