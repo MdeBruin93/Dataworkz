@@ -1,7 +1,8 @@
 export {
   LoginComponent,
   RegisterComponent,
-  ForgotPasswordComponent
+  ForgotPasswordComponent,
+  ResetPasswordComponent
 } from './pages';
 
 export {

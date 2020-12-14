@@ -115,6 +115,13 @@ public class EventImplService implements EventService {
     
     @Override
     public void delete(int eventId) {
-        eventRepository.deleteById(eventId);
+        var event = eventRepository.findById(eventId).orElseThrow(EventNotFoundException::new);
+
+        var isOrganizer = authService.myDao().getId().equals(event.getUser().getId());
+        if (authService.myDao().isAdmin() || isOrganizer) {
+            eventRepository.deleteById(eventId);
+        } else {
+            throw new EventNotFoundException();
+        }
     }
 }
