@@ -18,6 +18,8 @@
       <mat-error *ngIf="loginForm.controls.password.errors && loginForm.controls.password.errors.required">Password is required</mat-error>
   </mat-form-field>
   <br>
+  <a class="forgot-password-link" [routerLink]="['/forgot-password']" routerLinkActive="router-link-active" >Forgot password?</a>
+  <br>
   <br>
   <mat-card-actions>
       <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!loginForm.valid">LOGIN</button>
