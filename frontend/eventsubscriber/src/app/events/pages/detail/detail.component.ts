@@ -43,4 +43,8 @@ export class DetailComponent implements OnInit {
     });
   }
 
+  sanitize(url: string) {
+    return this.eventsService.sanitize(url);
+  }
+
 }

@@ -44,4 +44,8 @@ export class OverviewComponent implements OnInit {
       }
     });
   }
+
+  sanitize(url: string) {
+    return this.eventsService.sanitize(url);
+  }
 }

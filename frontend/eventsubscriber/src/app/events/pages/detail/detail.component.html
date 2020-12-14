@@ -1,6 +1,8 @@
 <div class="event-detail">
   <div class="event-detail-container">
     <mat-card *ngIf="event">
+      <img [src]="sanitize(event.imageUrl)" alt="">
+
       <mat-card-title>
         {{event.title}}
       </mat-card-title>

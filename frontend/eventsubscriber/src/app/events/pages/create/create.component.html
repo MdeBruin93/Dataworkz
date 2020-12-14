@@ -36,6 +36,10 @@
     </mat-form-field>
     <br>
     <br>
+    <input type="file" (change)="onSelect($event)" formControlName="image">
+
+    <br>
+    <br>
     <mat-card-actions>
         <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!eventCreateForm.valid">CREATE</button>
     </mat-card-actions>
