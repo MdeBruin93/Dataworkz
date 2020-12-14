@@ -35,4 +35,18 @@ export class AuthService {
     this.storageService.remove();
     this.router.navigate(['./login']);
   }
+
+  public forgotPassword(data: object): void {
+    console.log(data);
+    // TODO: uncomment when endpoint is added
+    // this.http.post<any>(`${environment.apiUrl}/api/auth/forgot-password`, data);
+    this.router.navigate(['./login']);
+  }
+
+  public resetPassword(data: object): void {
+    console.log(data);
+    // TODO: uncomment when endpoint is added
+    // this.http.post<any>(`${environment.apiUrl}/api/auth/reset-password`, data);
+    this.router.navigate(['./login']);
+  }
 }
