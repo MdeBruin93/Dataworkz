@@ -10,26 +10,22 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 @Service
-public class GmailEmailProvider implements EmailProvider {
+public class SmtpEmailProvider implements EmailProvider{
 
-    @Value("${spring.mail.host}")
-    private String host;
+    @Value("${spring.mail.smtp}")
+    private String smtp;
     @Value("${spring.mail.port}")
     private int port;
     @Value("${spring.mail.username}")
     private String username;
     @Value("${spring.mail.password}")
     private String password;
-    @Value("${spring.mail.subject}")
-    private String subject;
-    @Value("${spring.mail.content}")
-    private String content;
 
     @Override
-    public void send(String email, String token) throws EmailSendFailedException {
+    public void send(String email, String subject, String content, boolean html) {
         try {
             JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-            mailSender.setHost(host);
+            mailSender.setHost(smtp);
             mailSender.setPort(port);
 
             mailSender.setUsername(username);
@@ -46,7 +42,7 @@ public class GmailEmailProvider implements EmailProvider {
             helper.setFrom(username);
             helper.setSubject(subject);
             helper.setTo(email);
-            helper.setText(String.format(content, token), true);
+            helper.setText(content, true);
             mailSender.send(mimeMessage);
 
         } catch (Exception e) {

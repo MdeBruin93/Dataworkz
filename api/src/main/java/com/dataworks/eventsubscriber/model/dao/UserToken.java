@@ -3,7 +3,7 @@ package com.dataworks.eventsubscriber.model.dao;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 public class UserToken extends BaseDao {
 
-    private int userId;
+    @ManyToOne()
+    private User user;
     private String token;
     private TokenType type;
     private boolean tokenIsUsed;
