@@ -5,10 +5,12 @@ export interface IEvent {
     date: Date;
     maxAmountOfAttendees: number;
     euroAmount: number;
+    image: string;
 }
 
 export interface IEventResponse extends IEvent {
     id: number;
+    imageUrl: string;
 }
 
 export class Event {
@@ -31,6 +33,9 @@ export class Event {
         Validators.required,
         Validators.pattern("^[0-9]*$"),
         Validators.min(0),
+      ]),
+      image: new FormControl(null, [
+        Validators.required,
       ])
     });
   }

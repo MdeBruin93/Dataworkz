@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { IEvent, IEventResponse } from '../models';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,12 @@ import { IEvent, IEventResponse } from '../models';
 export class EventsService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
   ) { }
 
-  public create(event: IEvent): Observable<IEventResponse> {
-    return this.http.post<IEventResponse>(`${environment.apiUrl}/api/events/`, event);
+  public create(formData: FormData): Observable<IEventResponse> {
+    return this.http.post<IEventResponse>(`${environment.apiUrl}/api/events/`, formData);
   }
 
   public update(id:string, event: IEvent): Observable<IEventResponse> {
@@ -35,5 +37,9 @@ export class EventsService {
 
   public subscribe(id: number): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/api/events/${id}/subscribe`, {});
+  }
+
+  public sanitize(url:string): SafeHtml{
+    return this.sanitizer.bypassSecurityTrustUrl(url);
   }
 }
