@@ -1,6 +1,7 @@
 package com.dataworks.eventsubscriber.controller;
 
 import com.dataworks.eventsubscriber.exception.user.UserTokenNotFoundException;
+import com.dataworks.eventsubscriber.model.dto.ForgotPasswordDto;
 import com.dataworks.eventsubscriber.service.UserTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,14 +42,11 @@ public class UserTokenController {
         }
     }
 
-    @PostMapping("/resetpassword/{email}")
-    public ResponseEntity resetPassword(@RequestBody String email) {
-        if (email.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Need an email to send reset password link to.");
-        }
-
+    @PostMapping("/forgot-password")
+    public ResponseEntity resetPassword(@RequestBody ForgotPasswordDto forgotPasswordDto) {
         try {
-            return new ResponseEntity(userTokenService.createPasswordResetTokenForUser(email), HttpStatus.OK);
+            userTokenService.generatePasswordResetToken(forgotPasswordDto);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (UserTokenNotFoundException utnfe) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserToken was either not found or incorrect.");
         } catch (Exception e) {

@@ -40,7 +40,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("reset-password")
+    @PostMapping("/reset-password")
     public ResponseEntity resetPassword(@Valid @RequestBody ResetPasswordDto resetPasswordDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);

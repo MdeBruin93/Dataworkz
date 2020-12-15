@@ -1,5 +1,6 @@
 package com.dataworks.eventsubscriber.model.dao;
 
+import com.dataworks.eventsubscriber.enums.TokenType;
 import lombok.Getter;
 import lombok.Setter;
 
