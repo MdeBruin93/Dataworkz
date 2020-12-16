@@ -71,15 +71,6 @@ public class EventController {
         }
     }
 
-    @GetMapping("/findbyuser")
-    public ResponseEntity findbyuser() {
-        try {
-            return new ResponseEntity(eventService.findByUserId(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable int id) {
         try {

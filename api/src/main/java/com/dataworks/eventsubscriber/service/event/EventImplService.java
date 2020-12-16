@@ -112,7 +112,16 @@ public class EventImplService implements EventService {
                 .map(eventMapper::mapToEventDestination)
                 .collect(Collectors.toList());
     }
-    
+
+    @Override
+    public List<EventDto> findBySubscribedUsers() {
+        var loggedInUser = authService.myDaoOrFail();
+        return eventRepository.findBySubscribedUsers(loggedInUser.getId())
+                .stream()
+                .map(eventMapper::mapToEventDestination)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public void delete(int eventId) {
         var event = eventRepository.findById(eventId).orElseThrow(EventNotFoundException::new);

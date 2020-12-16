@@ -11,5 +11,6 @@ public interface EventService {
     EventDto findById(int id);
     EventDto subscribe(int id);
     List<EventDto> findByUserId();
+    List<EventDto> findBySubscribedUsers();
     void delete(int eventId);
 }
