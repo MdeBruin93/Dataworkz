@@ -116,7 +116,7 @@ public class EventImplService implements EventService {
     @Override
     public List<EventDto> findBySubscribedUsers() {
         var loggedInUser = authService.myDaoOrFail();
-        return eventRepository.findBySubscribedUsers(loggedInUser.getId())
+        return eventRepository.findBySubscribedUsers_Id(loggedInUser.getId())
                 .stream()
                 .map(eventMapper::mapToEventDestination)
                 .collect(Collectors.toList());
