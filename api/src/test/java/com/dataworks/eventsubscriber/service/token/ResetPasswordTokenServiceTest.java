@@ -1,7 +1,9 @@
 package com.dataworks.eventsubscriber.service.token;
 
+import com.dataworks.eventsubscriber.enums.TokenType;
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
+import com.dataworks.eventsubscriber.exception.user.UserTokenNotFoundException;
 import com.dataworks.eventsubscriber.mapper.UserTokenMapper;
 import com.dataworks.eventsubscriber.model.dao.Event;
 import com.dataworks.eventsubscriber.model.dao.User;
@@ -11,6 +13,7 @@ import com.dataworks.eventsubscriber.model.dto.TokenDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import com.dataworks.eventsubscriber.repository.UserTokenRepository;
+import com.dataworks.eventsubscriber.service.email.EmailProvider;
 import com.dataworks.eventsubscriber.service.storage.LocalStorageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +39,8 @@ class ResetPasswordTokenServiceTest {
     @Mock
     UserTokenMapper userTokenMapper;
     @Mock
+    EmailProvider emailProvider;
+    @Mock
     User user;
     @Mock
     UserToken userToken;
@@ -43,6 +48,93 @@ class ResetPasswordTokenServiceTest {
     TokenDto tokenDto;
     @InjectMocks
     ResetPasswordTokenService resetPasswordTokenService;
+
+    @Test
+    void verifyWhenTokenAndEmailAndTokenTypeIsNotSet_ThenThrowException() {
+        //given
+        resetPasswordTokenService.setTokenType(null);
+        //when
+        //then
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> resetPasswordTokenService.verify());
+    }
+
+    @Test
+    void verifyWhenTokenIsSetAndEmailAndTokenTypeIsNotSet_ThenThrowException() {
+        //given
+        resetPasswordTokenService.setTokenType(null);
+        resetPasswordTokenService.setToken("abcdefg");
+        //when
+        //then
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> resetPasswordTokenService.verify());
+    }
+
+    @Test
+    void verifyWhenTokenNotSetAndEmailIsSetAndTokenTypeIsNotSet_ThenThrowException() {
+        //given
+        resetPasswordTokenService.setTokenType(null);
+        resetPasswordTokenService.setEmail("ricky@hr.nl");
+        //when
+        //then
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> resetPasswordTokenService.verify());
+    }
+
+    @Test
+    void verifyWhenTokenNotSetAndEmailIsNotAndTokenTypeIsSet_ThenThrowException() {
+        //given
+        //when
+        //then
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> resetPasswordTokenService.verify());
+    }
+
+    @Test
+    void verifyWhenTokenIsNotFoundBeTokenAndType_ThenThrowException() {
+        //given
+        resetPasswordTokenService.setToken("abc");
+        resetPasswordTokenService.setEmail("info@hr.nl");
+
+        //when
+        when(userTokenRepository.findByTokenAndType(anyString(), any(TokenType.class)))
+                .thenReturn(Optional.empty());
+        //then
+        assertThatExceptionOfType(UserTokenNotFoundException.class)
+                .isThrownBy(() -> resetPasswordTokenService.verify());
+    }
+
+    @Test
+    void verifyWhenTokenIsFoundAndOwnerEmailIsNotEqualGivenEmail_ThenThrowException() {
+        //given
+        resetPasswordTokenService.setToken("abc");
+        resetPasswordTokenService.setEmail("info@hr.nl");
+
+        //when
+        when(userTokenRepository.findByTokenAndType(anyString(), any(TokenType.class)))
+                .thenReturn(Optional.of(userToken));
+        when(userToken.getUser()).thenReturn(user);
+        when(user.getEmail()).thenReturn("ricky@hr.nl");
+        //then
+        assertThatExceptionOfType(UserTokenNotFoundException.class)
+                .isThrownBy(() -> resetPasswordTokenService.verify());
+    }
+
+    @Test
+    void verifyWhenTokenIsFoundAndOwnerEmailIsEqualGivenEmail_ThenVerify() {
+        //given
+        resetPasswordTokenService.setToken("abc");
+        resetPasswordTokenService.setEmail("info@hr.nl");
+
+        //when
+        when(userTokenRepository.findByTokenAndType(anyString(), any(TokenType.class)))
+                .thenReturn(Optional.of(userToken));
+        when(userToken.getUser()).thenReturn(user);
+        when(user.getEmail()).thenReturn("info@hr.nl");
+        //then
+        resetPasswordTokenService.verify();
+        verify(userTokenRepository, times(1)).save(userToken);
+    }
 
     @Test
     void generateWhenEmailAndTypeIsNotSet_ThenThrowException() {
@@ -101,6 +193,9 @@ class ResetPasswordTokenServiceTest {
         //when
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(userTokenRepository.save(any(UserToken.class))).thenReturn(userToken);
+        when(emailProvider.setEmail(anyString())).thenReturn(emailProvider);
+        when(emailProvider.setSubject(anyString())).thenReturn(emailProvider);
+        when(emailProvider.setContent(anyString())).thenReturn(emailProvider);
         when(userTokenMapper.mapToDestination(any(UserToken.class))).thenReturn(tokenDto);
 
         // then

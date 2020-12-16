@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class UserToken extends BaseDao {
-
     @ManyToOne()
     private User user;
     private String token;
