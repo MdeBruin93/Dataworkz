@@ -31,6 +31,10 @@ export class EventsService {
     return this.http.get<IEvent[]>(`${environment.apiUrl}/api/events/`);
   }
 
+  public findByUser(): Observable<IEvent[]> {
+    return this.http.get<IEvent[]>(`${environment.apiUrl}/api/events/findbyuser`);
+  }
+
   public findById(id: number): Observable<IEventResponse> {
     return this.http.get<IEventResponse>(`${environment.apiUrl}/api/events/${id}`);
   }

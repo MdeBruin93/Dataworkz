@@ -10,6 +10,8 @@ import { IEventResponse } from '../../models/event.model';
 })
 export class OverviewComponent implements OnInit {
   public events: any;
+  public eventsByUser: any;
+  public showSubscribedToEvents: boolean = false;
 
   constructor(
     private eventsService: EventsService,
@@ -21,6 +23,16 @@ export class OverviewComponent implements OnInit {
       next: _response => {
         console.log(_response);
         this.events = _response;
+      },
+      error: error => {
+        console.error('There was an error!', error);
+      }
+    });
+
+    this.eventsService.findByUser().subscribe({
+      next: _response => {
+        console.log(_response);
+        this.eventsByUser = _response;
       },
       error: error => {
         console.error('There was an error!', error);
