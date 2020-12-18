@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface WishlistService {
     List<WishlistDto> findByUserId();
+    WishlistDto store(WishlistDto wishlistDto);
+    WishlistDto update(int id, WishlistDto wishlistDto);
 }

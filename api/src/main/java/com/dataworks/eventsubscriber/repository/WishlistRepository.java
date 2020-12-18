@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface WishlistRepository extends JpaRepository<Wishlist, Integer> {
     List<Wishlist> findByUserId(int userId);
+    void deleteEventsById(int id);
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Component
 @NoArgsConstructor
@@ -14,4 +15,5 @@ import javax.validation.constraints.NotNull;
 public class WishlistDto extends BaseDto {
     @NotNull
     private String name;
+    private List<EventDto> events;
 }
