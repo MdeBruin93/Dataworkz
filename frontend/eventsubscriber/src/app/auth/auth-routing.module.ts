@@ -17,7 +17,7 @@ const routes: Routes = [
     component: RegisterComponent
   },
   {
-    path: 'forgot-password',
+    path: 'forgot-password/:token',
     component: ForgotPasswordComponent
   }
 ];

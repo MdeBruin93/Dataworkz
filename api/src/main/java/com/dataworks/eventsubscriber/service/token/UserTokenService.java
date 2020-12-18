@@ -39,7 +39,7 @@ public abstract class UserTokenService implements TokenService {
         }
 
         var tokenDto = getTokenDto();
-        var foundToken = userTokenRepository.findByTokenAndType(tokenDto.getToken(), tokenType)
+        var foundToken = userTokenRepository.findByTokenAndTypeAndTokenIsUsed(tokenDto.getToken(), tokenType, false)
                 .orElseThrow(UserTokenNotFoundException::new);
 
         this.decode();

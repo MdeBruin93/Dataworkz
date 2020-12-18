@@ -99,7 +99,7 @@ class ResetPasswordTokenServiceTest {
 
         //when
         when(tokenDto.getToken()).thenReturn(token);
-        when(userTokenRepository.findByTokenAndType(anyString(), any(TokenType.class)))
+        when(userTokenRepository.findByTokenAndTypeAndTokenIsUsed(anyString(), any(TokenType.class), false))
                 .thenReturn(Optional.empty());
         //then
         assertThatExceptionOfType(UserTokenNotFoundException.class)
@@ -115,7 +115,7 @@ class ResetPasswordTokenServiceTest {
 
         //when
         when(tokenDto.getToken()).thenReturn(token);
-        when(userTokenRepository.findByTokenAndType(anyString(), any(TokenType.class)))
+        when(userTokenRepository.findByTokenAndTypeAndTokenIsUsed(anyString(), any(TokenType.class), false))
                 .thenReturn(Optional.of(userToken));
         when(userToken.getUser()).thenReturn(user);
         when(user.getEmail()).thenReturn("info@hr.nl");

@@ -16,7 +16,7 @@ public class ResetPasswordTokenService extends UserTokenService {
     @Getter
     @Setter
     private EmailProvider emailProvider;
-    @Value("${spring.mail.host}")
+    @Value("${spring.client.host}")
     private String host;
 
     public ResetPasswordTokenService(
@@ -33,7 +33,7 @@ public class ResetPasswordTokenService extends UserTokenService {
     @Override
     public TokenDto generate() {
         var token = super.generate();
-        var content = String.format("<a href=" + host + "Auth/reset-password/%s>Reset your password</a>", token);
+        var content = String.format("<a href=" + host + "/reset-password/%s>Reset your password</a>", token.getToken());
 
         emailProvider.setEmail(this.getEmail())
                 .setSubject("Reset your password")
