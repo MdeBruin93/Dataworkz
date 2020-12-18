@@ -6,11 +6,11 @@ import { EventsService } from '../../services';
 import { Event } from '../../models';
 
 @Component({
-  selector: 'app-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+  selector: 'app-form',
+  templateUrl: './form.component.html',
+  styleUrls: ['./form.component.scss']
 })
-export class EditComponent implements OnInit {
+export class FormComponent implements OnInit {
   eventId: any;
   eventCreateForm: FormGroup = Event.getFormGroup();
   file: any;
@@ -24,15 +24,19 @@ export class EditComponent implements OnInit {
 
   ngOnInit(): void {
     this.eventId = this.route.snapshot.paramMap.get('eventId');
-    this.eventService.findById(this.eventId).subscribe({
-      next: response => {
-        this.eventCreateForm.patchValue(response)
-      },
-      error: error => {
-        this.snackBar.open('Failed to open an event');
-        console.error('There was an error!', error);
-      }
-    });
+    if (this.eventId) {
+      this.eventService.findById(this.eventId).subscribe({
+        next: response => {
+          this.eventCreateForm.patchValue(response)
+        },
+        error: error => {
+          this.snackBar.open('Failed to open an event');
+          console.error('There was an error!', error);
+        }
+      });
+    } else {
+      this.eventCreateForm = Event.getFormGroup(true);
+    }
   }
 
   onSubmit() {
@@ -44,16 +48,20 @@ export class EditComponent implements OnInit {
     let eventData = this.eventCreateForm.value;
     delete eventData.image;
 
-    this.eventService.update(this.eventId, eventData, imageUploadFormData).subscribe({
-        next: _response => {
-          this.snackBar.open('Event successfully modified');
-          this.router.navigate(['/events']);
-        },
-        error: error => {
-          this.eventCreateForm.reset();
-          this.snackBar.open('Failed to modify your event');
-          console.error('There was an error!', error);
-        }
+    if (this.eventId) {
+      eventData.id = this.eventId;
+    }
+
+    this.eventService.save(eventData, imageUploadFormData).subscribe({
+      next: _response => {
+        this.snackBar.open('Event successfully saved');
+        this.router.navigate(['/events']);
+      },
+      error: error => {
+        this.eventCreateForm.reset();
+        this.snackBar.open('Failed to save your event');
+        console.error('There was an error!', error);
+      }
     });
   }
 

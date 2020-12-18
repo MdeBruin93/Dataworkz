@@ -16,7 +16,14 @@ export class EventsService {
     private sanitizer: DomSanitizer
   ) { }
 
-  public create(event: IEvent, formData: FormData): Observable<IEventResponse> {
+  public save(event: IEventResponse, formData: FormData): Observable<IEventResponse> {
+    if (event.id != null) {
+      return this.update(event, formData);
+    }
+    return this.create(event, formData);
+  }
+
+  private create(event: IEvent, formData: FormData): Observable<IEventResponse> {
     return this.http.post<IFileResponse>(`${environment.apiUrl}/api/storage/upload`, formData)
       .pipe(
         switchMap((file: IFileResponse) => {
@@ -30,17 +37,17 @@ export class EventsService {
     return this.http.post<IFileResponse>(`${environment.apiUrl}/api/storage/upload`, formData);
   }
 
-  public update(id:string, event: IEventResponse, formData: FormData): Observable<IEventResponse> {
+  private update(event: IEventResponse, formData: FormData): Observable<IEventResponse> {
     if (formData.get('file')) {
       return this.http.post<IFileResponse>(`${environment.apiUrl}/api/storage/upload`, formData)
         .pipe(
           switchMap((file: IFileResponse) => {
             event.imageUrl = file.fileUrl;
-            return this.http.put<IEventResponse>(`${environment.apiUrl}/api/events/${id}`, event);
+            return this.http.put<IEventResponse>(`${environment.apiUrl}/api/events/${event.id}`, event);
           })
         );
     }
-    return this.http.put<IEventResponse>(`${environment.apiUrl}/api/events/${id}`, event);
+    return this.http.put<IEventResponse>(`${environment.apiUrl}/api/events/${event.id}`, event);
   }
 
   public getAll(): Observable<IEventResponse[]> {
