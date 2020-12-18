@@ -63,7 +63,7 @@ class ResetPasswordTokenServiceTest {
     void verifyWhenTokenIsSetAndEmailAndTokenTypeIsNotSet_ThenThrowException() {
         //given
         resetPasswordTokenService.setTokenType(null);
-        resetPasswordTokenService.setToken("abcdefg");
+        resetPasswordTokenService.setTokenDto(tokenDto);
         //when
         //then
         assertThatExceptionOfType(NullPointerException.class)
@@ -93,10 +93,12 @@ class ResetPasswordTokenServiceTest {
     @Test
     void verifyWhenTokenIsNotFoundBeTokenAndType_ThenThrowException() {
         //given
-        resetPasswordTokenService.setToken("abc");
+        resetPasswordTokenService.setTokenDto(tokenDto);
         resetPasswordTokenService.setEmail("info@hr.nl");
+        var token = "abc";
 
         //when
+        when(tokenDto.getToken()).thenReturn(token);
         when(userTokenRepository.findByTokenAndType(anyString(), any(TokenType.class)))
                 .thenReturn(Optional.empty());
         //then
@@ -105,28 +107,14 @@ class ResetPasswordTokenServiceTest {
     }
 
     @Test
-    void verifyWhenTokenIsFoundAndOwnerEmailIsNotEqualGivenEmail_ThenThrowException() {
-        //given
-        resetPasswordTokenService.setToken("abc");
-        resetPasswordTokenService.setEmail("info@hr.nl");
-
-        //when
-        when(userTokenRepository.findByTokenAndType(anyString(), any(TokenType.class)))
-                .thenReturn(Optional.of(userToken));
-        when(userToken.getUser()).thenReturn(user);
-        when(user.getEmail()).thenReturn("ricky@hr.nl");
-        //then
-        assertThatExceptionOfType(UserTokenNotFoundException.class)
-                .isThrownBy(() -> resetPasswordTokenService.verify());
-    }
-
-    @Test
     void verifyWhenTokenIsFoundAndOwnerEmailIsEqualGivenEmail_ThenVerify() {
         //given
-        resetPasswordTokenService.setToken("abc");
+        resetPasswordTokenService.setTokenDto(tokenDto);
         resetPasswordTokenService.setEmail("info@hr.nl");
+        var token = "aW5mb0Boci5ubDphYmM=";
 
         //when
+        when(tokenDto.getToken()).thenReturn(token);
         when(userTokenRepository.findByTokenAndType(anyString(), any(TokenType.class)))
                 .thenReturn(Optional.of(userToken));
         when(userToken.getUser()).thenReturn(user);

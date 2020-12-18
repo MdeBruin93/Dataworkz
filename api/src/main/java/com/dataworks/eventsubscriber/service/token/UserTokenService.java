@@ -25,7 +25,7 @@ import java.util.UUID;
 @Accessors(chain = true)
 public abstract class UserTokenService implements TokenService {
     private String email;
-    private String token;
+    private TokenDto tokenDto;
     @Setter(AccessLevel.PROTECTED)
     private TokenType tokenType;
     private final UserRepository userRepository;
@@ -34,12 +34,17 @@ public abstract class UserTokenService implements TokenService {
 
     @Override
     public void verify() {
-        if (getToken() == null || getEmail() == null || getTokenType() == null) {
+        if (getTokenDto() == null || getTokenType() == null) {
             throw new NullPointerException();
         }
 
-        var foundToken = userTokenRepository.findByTokenAndType(getToken(), tokenType)
+        var tokenDto = getTokenDto();
+        var foundToken = userTokenRepository.findByTokenAndType(tokenDto.getToken(), tokenType)
                 .orElseThrow(UserTokenNotFoundException::new);
+
+        this.decode();
+
+
         var isOwnerTokenEqualToGivenEmail = foundToken.getUser()
                 .getEmail()
                 .equals(getEmail());
@@ -47,6 +52,7 @@ public abstract class UserTokenService implements TokenService {
         if (!isOwnerTokenEqualToGivenEmail) {
             throw new UserTokenNotFoundException();
         }
+
 
         foundToken.setTokenIsUsed(true);
         userTokenRepository.save(foundToken);
@@ -61,13 +67,30 @@ public abstract class UserTokenService implements TokenService {
         var user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
 
-        var token = UUID.randomUUID().toString();
-
         var userToken = new UserToken();
         userToken.setUser(user);
-        userToken.setToken(token);
+        userToken.setToken(this.encode());
         userToken.setType(tokenType);
 
         return userTokenMapper.mapToDestination(userTokenRepository.save(userToken));
     }
+
+    @Override
+    public String encode() {
+        var input = this.getEmail() + ":" + UUID.randomUUID().toString();
+
+        return Base64.getEncoder().encodeToString(input.getBytes());
+    }
+
+    public String decode() {
+        var output = this.getTokenDto().getToken();
+        byte[] decodedBytes = Base64.getDecoder().decode(output);
+        String decodedString = new String(decodedBytes);
+
+        var decodedStringParts = decodedString.split(":");
+        this.setEmail(decodedStringParts[0]);
+
+        return decodedString;
+    }
+
 }

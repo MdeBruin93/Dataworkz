@@ -9,4 +9,6 @@ import org.springframework.stereotype.Service;
 public interface TokenService {
     public void verify();
     public TokenDto generate();
+    String encode();
+    String decode();
 }

@@ -47,18 +47,4 @@ public class UserTokenController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @PostMapping("/forgot-password")
-    public ResponseEntity resetPassword(@RequestBody ForgotPasswordDto forgotPasswordDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            resetPasswordTokenService.setEmail(forgotPasswordDto.getEmail()).generate();
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
-        } catch (UserNotFoundException exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
-        }
-    }
 }
