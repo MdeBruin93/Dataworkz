@@ -56,6 +56,7 @@ public class EventImplService implements EventService {
         ev.setEuroAmount(eventDto.getEuroAmount());
         ev.setMaxAmountOfAttendees(eventDto.getMaxAmountOfAttendees());
         ev.setTitle(eventDto.getTitle());
+        ev.setImageUrl(eventDto.getImageUrl());
 
         return eventMapper.mapToEventDestination(eventRepository.save(ev));
     }

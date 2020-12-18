@@ -11,7 +11,7 @@ import { Event } from '../../models';
   styleUrls: ['./create.component.scss']
 })
 export class CreateComponent implements OnInit {
-  eventCreateForm: FormGroup = Event.getFormGroup();
+  eventCreateForm: FormGroup = Event.getFormGroup(true);
   file: any;
 
   constructor(
@@ -24,22 +24,13 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
-    var formData: any = new FormData();
-    const title = this.eventCreateForm.get('title') || {value: null};
-    const date = this.eventCreateForm.get('date') || {value: null};
-    const description = this.eventCreateForm.get('description') || {value: null};
-    const maxAmountOfAttendees = this.eventCreateForm.get('maxAmountOfAttendees') || {value: null};
-    const euroAmount = this.eventCreateForm.get('euroAmount') || {value: null};
+    var imageUploadFormData: any = new FormData();
+    imageUploadFormData.append("file", this.file);
 
-    formData.append("title", title.value);
-    formData.append("description", description.value);
-    const dateValue = (date.value as Date);
-    formData.append("date", dateValue.toISOString().split('T')[0]);
-    formData.append("maxAmountOfAttendees", maxAmountOfAttendees.value);
-    formData.append("euroAmount", euroAmount.value);
-    formData.append("image", this.file);
+    let eventData = this.eventCreateForm.value;
+    delete eventData.image;
 
-    this.eventService.create(formData).subscribe({
+    this.eventService.create(eventData, imageUploadFormData).subscribe({
         next: _response => {
           this.snackBar.open('Event successfully created');
           this.router.navigate(['/events']);
