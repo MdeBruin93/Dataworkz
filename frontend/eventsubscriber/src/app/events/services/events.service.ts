@@ -43,6 +43,10 @@ export class EventsService {
     return this.http.post<any>(`${environment.apiUrl}/api/events/${id}/subscribe`, {});
   }
 
+  public delete(id: number): Observable<any> {
+    return this.http.delete<any>(`${environment.apiUrl}/api/events/${id}`, {});
+  }
+
   public sanitize(url:string): SafeHtml{
     return this.sanitizer.bypassSecurityTrustUrl(url);
   }

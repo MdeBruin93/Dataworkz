@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { EventsService } from '../../services';
+import { EventsService, UserService } from '../../services';
 import { IEventResponse } from '../../models/event.model';
 
 @Component({
@@ -15,6 +15,7 @@ export class OverviewComponent implements OnInit {
 
   constructor(
     private eventsService: EventsService,
+    private userService: UserService,
     private router: Router
   ) { }
 
@@ -29,7 +30,7 @@ export class OverviewComponent implements OnInit {
       }
     });
 
-    this.eventsService.findByUser().subscribe({
+    this.userService.subscribedToEvents().subscribe({
       next: _response => {
         console.log(_response);
         this.eventsByUser = _response;
@@ -48,6 +49,17 @@ export class OverviewComponent implements OnInit {
     event.stopPropagation();
     event.preventDefault();
     this.eventsService.subscribe(id).subscribe({
+      next: _response => {
+        console.log(_response);
+      },
+      error: error => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
+
+  deleteEvent(id: number) {
+    this.eventsService.delete(id).subscribe({
       next: _response => {
         console.log(_response);
       },
