@@ -16,7 +16,7 @@ public class ActivateAccountTokenService extends UserTokenService {
     @Getter
     @Setter
     private EmailProvider emailProvider;
-    @Value("${spring.client.host}")
+    @Value("${spring.client.reset-password}")
     private String host;
 
     public ActivateAccountTokenService(
@@ -33,7 +33,7 @@ public class ActivateAccountTokenService extends UserTokenService {
     @Override
     public TokenDto generate() {
         var token = super.generate();
-        var content = String.format("<a href=" + host + "api/usertokens/verifyuseremail/%s>Verify your email</a>", token.getToken());
+        var content = String.format("<a href=" + host + "/activate-account/%s>Verify your email</a>", token.getToken());
 
         emailProvider.setEmail(this.getEmail())
                 .setSubject("Reset your password")
