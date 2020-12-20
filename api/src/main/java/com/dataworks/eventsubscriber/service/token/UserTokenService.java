@@ -79,12 +79,12 @@ public abstract class UserTokenService implements TokenService {
     public String encode() {
         var input = this.getEmail() + ":" + UUID.randomUUID().toString();
 
-        return Base64.getEncoder().encodeToString(input.getBytes());
+        return Base64.getUrlEncoder().encodeToString(input.getBytes());
     }
 
     public String decode() {
         var output = this.getTokenDto().getToken();
-        byte[] decodedBytes = Base64.getDecoder().decode(output);
+        byte[] decodedBytes = Base64.getUrlDecoder().decode(output);
         String decodedString = new String(decodedBytes);
 
         var decodedStringParts = decodedString.split(":");
