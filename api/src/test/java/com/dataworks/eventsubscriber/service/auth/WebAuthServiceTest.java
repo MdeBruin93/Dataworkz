@@ -10,6 +10,7 @@ import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.model.dto.UserTokenDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import com.dataworks.eventsubscriber.service.UserTokenService;
+import com.dataworks.eventsubscriber.service.token.ActivateAccountTokenService;
 import com.dataworks.eventsubscriber.service.token.ResetPasswordTokenService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,6 +50,8 @@ class WebAuthServiceTest {
     UserTokenService userTokenService;
     @Mock
     ResetPasswordTokenService resetPasswordTokenService;
+    @Mock
+    ActivateAccountTokenService activateAccountTokenService;
     @Mock
     TokenDto tokenDto;
     @Mock
@@ -106,5 +109,20 @@ class WebAuthServiceTest {
         //then
         var result = webAuthService.forgotPassword(email);
         assertThat(result).isInstanceOf(TokenDto.class);
+    }
+
+    @Test
+    void activate() {
+        //given
+        var email = "info@hr.nl";
+        //when
+        when(activateAccountTokenService.setTokenDto(tokenDto)).thenReturn(activateAccountTokenService);
+        when(activateAccountTokenService.getEmail()).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
+        when(userMapper.mapToDestination(user)).thenReturn(userDto);
+        //then
+        var result = webAuthService.activate(tokenDto);
+        assertThat(result).isInstanceOf(UserDto.class);
     }
 }
