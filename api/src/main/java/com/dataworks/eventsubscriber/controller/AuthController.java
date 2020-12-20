@@ -44,7 +44,7 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity resetPassword(@RequestBody ForgotPasswordDto forgotPasswordDto, BindingResult bindingResult) {
+    public ResponseEntity resetPassword(@Valid @RequestBody ForgotPasswordDto forgotPasswordDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
         }
@@ -65,8 +65,10 @@ public class AuthController {
 
         try {
             return new ResponseEntity(authService.resetPassword(resetPasswordDto), HttpStatus.OK);
-        } catch (UserNotFoundException | PasswordDontMatchException unfe) {
+        } catch (PasswordDontMatchException exception) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (UserNotFoundException exception) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
 }
