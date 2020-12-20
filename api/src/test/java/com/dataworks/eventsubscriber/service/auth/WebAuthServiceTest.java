@@ -54,10 +54,6 @@ class WebAuthServiceTest {
     ActivateAccountTokenService activateAccountTokenService;
     @Mock
     TokenDto tokenDto;
-    @Mock
-    Authentication authentication;
-    @Mock
-    SecurityContext securityContext;
     @InjectMocks
     WebAuthService webAuthService;
 
