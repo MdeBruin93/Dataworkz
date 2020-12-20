@@ -3,10 +3,8 @@ package com.dataworks.eventsubscriber.controller;
 import com.dataworks.eventsubscriber.exception.PasswordDontMatchException;
 import com.dataworks.eventsubscriber.exception.user.UserAlreadyExistException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
-import com.dataworks.eventsubscriber.model.dto.ForgotPasswordDto;
-import com.dataworks.eventsubscriber.model.dto.RegisterDto;
-import com.dataworks.eventsubscriber.model.dto.ResetPasswordDto;
-import com.dataworks.eventsubscriber.model.dto.UserDto;
+import com.dataworks.eventsubscriber.exception.user.UserTokenNotFoundException;
+import com.dataworks.eventsubscriber.model.dto.*;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import com.dataworks.eventsubscriber.service.auth.WebAuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -243,5 +241,81 @@ class AuthControllerTest {
                         .content(json))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void activateWhenTokenDtoIsNotValid_ThenThrowBadRequest() throws Exception {
+        //given
+        var token = "abc";
+        var resetPasswordDto = new TokenDto();
+        resetPasswordDto.setToken(token);
+        var json = new ObjectMapper().writeValueAsString(resetPasswordDto);
+
+        //when
+        when(webAuthService.activate(isA(TokenDto.class))).thenThrow(UserTokenNotFoundException.class);
+        //then
+        mockMvc.perform(
+                post("/api/auth/activate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void activateWhenUserTokenIsNotFound_ThenThrowNotFound() throws Exception {
+        //given
+        var token = "abc";
+        var resetPasswordDto = new TokenDto();
+        resetPasswordDto.setToken(token);
+        var json = new ObjectMapper().writeValueAsString(resetPasswordDto);
+
+        //when
+        when(webAuthService.activate(isA(TokenDto.class))).thenThrow(UserTokenNotFoundException.class);
+        //then
+        mockMvc.perform(
+                post("/api/auth/activate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void activateWhenUserNotFound_ThenThrowNotFound() throws Exception {
+        //given
+        var token = "abc";
+        var resetPasswordDto = new TokenDto();
+        resetPasswordDto.setToken(token);
+        var json = new ObjectMapper().writeValueAsString(resetPasswordDto);
+
+        //when
+        when(webAuthService.activate(isA(TokenDto.class))).thenThrow(UserNotFoundException.class);
+        //then
+        mockMvc.perform(
+                post("/api/auth/activate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void activateWhenSuccess_ThenReturnNoContent() throws Exception {
+        //given
+        var token = "abc";
+        var resetPasswordDto = new TokenDto();
+        resetPasswordDto.setToken(token);
+        var json = new ObjectMapper().writeValueAsString(resetPasswordDto);
+
+        //when
+        when(webAuthService.activate(isA(TokenDto.class))).thenReturn(userDto);
+        //then
+        mockMvc.perform(
+                post("/api/auth/activate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 }

@@ -44,7 +44,6 @@ public abstract class UserTokenService implements TokenService {
 
         this.decode();
 
-
         var isOwnerTokenEqualToGivenEmail = foundToken.getUser()
                 .getEmail()
                 .equals(getEmail());

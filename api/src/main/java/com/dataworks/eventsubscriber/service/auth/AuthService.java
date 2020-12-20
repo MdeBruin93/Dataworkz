@@ -18,4 +18,6 @@ public interface AuthService {
     User myDaoOrFail();
 
     TokenDto forgotPassword(String email);
+
+    UserDto activate(TokenDto tokenDto);
 }

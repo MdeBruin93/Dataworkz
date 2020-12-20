@@ -15,6 +15,7 @@ import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import com.dataworks.eventsubscriber.service.UserTokenDecoder;
 import com.dataworks.eventsubscriber.service.UserTokenService;
+import com.dataworks.eventsubscriber.service.token.ActivateAccountTokenService;
 import com.dataworks.eventsubscriber.service.token.ResetPasswordTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -31,7 +32,7 @@ public class WebAuthService implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RegisterMapper registerMapper;
     private final UserMapper userMapper;
-    private final UserTokenService userTokenService;
+    private final ActivateAccountTokenService activateAccountTokenService;
     private final ResetPasswordTokenService resetPasswordTokenService;
     private final TokenMapper tokenMapper;
 
@@ -47,32 +48,18 @@ public class WebAuthService implements AuthService {
         var mappedUser = registerMapper.mapToUserSource(registerDto);
         mappedUser.setPassword(this.passwordEncoder.encode(mappedUser.getPassword()));
         mappedUser.setRole("ROLE_USER");
-        mappedUser.setEmailVerified(true);
 
         var savedUser = userRepository.save(mappedUser);
 
         try {
-            userTokenService.createEmailTokenForUser(registerDto.getEmail());
+            activateAccountTokenService
+                    .setEmail(registerDto.getEmail())
+                    .generate();
         } catch (EmailSendFailedException esfe) {
             System.out.println(esfe.getMessage());
             userRepository.delete(savedUser);
         }
         return userMapper.mapToDestination(savedUser);
-    }
-
-    @Override
-    public UserDto resetPassword(ResetPasswordDto resetPasswordDto) {
-        var tokenDto = tokenMapper.mapResetPasswordDtoToSource(resetPasswordDto);
-        resetPasswordTokenService
-                .setTokenDto(tokenDto)
-                .verify();
-
-        var email = resetPasswordTokenService.getEmail();
-        var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        user.setPassword(passwordEncoder.encode(resetPasswordDto.getNewPassword()));
-        userRepository.save(user);
-
-        return userMapper.mapToDestination(user);
     }
 
     @Override
@@ -108,5 +95,31 @@ public class WebAuthService implements AuthService {
     @Override
     public TokenDto forgotPassword(String email) {
         return resetPasswordTokenService.setEmail(email).generate();
+    }
+
+    @Override
+    public UserDto resetPassword(ResetPasswordDto resetPasswordDto) {
+        var tokenDto = tokenMapper.mapResetPasswordDtoToSource(resetPasswordDto);
+        resetPasswordTokenService
+                .setTokenDto(tokenDto)
+                .verify();
+
+        var email = resetPasswordTokenService.getEmail();
+        var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        user.setPassword(passwordEncoder.encode(resetPasswordDto.getNewPassword()));
+        userRepository.save(user);
+
+        return userMapper.mapToDestination(user);
+    }
+
+    @Override
+    public UserDto activate(TokenDto tokenDto) {
+        activateAccountTokenService.setTokenDto(tokenDto).verify();
+
+        var email = activateAccountTokenService.getEmail();
+        var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        user.setEmailVerified(true);
+
+        return userMapper.mapToDestination(userRepository.save(user));
     }
 }
