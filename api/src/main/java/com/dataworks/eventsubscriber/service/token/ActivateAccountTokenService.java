@@ -46,7 +46,7 @@ public class ActivateAccountTokenService extends UserTokenService {
         var content = String.format("<a href=" + host + "/%s>Verify your email</a>", safeUrlToken);
 
         emailProvider.setEmail(this.getEmail())
-                .setSubject("Reset your password")
+                .setSubject("Activate your account!")
                 .setContent(content)
                 .send();
 
