@@ -6,6 +6,7 @@ import {
   RegisterComponent,
   LoginComponent
 } from './pages';
+import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
   {
     path: 'forgot-password/:token',
     component: ForgotPasswordComponent
+  },
+  {
+    path: 'activate-account/:token',
+    component: ActivateAccountComponent
   }
 ];
 

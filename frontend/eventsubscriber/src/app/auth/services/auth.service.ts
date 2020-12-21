@@ -43,4 +43,8 @@ export class AuthService {
   public resetPassword(data: object): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/api/auth/reset-password`, data);
   }
+
+  public activateAccount(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/api/auth/activate`, data);
+  }
 }
