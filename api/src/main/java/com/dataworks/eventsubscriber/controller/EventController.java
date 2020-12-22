@@ -28,7 +28,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class EventController {
     private final EventService eventService;
-
+  
     @Operation(
             summary = "Create event",
             description = "",
@@ -40,8 +40,8 @@ public class EventController {
                     content = @Content(schema = @Schema(implementation = EventDto.class))),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "404", description = "Logged in user not found")})
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity store(@Valid @ModelAttribute EventDto eventDto, BindingResult bindingResult) {
+    @PostMapping(value = "")
+    public ResponseEntity store(@Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
 
         try {
@@ -63,8 +63,8 @@ public class EventController {
                     content = @Content(schema = @Schema(implementation = EventDto.class))),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "404", description = "Event not found or Logged in user not found")})
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity update(@PathVariable("id") int id, @Valid @ModelAttribute EventDto eventDto, BindingResult bindingResult) {
+    @PutMapping(value = "/{id}")
+    public ResponseEntity update(@PathVariable("id") int id, @Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
 
         try {

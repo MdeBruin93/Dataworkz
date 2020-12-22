@@ -1,4 +1,3 @@
-export { EditComponent } from './edit/edit.component';
-export { CreateComponent } from "./create/create.component";
+export { FormComponent } from './form/form.component';
 export { OverviewComponent } from './overview/overview.component';
 export { DetailComponent } from './detail/detail.component';
