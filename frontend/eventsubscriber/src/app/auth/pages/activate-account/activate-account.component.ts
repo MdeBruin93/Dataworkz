@@ -9,6 +9,7 @@ import { AuthService } from '@auth/services';
 })
 export class ActivateAccountComponent implements OnInit {
   token: string = '';
+  activationSuccessfull: boolean = false;
 
   constructor(
     private router: Router,
@@ -25,7 +26,7 @@ export class ActivateAccountComponent implements OnInit {
 
     this.authService.activateAccount(activateAccountObject).subscribe(
       (_response) => {
-        console.log(_response);
+        this.activationSuccessfull = true;
       }
     );
   }

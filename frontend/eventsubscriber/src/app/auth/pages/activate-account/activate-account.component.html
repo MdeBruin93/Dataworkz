@@ -1,1 +1,9 @@
-<p>activate-account works!</p>
+<ng-container *ngIf="activationSuccessfull">
+    <h3 >Uw account is succesvol geactiveerd</h3>
+    <p><a [routerLink]="['/login']">Klik hier</a> om naar de login pagina te gaan.</p>
+</ng-container>
+
+<ng-container *ngIf="!activationSuccessfull">
+    <h3>Er is iets fout gegaan</h3>
+    <p>Het kan zijn dat uw account al geactiveerd is.</p>
+</ng-container>
