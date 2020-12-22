@@ -22,8 +22,8 @@ import javax.validation.Valid;
 public class EventController {
     private final EventService eventService;
 
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity store(@Valid @ModelAttribute EventDto eventDto, BindingResult bindingResult) {
+    @PostMapping(value = "")
+    public ResponseEntity store(@Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
 
         try {
@@ -34,8 +34,8 @@ public class EventController {
         }
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity update(@PathVariable("id") int id, @Valid @ModelAttribute EventDto eventDto, BindingResult bindingResult) {
+    @PutMapping(value = "/{id}")
+    public ResponseEntity update(@PathVariable("id") int id, @Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
 
         try {
