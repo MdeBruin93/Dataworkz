@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { 
-  CreateComponent,
-  EditComponent,
+  FormComponent,
   OverviewComponent,
   DetailComponent
 } from './pages';
@@ -14,11 +13,11 @@ const routes: Routes = [
   },
   {
     path: 'create',
-    component: CreateComponent
+    component: FormComponent
   },
   {
     path: 'edit/:eventId',
-    component: EditComponent
+    component: FormComponent
   },
   {
     path:':id',
