@@ -11,6 +11,9 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 @Service
 public class ResetPasswordTokenService extends UserTokenService {
     @Getter
@@ -32,14 +35,20 @@ public class ResetPasswordTokenService extends UserTokenService {
 
     @Override
     public TokenDto generate() {
-        var token = super.generate();
-        var content = String.format("<a href=" + host + "/reset-password/%s>Reset your password</a>", token.getToken());
+        var tokenDto = super.generate();
+        String safeUrlToken = null;
+        try {
+            safeUrlToken = URLEncoder.encode(tokenDto.getToken(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        var content = String.format("<a href=" + host + "/reset-password/%s>Reset your password</a>", safeUrlToken);
 
         emailProvider.setEmail(this.getEmail())
                 .setSubject("Reset your password")
                 .setContent(content)
                 .send();
 
-        return token;
+        return tokenDto;
     }
 }
