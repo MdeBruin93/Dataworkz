@@ -1,11 +1,9 @@
 package com.dataworks.eventsubscriber.controller;
 
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
-import com.dataworks.eventsubscriber.exception.user.UserAlreadyExistException;
+import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
-import com.dataworks.eventsubscriber.model.dto.ForgotPasswordDto;
-import com.dataworks.eventsubscriber.model.dto.RegisterDto;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import com.dataworks.eventsubscriber.service.event.EventImplService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -43,8 +42,9 @@ class EventControllerTest {
 
         //then
         mockMvc.perform(
-                multipart("/api/events/")
-                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
+                post("/api/events/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -58,19 +58,17 @@ class EventControllerTest {
         eventDto.setDescription("Test");
         eventDto.setEuroAmount(5);
         eventDto.setMaxAmountOfAttendees(1);
+        eventDto.setImageUrl("test.png");
+        var json = new ObjectMapper().writeValueAsString(eventDto);
 
         //when
         when(eventImplService.store(any(EventDto.class))).thenThrow(UserNotFoundException.class);
 
         //then
         mockMvc.perform(
-                multipart("/api/events/")
-                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                        .param("Title", "Test")
-                        .param("date", "2019-01-01")
-                        .param("description", "Test")
-                        .param("euroAmount", "5")
-                        .param("maxAmountOfAttendees", "5"))
+                post("/api/events/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -84,6 +82,7 @@ class EventControllerTest {
         eventDto.setDescription("Test");
         eventDto.setEuroAmount(5);
         eventDto.setMaxAmountOfAttendees(1);
+        eventDto.setImageUrl("test.png");
         var json = new ObjectMapper().writeValueAsString(eventDto);
 
         //when
@@ -91,13 +90,9 @@ class EventControllerTest {
 
         //then
         mockMvc.perform(
-                multipart("/api/events/")
-                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                        .param("Title", "Test")
-                        .param("date", "2019-01-01")
-                        .param("description", "Test")
-                        .param("euroAmount", "5")
-                        .param("maxAmountOfAttendees", "5"))
+                post("/api/events/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
                 .andDo(print())
                 .andExpect(status().isCreated());
     }
@@ -107,12 +102,14 @@ class EventControllerTest {
         //given
         var id = 1;
         var eventDto = new EventDto();
+        var json = new ObjectMapper().writeValueAsString(eventDto);
         //when
 
         //then
         mockMvc.perform(
                 put("/api/events/" + id)
-                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -127,6 +124,8 @@ class EventControllerTest {
         eventDto.setDescription("Test");
         eventDto.setEuroAmount(5);
         eventDto.setMaxAmountOfAttendees(1);
+        eventDto.setImageUrl("test.png");
+        var json = new ObjectMapper().writeValueAsString(eventDto);
 
         //when
         when(eventImplService.update(eq(id), any(EventDto.class))).thenThrow(UserNotFoundException.class);
@@ -134,12 +133,8 @@ class EventControllerTest {
         //then
         mockMvc.perform(
                 put("/api/events/" + id)
-                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                        .param("Title", "Test")
-                        .param("date", "2019-01-01")
-                        .param("description", "Test")
-                        .param("euroAmount", "5")
-                        .param("maxAmountOfAttendees", "5"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -154,6 +149,8 @@ class EventControllerTest {
         eventDto.setDescription("Test");
         eventDto.setEuroAmount(5);
         eventDto.setMaxAmountOfAttendees(1);
+        eventDto.setImageUrl("test.png");
+        var json = new ObjectMapper().writeValueAsString(eventDto);
 
         //when
         when(eventImplService.update(eq(id), any(EventDto.class))).thenThrow(EventNotFoundException.class);
@@ -161,12 +158,8 @@ class EventControllerTest {
         //then
         mockMvc.perform(
                 put("/api/events/" + id)
-                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                        .param("Title", "Test")
-                        .param("date", "2019-01-01")
-                        .param("description", "Test")
-                        .param("euroAmount", "5")
-                        .param("maxAmountOfAttendees", "5"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -181,6 +174,8 @@ class EventControllerTest {
         eventDto.setDescription("Test");
         eventDto.setEuroAmount(5);
         eventDto.setMaxAmountOfAttendees(1);
+        eventDto.setImageUrl("test.png");
+        var json = new ObjectMapper().writeValueAsString(eventDto);
 
         //when
         when(eventImplService.update(eq(id), any(EventDto.class))).thenReturn(eventDto);
@@ -189,13 +184,90 @@ class EventControllerTest {
         mockMvc.perform(
                 put("/api/events/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                        .param("Title", "Test")
-                        .param("date", "2019-01-01")
-                        .param("description", "Test")
-                        .param("euroAmount", "5")
-                        .param("maxAmountOfAttendees", "5"))
+                        .content(json))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void subscribeEvent_EventNotFound() throws Exception {
+        //given
+        var eventId = 1;
+        //when
+        when(eventImplService.subscribe(eventId)).thenThrow(EventNotFoundException.class);
+
+        //then
+        mockMvc.perform(
+                post("/api/events/" + eventId + "/subscribe"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void subscribeEvent_UserNotFound() throws Exception {
+        //given
+        var eventId = 1;
+        //when
+        when(eventImplService.subscribe(eventId)).thenThrow(EventNotFoundException.class);
+
+        //then
+        mockMvc.perform(
+                post("/api/events/" + eventId + "/subscribe"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void subscribeEvent_UserAlreadySubscribed() throws Exception {
+        //given
+        var eventId = 1;
+        //when
+        when(eventImplService.subscribe(eventId)).thenThrow(EventUserAlreadySubscribedException.class);
+
+        //then
+        mockMvc.perform(
+                post("/api/events/" + eventId + "/subscribe"))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    void subscribeEvent_Subscribe() throws Exception {
+        //given
+        var eventId = 1;
+        //when
+        when(eventImplService.subscribe(eventId)).thenReturn(new EventDto());
+
+        //then
+        mockMvc.perform(
+                post("/api/events/" + eventId + "/subscribe"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getEventsForUser_FindByUser() throws Exception {
+        //given
+
+        //when
+        when(eventImplService.findByUserId()).thenReturn(new ArrayList<EventDto>());
+
+        //then
+        mockMvc.perform(
+                get("/api/events/findbyuser"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteEvent_DeleteEvent() throws Exception {
+        // given
+        var eventId = 1;
+        var json = new ObjectMapper().writeValueAsString(new EventDto());
+
+        // when
+
+        // then
+        mockMvc.perform(
+                delete("/api/events/" + eventId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 }

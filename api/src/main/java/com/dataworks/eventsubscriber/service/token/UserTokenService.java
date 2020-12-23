@@ -15,6 +15,9 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -43,7 +46,6 @@ public abstract class UserTokenService implements TokenService {
                 .orElseThrow(UserTokenNotFoundException::new);
 
         this.decode();
-
 
         var isOwnerTokenEqualToGivenEmail = foundToken.getUser()
                 .getEmail()
@@ -84,7 +86,14 @@ public abstract class UserTokenService implements TokenService {
 
     public String decode() {
         var output = this.getTokenDto().getToken();
-        byte[] decodedBytes = Base64.getUrlDecoder().decode(output);
+        String decodedURL = null;
+        try {
+            decodedURL = URLDecoder.decode(output, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        byte[] decodedBytes = Base64.getUrlDecoder().decode(decodedURL);
         String decodedString = new String(decodedBytes);
 
         var decodedStringParts = decodedString.split(":");
