@@ -18,6 +18,7 @@ import {
 import {
   DashboardComponent
 } from './dashboard';
+import { ActivateAccountComponent } from '@auth/pages/activate-account/activate-account.component';
 
 
 const routes: Routes = [
@@ -43,8 +44,12 @@ const routes: Routes = [
         component: ForgotPasswordComponent
       },
       {
-        path: 'reset-password',
+        path: 'reset-password/:token',
         component: ResetPasswordComponent
+      },
+      {
+        path: 'activate-password/:token',
+        component: ActivateAccountComponent
       }
     ]
   },

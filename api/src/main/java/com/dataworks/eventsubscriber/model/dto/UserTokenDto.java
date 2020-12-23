@@ -1,6 +1,6 @@
 package com.dataworks.eventsubscriber.model.dto;
 
-import com.dataworks.eventsubscriber.model.dao.TokenType;
+import com.dataworks.eventsubscriber.enums.TokenType;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 

@@ -1,5 +1,6 @@
 package com.dataworks.eventsubscriber.model.dao;
 
+import com.dataworks.eventsubscriber.enums.TokenType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class UserToken extends BaseDao {
-
     @ManyToOne()
     private User user;
     private String token;

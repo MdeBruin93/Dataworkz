@@ -37,6 +37,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("auth/my").authenticated()
                 .antMatchers("/test/user").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/test/admin").hasRole("ADMIN")
+                .antMatchers("/auth/forgot-password").permitAll()
+                .antMatchers("/auth/reset-password").permitAll()
 //                .antMatchers("/post/create").authenticated()
                 .and()
                 .httpBasic();

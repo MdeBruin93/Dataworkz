@@ -2,10 +2,12 @@ package com.dataworks.eventsubscriber.service;
 
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserTokenNotFoundException;
-import com.dataworks.eventsubscriber.model.dao.TokenType;
+import com.dataworks.eventsubscriber.enums.TokenType;
 import com.dataworks.eventsubscriber.model.dao.UserToken;
+import com.dataworks.eventsubscriber.model.dto.ForgotPasswordDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import com.dataworks.eventsubscriber.repository.UserTokenRepository;
+import com.dataworks.eventsubscriber.service.email.EmailProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,10 @@ public class UserTokenService implements TokenService {
         var token = createTokenForUser(email, TokenType.EmailConfirmation);
         var content = String.format("<a href=" + host + "api/usertokens/verifyuseremail/%s>Verify your email</a>", token);
 
-        emailProvider.send(email, "Verify your email", content, true);
+        emailProvider.setEmail(email)
+                .setSubject("Verify your email")
+                .setContent(content)
+                .send();
     }
 
     @Override
@@ -38,7 +43,11 @@ public class UserTokenService implements TokenService {
         var token = createTokenForUser(email, TokenType.PasswordReset);
         var content = String.format("<a href=" +host + "Auth/reset-password/%s>Reset your password</a>", token);
 
-        emailProvider.send(email, "Reset your password", content, true);
+        emailProvider.setEmail(email)
+                .setSubject("Reset your password")
+                .setContent(content)
+                .send();
+
         return token;
     }
 
@@ -70,5 +79,14 @@ public class UserTokenService implements TokenService {
         userTokenRepository.save(userToken);
 
         return encryptedToken;
+    }
+
+    @Override
+    public void generatePasswordResetToken(ForgotPasswordDto forgotPasswordDto) {
+        var email = forgotPasswordDto.getEmail();
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+
+
     }
 }

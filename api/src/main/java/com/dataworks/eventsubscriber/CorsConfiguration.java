@@ -19,7 +19,7 @@ public class CorsConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
 
-                String path = env.getProperty("spring.client.host");
+                String path = env.getProperty("spring.cors.hosts");
                 registry.addMapping("/**")
                         .allowedOrigins(path)
                         .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS");

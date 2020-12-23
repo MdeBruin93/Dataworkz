@@ -1,7 +1,6 @@
 package com.dataworks.eventsubscriber.model;
 
-import com.dataworks.eventsubscriber.model.dao.TokenType;
-import lombok.Data;
+import com.dataworks.eventsubscriber.enums.TokenType;
 import lombok.Getter;
 
 @Getter

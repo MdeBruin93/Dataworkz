@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '@auth/services';
 
@@ -9,6 +10,7 @@ import { AuthService } from '@auth/services';
   styleUrls: ['./reset-password.component.scss']
 })
 export class ResetPasswordComponent implements OnInit {
+  token: string = '';
   newPasswordHide = true;
   repeatNewPasswordHide = true;
   resetPasswordForm: FormGroup = new FormGroup({
@@ -21,10 +23,13 @@ export class ResetPasswordComponent implements OnInit {
   });
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+    this.token = this.route.snapshot.params.token;
   }
 
   isPasswordsEqual(): boolean {
@@ -32,7 +37,13 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   onSubmit() {
-    this.authService.resetPassword(this.resetPasswordForm.value);
+    let resetPasswordData = this.resetPasswordForm.value;
+    resetPasswordData['token'] = `${this.token}=`;
+    this.authService.resetPassword(resetPasswordData).subscribe(
+      (_response) => {
+        this.router.navigate(['./login']);
+      }
+    );
   }
 
 }
