@@ -64,8 +64,18 @@ public class AuthController {
         }
     }
 
+    @Operation(
+            summary = "Forgot password",
+            description = "Forgot password",
+            tags = { "Authentication" }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Return user object and send email",
+                    content = @Content(schema = @Schema(implementation = UserDto.class))),
+            @ApiResponse(responseCode = "400", description = "Model validation failed or Password and repeat password don't not match."),
+            @ApiResponse(responseCode = "404", description = "User not foud.")})
     @PostMapping("/forgot-password")
-    public ResponseEntity resetPassword(@Valid @RequestBody ForgotPasswordDto forgotPasswordDto, BindingResult bindingResult) {
+    public ResponseEntity forgotPassword(@Valid @RequestBody ForgotPasswordDto forgotPasswordDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
         }
@@ -84,9 +94,11 @@ public class AuthController {
             tags = { "Authentication" }
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "When user is registered then return a new user object",
+            @ApiResponse(responseCode = "200", description = "Return user object",
                     content = @Content(schema = @Schema(implementation = UserDto.class))),
-            @ApiResponse(responseCode = "400", description = "Model validation failed or Password and repeat password don't not match.")})
+            @ApiResponse(responseCode = "400", description = "Model validation failed or Password and repeat password don't not match."),
+            @ApiResponse(responseCode = "404", description = "User not foud."),
+            @ApiResponse(responseCode = "409", description = "Password dont match.")})
     @PostMapping("reset-password")
     public ResponseEntity resetPassword(@Valid @RequestBody ResetPasswordDto resetPasswordDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -102,6 +114,16 @@ public class AuthController {
         }
     }
 
+    @Operation(
+            summary = "Activate account",
+            description = "Activate account",
+            tags = { "Authentication" }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successful operation",
+                    content = @Content(schema = @Schema(implementation = UserDto.class))),
+            @ApiResponse(responseCode = "400", description = "Model validation failed or Password and repeat password don't not match."),
+            @ApiResponse(responseCode = "404", description = "Token not found or user not foud.")})
     @PostMapping("/activate")
     public ResponseEntity activate(@Valid @RequestBody TokenDto tokenDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

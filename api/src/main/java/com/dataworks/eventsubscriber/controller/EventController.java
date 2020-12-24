@@ -161,13 +161,13 @@ public class EventController {
             @ApiResponse(responseCode = "200", description = "Returns a list of events.",
                     content = @Content(schema = @Schema(implementation = EventDto.class))),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "500", description = "Internal server error.")})
+            @ApiResponse(responseCode = "404", description = "Event not found.")})
     public ResponseEntity delete(@PathVariable int id) {
         try {
             eventService.delete(id);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (EventNotFoundException e) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
 }
