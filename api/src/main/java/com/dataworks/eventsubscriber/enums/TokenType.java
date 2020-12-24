@@ -1,4 +1,4 @@
-package com.dataworks.eventsubscriber.model.dao;
+package com.dataworks.eventsubscriber.enums;
 
 public enum TokenType {
     EmailConfirmation,

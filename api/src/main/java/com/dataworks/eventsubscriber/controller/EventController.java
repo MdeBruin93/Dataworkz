@@ -14,12 +14,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.validation.Valid;
 
@@ -40,8 +37,8 @@ public class EventController {
                     content = @Content(schema = @Schema(implementation = EventDto.class))),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "404", description = "Logged in user not found")})
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity store(@Valid @ModelAttribute EventDto eventDto, BindingResult bindingResult) {
+    @PostMapping(value = "")
+    public ResponseEntity store(@Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
 
         try {
@@ -63,8 +60,8 @@ public class EventController {
                     content = @Content(schema = @Schema(implementation = EventDto.class))),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "404", description = "Event not found or Logged in user not found")})
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity update(@PathVariable("id") int id, @Valid @ModelAttribute EventDto eventDto, BindingResult bindingResult) {
+    @PutMapping(value = "/{id}")
+    public ResponseEntity update(@PathVariable("id") int id, @Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
 
         try {

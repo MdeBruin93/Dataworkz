@@ -36,17 +36,15 @@ export class AuthService {
     this.router.navigate(['./login']);
   }
 
-  public forgotPassword(data: object): void {
-    console.log(data);
-    // TODO: uncomment when endpoint is added
-    // this.http.post<any>(`${environment.apiUrl}/api/auth/forgot-password`, data);
-    this.router.navigate(['./login']);
+  public forgotPassword(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/api/auth/forgot-password`, data);
   }
 
-  public resetPassword(data: object): void {
-    console.log(data);
-    // TODO: uncomment when endpoint is added
-    // this.http.post<any>(`${environment.apiUrl}/api/auth/reset-password`, data);
-    this.router.navigate(['./login']);
+  public resetPassword(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/api/auth/reset-password`, data);
+  }
+
+  public activateAccount(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/api/auth/activate`, data);
   }
 }

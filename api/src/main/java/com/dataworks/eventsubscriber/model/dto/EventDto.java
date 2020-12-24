@@ -22,7 +22,6 @@ public class EventDto {
     private String title;
     @NotNull
     private String description;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
     private Date date;
     @NotNull
@@ -31,6 +30,6 @@ public class EventDto {
     @NotNull
     @Min(0)
     private double euroAmount;
-    private MultipartFile image;
+    @NotNull
     private String imageUrl;
 }
