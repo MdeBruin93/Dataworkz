@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ class EventControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
     void createEventWithNotFoundUser_NotFound() throws Exception {
         //given
         var eventDto = new EventDto();
@@ -98,6 +100,7 @@ class EventControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
     void updateInvalidEvent_BadRequest() throws Exception {
         //given
         var id = 1;
@@ -115,6 +118,7 @@ class EventControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
     void updateEventWithNotFoundUser_NotFound() throws Exception {
         //given
         var id = 1;
@@ -140,6 +144,7 @@ class EventControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
     void updateEventWithNotFoundEvent_NotFound() throws Exception {
         //given
         var id = 1;
@@ -165,6 +170,7 @@ class EventControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
     void updateEvent_Update() throws Exception {
         //given
         var id = 1;

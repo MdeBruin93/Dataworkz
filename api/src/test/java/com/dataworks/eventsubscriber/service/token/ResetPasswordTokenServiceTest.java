@@ -180,6 +180,7 @@ class ResetPasswordTokenServiceTest {
 
         //when
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        when(tokenDto.getToken()).thenReturn("abcde");
         when(userTokenRepository.save(any(UserToken.class))).thenReturn(userToken);
         when(emailProvider.setEmail(anyString())).thenReturn(emailProvider);
         when(emailProvider.setSubject(anyString())).thenReturn(emailProvider);
