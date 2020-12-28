@@ -9,7 +9,6 @@ import com.dataworks.eventsubscriber.model.dto.TokenDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.model.dto.UserTokenDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
-import com.dataworks.eventsubscriber.service.UserTokenService;
 import com.dataworks.eventsubscriber.service.token.ActivateAccountTokenService;
 import com.dataworks.eventsubscriber.service.token.ResetPasswordTokenService;
 import org.junit.jupiter.api.Test;
@@ -17,8 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -46,8 +43,6 @@ class WebAuthServiceTest {
     UserMapper userMapper;
     @Mock
     PasswordEncoder passwordEncoder;
-    @Mock
-    UserTokenService userTokenService;
     @Mock
     ResetPasswordTokenService resetPasswordTokenService;
     @Mock
