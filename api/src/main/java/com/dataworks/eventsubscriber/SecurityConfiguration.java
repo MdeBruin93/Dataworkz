@@ -3,7 +3,10 @@ package com.dataworks.eventsubscriber;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -29,9 +32,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers("/test/user").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/test/admin").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/auth/my").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/auth/forgot-password").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/auth/reset-password").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/events").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/events").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/events/{id}").hasAnyRole("USER", "ADMIN")
 //                .antMatchers("/post/create").authenticated()
                 .and()
                 .httpBasic();
@@ -46,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    DaoAuthenticationProvider authenticationProvider() {
+    public DaoAuthenticationProvider authenticationProvider() {
         var daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         daoAuthenticationProvider.setUserDetailsService(this.webAuthDetailService);

@@ -1,11 +1,13 @@
 package com.dataworks.eventsubscriber.model.dao;
 
+import com.dataworks.eventsubscriber.enums.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,4 +26,19 @@ public class User extends BaseDao {
     private boolean emailVerified;
     @NotNull
     private String role;
+    @OneToMany(mappedBy = "user")
+    private List<Event> events;
+    @ManyToMany
+    @JoinTable(
+            name = "participant",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
+    private List<Event> subscribedEvents;
+    @OneToMany(mappedBy = "user")
+    private List<UserToken> tokens;
+
+    public boolean isAdmin() {
+        return this.getRole()
+                .equals(Role.ROLE_ADMIN.toString());
+    }
 }

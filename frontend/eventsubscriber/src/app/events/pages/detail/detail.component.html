@@ -1,0 +1,23 @@
+<div class="event-detail">
+  <div class="event-detail-container">
+    <mat-card *ngIf="event">
+      <img [src]="sanitize(event.imageUrl)" alt="">
+
+      <mat-card-title>
+        {{event.title}}
+      </mat-card-title>
+    
+      <mat-card-content>
+        {{event.description}}
+      </mat-card-content>
+    
+      <mat-card-footer>
+        <span><strong>Maximum number of participants:</strong> {{event.maxAmountOfAttendees}}</span><br>
+        <span><strong>Costs of participation:</strong> €{{event.euroAmount}}</span><br>
+        <button mat-raised-button color="primary" [routerLink]="['/events','edit', event.id]">Edit</button>
+        <button mat-raised-button color="primary" (click)="subscribeToEvent(event)">Subscribe</button>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+</div>
+
