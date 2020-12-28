@@ -21,7 +21,7 @@
           <span><strong>Costs of participation:</strong> €{{event.euroAmount}}</span><br>
           <button type="button" mat-raised-button color="primary" [routerLink]="['edit', event.id]">Edit</button>
           <button type="button" mat-raised-button color="primary" (click)="subscribeToEvent(event.id, $event)">Subscribe</button>
-          <button type="button" mat-raised-button color="primary" (click)="deleteEvent(event.id)">Delete</button>
+<!--          <button type="button" mat-raised-button color="primary" (click)="deleteEvent(event.id)">Delete</button>-->
         </mat-card-footer>
       </mat-card>
     </mat-grid-tile>
@@ -31,11 +31,11 @@
       <mat-grid-tile *ngFor="let event of eventsByUser">
         <mat-card (click)="navigateToDetail(event)">
           <img [src]="sanitize(event.imageUrl)" alt="">
-  
+
           <mat-card-title>
             {{event.title}}
           </mat-card-title>
-  
+
           <mat-card-content>
             {{event.description}}
           </mat-card-content>
