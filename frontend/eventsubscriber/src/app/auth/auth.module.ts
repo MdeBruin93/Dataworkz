@@ -22,13 +22,15 @@ import {
   ErrorHandlingInterceptor
 } from './interceptors';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegisterComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    ActivateAccountComponent
   ],
   imports: [
     CommonModule,

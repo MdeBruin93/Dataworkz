@@ -27,21 +27,12 @@ public class EventImplService implements EventService {
     private final EventMapper eventMapper;
     private final UserMapper userMapper;
     private final LocalStorageService localStorageService;
-    @Value("${spring.host}")
-    private String host;
 
     @Override
     public EventDto store(EventDto eventDto) {
         var loggedInUser = authService.myDaoOrFail();
-        var eventHasImage = eventDto.getImage() != null && !eventDto.getImage().isEmpty();
-
         var mappedEvent = eventMapper.mapToEventSource(eventDto);
         mappedEvent.setUser(loggedInUser);
-
-        if (eventHasImage) {
-            var image = localStorageService.store(eventDto.getImage());
-            mappedEvent.setImageUrl(host + "/" + image);
-        }
 
         var savedEvent = eventRepository.save(mappedEvent);
 
@@ -51,7 +42,6 @@ public class EventImplService implements EventService {
     @Override
     public EventDto update(int id, EventDto eventDto) {
         User loggedInUser = authService.myDaoOrFail();
-        var eventHasImage = eventDto.getImage() != null && !eventDto.getImage().isEmpty();
         Optional<Event> eventFromRepo = loggedInUser.isAdmin() ?
                 eventRepository.findById(id) :
                 eventRepository.findByIdAndUser_Id(id, loggedInUser.getId());
@@ -66,11 +56,7 @@ public class EventImplService implements EventService {
         ev.setEuroAmount(eventDto.getEuroAmount());
         ev.setMaxAmountOfAttendees(eventDto.getMaxAmountOfAttendees());
         ev.setTitle(eventDto.getTitle());
-
-        if (eventHasImage) {
-            var image = localStorageService.store(eventDto.getImage());
-            ev.setImageUrl(host + "/" + image);
-        }
+        ev.setImageUrl(eventDto.getImageUrl());
 
         return eventMapper.mapToEventDestination(eventRepository.save(ev));
     }

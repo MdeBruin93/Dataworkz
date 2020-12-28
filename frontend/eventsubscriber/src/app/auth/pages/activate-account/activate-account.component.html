@@ -1,0 +1,10 @@
+<ng-container *ngIf="activationSuccessfull">
+    <h3 >Your account is successfully activated.</h3>
+    <p><a [routerLink]="['/login']">Login</a></p>
+</ng-container>
+
+<ng-container *ngIf="!activationSuccessfull">
+    <h3>Something went wrong!</h3>
+    <p>Maybe your account is already activated.</p>
+    <p><a [routerLink]="['/login']">Login</a></p>
+</ng-container>

@@ -1,7 +1,7 @@
 package com.dataworks.eventsubscriber.service;
 
 import com.dataworks.eventsubscriber.model.DecodedTokenModel;
-import com.dataworks.eventsubscriber.model.dao.TokenType;
+import com.dataworks.eventsubscriber.enums.TokenType;
 
 import java.util.Base64;
 
