@@ -15,5 +15,8 @@ import java.util.List;
 public class WishlistDto extends BaseDto {
     @NotNull
     private String name;
+
+    private List<Integer> eventIds;
+
     private List<EventDto> events;
 }
