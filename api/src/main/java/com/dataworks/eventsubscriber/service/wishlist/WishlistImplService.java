@@ -41,9 +41,10 @@ public class WishlistImplService implements WishlistService {
     public WishlistDto store(WishlistDto wishlistDto) {
         var loggedInUser = authService.myDaoOrFail();
 
-        var mappedWishlist = wishListMapper.mapToEventSource(wishlistDto);
-        mappedWishlist.setUser(loggedInUser);
-        var savedWishlist = wishlistRepository.save(mappedWishlist);
+        var wishlist = wishListMapper.mapToEventSource(wishlistDto);
+        wishlist.setUser(loggedInUser);
+        addEventsToWishlist(wishlist, wishlistDto.getEventIds());
+        var savedWishlist = wishlistRepository.save(wishlist);
 
         return wishListMapper.mapToEventDestination(savedWishlist);
     }
@@ -54,11 +55,7 @@ public class WishlistImplService implements WishlistService {
         wishlist.setName(wishlistDto.getName());
 
         wishlist.getEvents().clear();
-
-        for (var eventId : wishlistDto.getEventIds()) {
-            var event = eventRepository.findById(eventId).orElseThrow(EventNotFoundException::new);
-            wishlist.getEvents().add(event);
-        }
+        addEventsToWishlist(wishlist, wishlistDto.getEventIds());
         wishlistRepository.save(wishlist);
 
         return wishListMapper.mapToEventDestination(wishlistRepository.save(wishlist));
@@ -69,9 +66,17 @@ public class WishlistImplService implements WishlistService {
         var wishlist = wishlistRepository.findById(id).orElseThrow(WishlistNotFoundException::new);
         var loggedInUser = authService.myDao();
 
-        if (!wishlist.getUser().getId().equals(loggedInUser.getId())) {
+        var isOwner = wishlist.getUser().getId().equals(loggedInUser.getId());
+        if (!isOwner && !loggedInUser.isAdmin()) {
             throw new WishlistNotFoundException();
         }
         wishlistRepository.deleteById(id);
+    }
+
+    private void addEventsToWishlist(Wishlist wishlist, List<Integer> eventIds){
+        for (var eventId : eventIds) {
+            var event = eventRepository.findById(eventId).orElseThrow(EventNotFoundException::new);
+            wishlist.getEvents().add(event);
+        }
     }
 }
