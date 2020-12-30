@@ -39,6 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/events").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/events").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.PUT, "/api/events/{id}").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/storage/upload").authenticated()
 //                .antMatchers("/post/create").authenticated()
                 .and()
                 .httpBasic();
