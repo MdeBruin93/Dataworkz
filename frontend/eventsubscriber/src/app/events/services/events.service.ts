@@ -54,12 +54,20 @@ export class EventsService {
     return this.http.get<IEventResponse[]>(`${environment.apiUrl}/api/events/`);
   }
 
+  public findByUser(): Observable<IEvent[]> {
+    return this.http.get<IEvent[]>(`${environment.apiUrl}/api/events/findbyuser`);
+  }
+
   public findById(id: number): Observable<IEventResponse> {
     return this.http.get<IEventResponse>(`${environment.apiUrl}/api/events/${id}`);
   }
 
   public subscribe(id: number): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/api/events/${id}/subscribe`, {});
+  }
+
+  public delete(id: number): Observable<any> {
+    return this.http.delete<any>(`${environment.apiUrl}/api/events/${id}`, {});
   }
 
   public sanitize(url:string): SafeHtml{

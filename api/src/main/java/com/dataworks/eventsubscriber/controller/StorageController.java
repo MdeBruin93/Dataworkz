@@ -1,11 +1,7 @@
 package com.dataworks.eventsubscriber.controller;
 
-import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.storage.StorageException;
-import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
-import com.dataworks.eventsubscriber.model.dto.FileDto;
-import com.dataworks.eventsubscriber.service.event.EventService;
 import com.dataworks.eventsubscriber.service.storage.StorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
