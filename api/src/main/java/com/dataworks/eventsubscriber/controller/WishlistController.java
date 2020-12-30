@@ -1,8 +1,8 @@
 package com.dataworks.eventsubscriber.controller;
 
+import com.dataworks.eventsubscriber.exception.WishlistNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
-import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.model.dto.WishlistDto;
 import com.dataworks.eventsubscriber.service.wishlist.WishlistService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +19,16 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class WishlistController {
     private final WishlistService wishlistService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity findById(@PathVariable int id) {
+        try {
+            var wishlist = wishlistService.findByIdAndUserId(id);
+            return new ResponseEntity(wishlist, HttpStatus.OK);
+        } catch (WishlistNotFoundException wishlistNotFoundException) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity store(@Valid @ModelAttribute WishlistDto wishlistDto, BindingResult bindingResult) {
@@ -49,7 +59,13 @@ public class WishlistController {
     }
 
     @GetMapping("/findbyuser")
-    public ResponseEntity findByUser(){
+    public ResponseEntity findByUser() {
         return new ResponseEntity(wishlistService.findByUserId(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable int id) {
+        wishlistService.delete(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

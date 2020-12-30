@@ -1,6 +1,7 @@
 package com.dataworks.eventsubscriber.service.wishlist;
 
 import com.dataworks.eventsubscriber.exception.NotFoundException;
+import com.dataworks.eventsubscriber.exception.WishlistNotFoundException;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.WishListMapper;
 import com.dataworks.eventsubscriber.model.dao.Wishlist;
@@ -27,6 +28,13 @@ public class WishlistImplService implements WishlistService {
         var loggedInUser = authService.myDao();
         var wishlists = wishlistRepository.findByUserId(loggedInUser.getId());
         return wishListMapper.mapToEventDestinationCollection(wishlists);
+    }
+
+    @Override
+    public WishlistDto findByIdAndUserId(int id) {
+        var loggedInUser = authService.myDao();
+        var wishlist = wishlistRepository.findByIdAndUserId(id, loggedInUser.getId()).orElseThrow(WishlistNotFoundException::new);
+        return wishListMapper.mapToEventDestination(wishlist);
     }
 
     @Override
@@ -59,5 +67,16 @@ public class WishlistImplService implements WishlistService {
         wishlistRepository.save(wishlist);
 
         return wishListMapper.mapToEventDestination(wishlistRepository.save(wishlist));
+    }
+
+    @Override
+    public void delete(int id) {
+        var wishlist = wishlistRepository.findById(id).orElseThrow(WishlistNotFoundException::new);
+        var loggedInUser = authService.myDao();
+
+        if (!wishlist.getUser().getId().equals(loggedInUser.getId()) || !loggedInUser.isAdmin()) {
+            throw new WishlistNotFoundException();
+        }
+        wishlistRepository.deleteById(id);
     }
 }
