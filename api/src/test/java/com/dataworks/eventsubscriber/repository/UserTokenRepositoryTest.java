@@ -1,4 +1,4 @@
-package com.dataworks.eventsubscriber.repositories;
+package com.dataworks.eventsubscriber.repository;
 
 import com.dataworks.eventsubscriber.repository.UserTokenRepository;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class UserTokenRepositoryTests {
+public class UserTokenRepositoryTest {
     @MockBean
     Authentication authentication;
     @Autowired
