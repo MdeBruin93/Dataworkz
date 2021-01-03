@@ -1,0 +1,46 @@
+<mat-list>
+    <div mat-subheader>
+        Wishlists
+        <mat-icon mat-list-icon class="wishlists__add-button">plus</mat-icon>
+    </div>
+    <ng-container *ngFor="let wishlist of wishlists; index as i">
+        <mat-list-item (click)="toggle[i] = !toggle[i]">
+            <mat-icon mat-list-icon>article</mat-icon>
+            <div mat-line>{{wishlist.name}}</div>
+            <div mat-line> {{wishlist.lastModified | date}} </div>
+            <span>
+                <mat-icon *ngIf="!toggle[i]">expand_more</mat-icon>
+                <mat-icon *ngIf="toggle[i]">expand_less</mat-icon>
+            </span>
+            <span>
+                <mat-icon *ngIf="!toggle[i]" (click)="deleteWishlist(wishlist.id)">close</mat-icon>
+            </span>
+            <button mat-button [mat-dialog-close]="wishlist" cdkFocusInitial>Add</button>
+        </mat-list-item>
+        <div [hidden]="!toggle[i]" style="margin-left: 25px;">
+            <mat-list>
+                <mat-list-item *ngFor="let event of wishlist.events" >
+                    <mat-icon mat-list-icon>event</mat-icon>
+                    <div mat-line>{{event.title}}</div>
+                </mat-list-item>
+            </mat-list>
+        </div>
+    </ng-container>
+
+</mat-list>
+
+<form [formGroup]="wishlistCreateForm" (ngSubmit)="onSubmit()">
+    <h4>Add wishlist</h4>
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" required>
+        <mat-error *ngIf="wishlistCreateForm.controls.name.errors && wishlistCreateForm.controls.name.errors.required">Name is required</mat-error>
+    </mat-form-field>
+    <br>
+    <br>
+
+    <mat-card-actions>
+        <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!wishlistCreateForm.valid">CREATE</button>
+    </mat-card-actions>
+</form>
+  

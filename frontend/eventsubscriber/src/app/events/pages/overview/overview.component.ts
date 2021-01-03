@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventsService } from '../../services';
 import { IEventResponse } from '../../models/event.model';
+import { MatDialog } from '@angular/material/dialog';
+import { WishlistComponent } from 'src/app/wishlists';
+import { WishlistService } from '../../../wishlists/services';
 
 @Component({
   selector: 'app-overview',
@@ -10,10 +13,13 @@ import { IEventResponse } from '../../models/event.model';
 })
 export class OverviewComponent implements OnInit {
   public events: any;
+  public clickedEventId: string = '';
 
   constructor(
     private eventsService: EventsService,
-    private router: Router
+    private wishlistService: WishlistService,
+    private router: Router,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -42,6 +48,47 @@ export class OverviewComponent implements OnInit {
       error: error => {
         console.error('There was an error!', error);
       }
+    });
+  }
+
+  getFormData(object: any) {
+    const formData = new FormData();
+    Object.keys(object).forEach(key => formData.append(key, object[key]));
+    Object.keys(object).forEach(key => console.log(object[key]));
+    formData.append('test','test')
+    console.log(formData);
+    console.log(formData.getAll('name'));
+    return formData;
+  }
+
+  openWishlistPicker(eventId: number): void {
+    const dialogRef = this.dialog.open(WishlistComponent, {
+      width: '750px'
+    });
+
+    dialogRef.afterClosed().subscribe(wishlist => {
+      console.log('The dialog was closed');
+      console.log(`Dialog result: ${wishlist}`);
+      let currentEventIds = wishlist.events.map((event:any) => { return event.id });
+      currentEventIds.push(eventId);
+      currentEventIds = [...new Set(currentEventIds)];
+
+      const object = {
+        name: wishlist.name,
+        eventIds: currentEventIds
+      }
+
+      const fromData = this.getFormData(object);
+      console.log(currentEventIds);
+
+      this.wishlistService.update(wishlist.id, fromData).subscribe({
+        next: _response => {
+          console.log(_response);
+        },
+        error: error => {
+          console.error('There was an error!', error);
+        }
+      });
     });
   }
 

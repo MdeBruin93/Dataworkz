@@ -2,10 +2,10 @@
   <button mat-raised-button routerLink="create" color="primary">Add</button>
   <mat-grid-list cols="4" rowHeight="1:1">
     <mat-grid-tile *ngFor="let event of events">
-      <mat-card (click)="navigateToDetail(event)">
+      <mat-card>
         <img [src]="sanitize(event.imageUrl)" alt="">
 
-        <mat-card-title>
+        <mat-card-title (click)="navigateToDetail(event)">
           {{event.title}}
         </mat-card-title>
 
@@ -18,6 +18,7 @@
           <span><strong>Costs of participation:</strong> €{{event.euroAmount}}</span><br>
           <button type="button" mat-raised-button color="primary" [routerLink]="['edit', event.id]">Edit</button>
           <button type="button" mat-raised-button color="primary" (click)="subscribeToEvent(event.id, $event)">Subscribe</button>
+          <button type="button" mat-raised-button color="primary" (click)="openWishlistPicker(event.id)">Add to wishlist</button>
         </mat-card-footer>
       </mat-card>
     </mat-grid-tile>

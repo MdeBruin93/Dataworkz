@@ -18,6 +18,7 @@ import {
 import {
   DashboardComponent
 } from './dashboard';
+import { WishlistComponent } from './wishlists';
 
 
 const routes: Routes = [
@@ -61,6 +62,10 @@ const routes: Routes = [
       {
         path: 'events',
         loadChildren: () => import('./events/events.module').then((m) => m.EventsModule),
+      },
+      {
+        path: 'wishlists',
+        loadChildren: () => import('./wishlists/wishlists.module').then((m) => m.WishlistsModule),
       },
     ]
   }
