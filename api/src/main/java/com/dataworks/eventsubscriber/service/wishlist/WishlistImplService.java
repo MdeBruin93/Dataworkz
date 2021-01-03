@@ -74,6 +74,9 @@ public class WishlistImplService implements WishlistService {
     }
 
     private void addEventsToWishlist(Wishlist wishlist, List<Integer> eventIds){
+        if (eventIds == null) {
+            return;
+        }
         for (var eventId : eventIds) {
             var event = eventRepository.findById(eventId).orElseThrow(EventNotFoundException::new);
             wishlist.getEvents().add(event);
