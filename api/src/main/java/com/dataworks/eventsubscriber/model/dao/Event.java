@@ -34,6 +34,12 @@ public class Event extends BaseDao {
     private User user;
     @ManyToMany
     @JoinTable(
+            name = "wishlist_event",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "wishlist_id"))
+    private List<Wishlist> wishlists;
+    @ManyToMany
+    @JoinTable(
             name = "participant",
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))

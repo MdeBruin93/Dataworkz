@@ -28,6 +28,8 @@ public class User extends BaseDao {
     private String role;
     @OneToMany(mappedBy = "user")
     private List<Event> events;
+    @OneToMany(mappedBy = "user")
+    private List<Wishlist> wishlists;
     @ManyToMany
     @JoinTable(
             name = "participant",

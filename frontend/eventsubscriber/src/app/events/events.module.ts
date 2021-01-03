@@ -10,6 +10,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BasicAuthInterceptor, ErrorHandlingInterceptor } from '@auth/interceptors';
 import { DetailComponent } from './pages/detail/detail.component';
 import { OverviewComponent } from './pages/overview/overview.component';
+import { WishlistsModule } from '../wishlists/wishlists.module';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { OverviewComponent } from './pages/overview/overview.component';
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    HttpClientModule
+    HttpClientModule,
+    WishlistsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
