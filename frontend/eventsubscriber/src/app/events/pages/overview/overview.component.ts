@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { EventsService } from '../../services';
+import { EventsService, UserService } from '../../services';
 import { IEventResponse } from '../../models/event.model';
 import { MatDialog } from '@angular/material/dialog';
 import { WishlistComponent } from 'src/app/wishlists';
@@ -14,10 +14,13 @@ import { WishlistService } from '../../../wishlists/services';
 export class OverviewComponent implements OnInit {
   public events: any;
   public clickedEventId: string = '';
+  public eventsByUser: any;
+  public showSubscribedToEvents: boolean = false;
 
   constructor(
     private eventsService: EventsService,
     private wishlistService: WishlistService,
+    private userService: UserService,
     private router: Router,
     public dialog: MatDialog
   ) { }
@@ -29,6 +32,16 @@ export class OverviewComponent implements OnInit {
         this.events = _response;
       },
       error: error => {
+        console.error('There was an error!', error);
+      }
+    });
+
+    this.userService.subscribedToEvents().subscribe({
+      next: (_response: any) => {
+        console.log(_response);
+        this.eventsByUser = _response;
+      },
+      error: (error: any) => {
         console.error('There was an error!', error);
       }
     });
@@ -89,6 +102,17 @@ export class OverviewComponent implements OnInit {
           console.error('There was an error!', error);
         }
       });
+    });
+  }
+
+  deleteEvent(id: number) {
+    this.eventsService.delete(id).subscribe({
+      next: (_response: any) => {
+        console.log(_response);
+      },
+      error: (error: any) => {
+        console.error('There was an error!', error);
+      }
     });
   }
 

@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { EventsRoutingModule } from './events-routing.module';
-import { CreateComponent } from './pages/create/create.component';
-import { EditComponent } from './pages/edit/edit.component';
+import { FormComponent } from './pages/form/form.component';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -16,8 +15,7 @@ import { WishlistsModule } from '../wishlists/wishlists.module';
 
 @NgModule({
   declarations: [
-    CreateComponent,
-    EditComponent,
+    FormComponent,
     DetailComponent,
     OverviewComponent
   ],

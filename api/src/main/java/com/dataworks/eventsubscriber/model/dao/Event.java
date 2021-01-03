@@ -28,6 +28,7 @@ public class Event extends BaseDao {
     @NotNull
     @Min(0)
     private double euroAmount;
+    @NotNull
     private String imageUrl;
     @ManyToOne
     private User user;

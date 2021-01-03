@@ -3,6 +3,7 @@ package com.dataworks.eventsubscriber;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -31,12 +32,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/auth/register").permitAll()
-                .antMatchers("/events/store").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/events/{id}/update").hasAnyRole("USER", "ADMIN")
-                .antMatchers("auth/my").authenticated()
-                .antMatchers("/test/user").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/test/admin").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/auth/my").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/auth/forgot-password").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/auth/reset-password").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/events").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/events").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/events/{id}").hasAnyRole("USER", "ADMIN")
 //                .antMatchers("/post/create").authenticated()
                 .and()
                 .httpBasic();

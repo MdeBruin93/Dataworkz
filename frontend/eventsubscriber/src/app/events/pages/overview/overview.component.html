@@ -1,6 +1,9 @@
 <div class="events-overview">
-  <button mat-raised-button routerLink="create" color="primary">Add</button>
-  <mat-grid-list cols="4" rowHeight="1:1">
+  <button mat-raised-button (click)="showSubscribedToEvents = !showSubscribedToEvents" color="primary">
+    {{ !showSubscribedToEvents ?  'Subscribed to events' : 'All events' }}
+  </button>
+  <button mat-raised-button routerLink="create" color="secondary">Add event</button>
+  <mat-grid-list *ngIf="!showSubscribedToEvents; else subscribedToEvents" cols="4" rowHeight="1:1">
     <mat-grid-tile *ngFor="let event of events">
       <mat-card>
         <img [src]="sanitize(event.imageUrl)" alt="">
@@ -19,8 +22,26 @@
           <button type="button" mat-raised-button color="primary" [routerLink]="['edit', event.id]">Edit</button>
           <button type="button" mat-raised-button color="primary" (click)="subscribeToEvent(event.id, $event)">Subscribe</button>
           <button type="button" mat-raised-button color="primary" (click)="openWishlistPicker(event.id)">Add to wishlist</button>
+<!--          <button type="button" mat-raised-button color="primary" (click)="deleteEvent(event.id)">Delete</button>-->
         </mat-card-footer>
       </mat-card>
     </mat-grid-tile>
   </mat-grid-list>
+  <ng-template #subscribedToEvents>
+    <mat-grid-list cols="4" rowHeight="1:1">
+      <mat-grid-tile *ngFor="let event of eventsByUser">
+        <mat-card (click)="navigateToDetail(event)">
+          <img [src]="sanitize(event.imageUrl)" alt="">
+
+          <mat-card-title>
+            {{event.title}}
+          </mat-card-title>
+
+          <mat-card-content>
+            {{event.description}}
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </ng-template>
 </div>
