@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventsService, UserService } from '../../services';
 import { IEventResponse } from '../../models/event.model';
+import { Store, Select } from '@ngxs/store';
+import { AuthState } from '@core/store';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { WishlistComponent } from 'src/app/wishlists';
 import { WishlistService } from '../../../wishlists/services';
@@ -12,6 +16,9 @@ import { WishlistService } from '../../../wishlists/services';
   styleUrls: ['./overview.component.scss']
 })
 export class OverviewComponent implements OnInit {
+  @Select(AuthState.isLoggedIn)
+  public isLoggedIn$: Observable<boolean>;
+
   public events: any;
   public clickedEventId: string = '';
   public eventsByUser: any;
@@ -22,13 +29,13 @@ export class OverviewComponent implements OnInit {
     private wishlistService: WishlistService,
     private userService: UserService,
     private router: Router,
+    private store: Store
     public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     this.eventsService.getAll().subscribe({
       next: _response => {
-        console.log(_response);
         this.events = _response;
       },
       error: error => {
@@ -36,14 +43,18 @@ export class OverviewComponent implements OnInit {
       }
     });
 
-    this.userService.subscribedToEvents().subscribe({
-      next: (_response: any) => {
-        console.log(_response);
+    this.isLoggedIn$.pipe(
+      switchMap((val: boolean) => {
+        if (val) {
+          return this.userService.subscribedToEvents();
+        }
+        throw new Error('Is not authenticated');
+      })
+    ).subscribe({
+      next: _response => {
         this.eventsByUser = _response;
       },
-      error: (error: any) => {
-        console.error('There was an error!', error);
-      }
+      error: error => {}
     });
   }
 

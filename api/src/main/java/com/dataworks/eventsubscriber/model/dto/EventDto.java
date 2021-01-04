@@ -1,5 +1,7 @@
 package com.dataworks.eventsubscriber.model.dto;
 
+import com.dataworks.eventsubscriber.model.dao.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,4 +34,6 @@ public class EventDto {
     private double euroAmount;
     @NotNull
     private String imageUrl;
+    @JsonIgnoreProperties("events")
+    private UserDto user;
 }
