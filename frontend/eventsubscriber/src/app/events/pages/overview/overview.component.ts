@@ -29,7 +29,7 @@ export class OverviewComponent implements OnInit {
     private wishlistService: WishlistService,
     private userService: UserService,
     private router: Router,
-    private store: Store
+    private store: Store,
     public dialog: MatDialog
   ) { }
 

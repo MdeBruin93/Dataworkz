@@ -25,7 +25,7 @@
         <mat-icon>event</mat-icon>
         <span class="toolbar-item-text">Events</span>
       </div>
-      <div class="icon-text-wrapper" *ngIf="isLoggedIn$ | async">
+      <div class="icon-text-wrapper" *ngIf="isLoggedIn$ | async" [routerLink]="['/wishlists']">
         <mat-icon>favorite</mat-icon>
         <span class="toolbar-item-text">Wishlist</span>
       </div>

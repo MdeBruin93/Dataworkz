@@ -28,7 +28,7 @@ import { WishlistsModule } from '../wishlists/wishlists.module';
     ReactiveFormsModule,
     RouterModule,
     HttpClientModule,
-    SharedModule
+    SharedModule,
     WishlistsModule
   ],
   providers: [
