@@ -19,5 +19,14 @@
 }
 
 form {
-    margin-top: 100px;
+    margin-top: 50px;
+}
+
+mat-icon {
+    cursor: pointer;
+}
+
+.mat-form-field-infix {
+    border-top: 0;
+    margin-right: 10px;
 }

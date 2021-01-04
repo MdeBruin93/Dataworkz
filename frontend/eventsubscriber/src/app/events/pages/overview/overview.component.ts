@@ -67,21 +67,15 @@ export class OverviewComponent implements OnInit {
   getFormData(object: any) {
     const formData = new FormData();
     Object.keys(object).forEach(key => formData.append(key, object[key]));
-    Object.keys(object).forEach(key => console.log(object[key]));
-    formData.append('test','test')
-    console.log(formData);
-    console.log(formData.getAll('name'));
     return formData;
   }
 
   openWishlistPicker(eventId: number): void {
     const dialogRef = this.dialog.open(WishlistComponent, {
-      width: '750px'
+      width: '1300px'
     });
 
     dialogRef.afterClosed().subscribe(wishlist => {
-      console.log('The dialog was closed');
-      console.log(`Dialog result: ${wishlist}`);
       let currentEventIds = wishlist.events.map((event:any) => { return event.id });
       currentEventIds.push(eventId);
       currentEventIds = [...new Set(currentEventIds)];
@@ -92,7 +86,6 @@ export class OverviewComponent implements OnInit {
       }
 
       const fromData = this.getFormData(object);
-      console.log(currentEventIds);
 
       this.wishlistService.update(wishlist.id, fromData).subscribe({
         next: _response => {
