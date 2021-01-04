@@ -1,7 +1,6 @@
 .event-detail {
   height: 100%;
   width: 100%;
-  background-color: rgb(241, 241, 241);
 
   .event-detail-container {
     
@@ -9,8 +8,15 @@
     align-content: center;
   
     mat-card {
-      width: 60%;
+      width: 45%;
       margin: auto;
+      padding-bottom: 40px;
+
+      img {
+        height: 50%;
+        width: 100%;
+        object-fit: cover;
+      }
   
       mat-card-title {
         margin-top: 10px;

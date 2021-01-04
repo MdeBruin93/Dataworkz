@@ -1,5 +1,7 @@
 package com.dataworks.eventsubscriber.model.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +33,7 @@ public class Event extends BaseDao {
     @NotNull
     private String imageUrl;
     @ManyToOne
+    @JsonIgnoreProperties("events")
     private User user;
     @ManyToMany
     @JoinTable(

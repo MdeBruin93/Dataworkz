@@ -1,8 +1,7 @@
 <div class="events-overview">
-  <button mat-raised-button (click)="showSubscribedToEvents = !showSubscribedToEvents" color="primary">
+  <button mat-raised-button (click)="showSubscribedToEvents = !showSubscribedToEvents" color="primary" *ngIf="isLoggedIn$ | async">
     {{ !showSubscribedToEvents ?  'Subscribed to events' : 'All events' }}
   </button>
-  <button mat-raised-button routerLink="create" color="secondary">Add event</button>
   <mat-grid-list *ngIf="!showSubscribedToEvents; else subscribedToEvents" cols="4" rowHeight="1:1">
     <mat-grid-tile *ngFor="let event of events">
       <mat-card>
@@ -19,10 +18,13 @@
         <mat-card-footer>
           <span><strong>Maximum number of participants:</strong> {{event.maxAmountOfAttendees}}</span><br>
           <span><strong>Costs of participation:</strong> €{{event.euroAmount}}</span><br>
-          <button type="button" mat-raised-button color="primary" [routerLink]="['edit', event.id]">Edit</button>
-          <button type="button" mat-raised-button color="primary" (click)="subscribeToEvent(event.id, $event)">Subscribe</button>
-          <button type="button" mat-raised-button color="primary" (click)="openWishlistPicker(event.id)">Add to wishlist</button>
-<!--          <button type="button" mat-raised-button color="primary" (click)="deleteEvent(event.id)">Delete</button>-->
+          <ng-container *ngIf="isLoggedIn$ | async">
+            <button type="button" mat-raised-button color="primary" [routerLink]="['edit', event.id]" *appIsAllowedForOrganizer="event.user.id">Edit</button>
+            <button type="button" mat-raised-button color="primary" (click)="subscribeToEvent(event.id, $event)" *appIsNotAllowedForOrganizer="event.user.id">Subscribe</button>
+            <button type="button" mat-raised-button color="primary" (click)="deleteEvent(event.id)" *appIsAllowedForOrganizer="event.user.id">Delete</button>
+			<button type="button" mat-raised-button color="primary" (click)="openWishlistPicker(event.id)" *ngIf="isLoggedIn$ | async">Add to wishlist</button>
+          </ng-container>
+          
         </mat-card-footer>
       </mat-card>
     </mat-grid-tile>
@@ -40,6 +42,16 @@
           <mat-card-content>
             {{event.description}}
           </mat-card-content>
+
+          <mat-card-footer>
+            <span><strong>Maximum number of participants:</strong> {{event.maxAmountOfAttendees}}</span><br>
+            <span><strong>Costs of participation:</strong> €{{event.euroAmount}}</span><br>
+            <ng-container *ngIf="isLoggedIn$ | async">
+              <button type="button" mat-raised-button color="primary" [routerLink]="['edit', event.id]" *appIsAllowedForOrganizer="event.user.id">Edit</button>
+              <button type="button" mat-raised-button color="primary" (click)="subscribeToEvent(event.id, $event)" *appIsNotAllowedForOrganizer="event.user.id">Subscribe</button>
+              <button type="button" mat-raised-button color="primary" (click)="deleteEvent(event.id)" *appIsAllowedForOrganizer="event.user.id">Delete</button>
+            </ng-container>
+          </mat-card-footer>
         </mat-card>
       </mat-grid-tile>
     </mat-grid-list>

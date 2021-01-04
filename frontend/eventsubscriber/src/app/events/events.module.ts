@@ -10,6 +10,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BasicAuthInterceptor, ErrorHandlingInterceptor } from '@auth/interceptors';
 import { DetailComponent } from './pages/detail/detail.component';
 import { OverviewComponent } from './pages/overview/overview.component';
+import { SharedModule } from '../shared';
 import { WishlistsModule } from '../wishlists/wishlists.module';
 
 
@@ -27,6 +28,7 @@ import { WishlistsModule } from '../wishlists/wishlists.module';
     ReactiveFormsModule,
     RouterModule,
     HttpClientModule,
+    SharedModule,
     WishlistsModule
   ],
   providers: [
