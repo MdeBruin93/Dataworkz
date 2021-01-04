@@ -112,6 +112,7 @@ export class OverviewComponent implements OnInit {
   deleteEvent(id: number) {
     this.eventsService.delete(id).subscribe({
       next: (_response: any) => {
+        this.ngOnInit();
         console.log(_response);
       },
       error: (error: any) => {
