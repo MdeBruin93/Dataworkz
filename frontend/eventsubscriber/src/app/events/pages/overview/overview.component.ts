@@ -1,7 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventsService, UserService } from '../../services';
 import { IEventResponse } from '../../models/event.model';
+import { Store, Select } from '@ngxs/store';
+import { AuthState } from '@core/store';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { WishlistComponent } from 'src/app/wishlists';
+import { WishlistService } from '../../../wishlists/services';
 
 @Component({
   selector: 'app-overview',
@@ -9,20 +16,26 @@ import { IEventResponse } from '../../models/event.model';
   styleUrls: ['./overview.component.scss']
 })
 export class OverviewComponent implements OnInit {
+  @Select(AuthState.isLoggedIn)
+  public isLoggedIn$: Observable<boolean>;
+
   public events: any;
+  public clickedEventId: string = '';
   public eventsByUser: any;
   public showSubscribedToEvents: boolean = false;
 
   constructor(
     private eventsService: EventsService,
+    private wishlistService: WishlistService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private store: Store,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     this.eventsService.getAll().subscribe({
       next: _response => {
-        console.log(_response);
         this.events = _response;
       },
       error: error => {
@@ -30,14 +43,18 @@ export class OverviewComponent implements OnInit {
       }
     });
 
-    this.userService.subscribedToEvents().subscribe({
+    this.isLoggedIn$.pipe(
+      switchMap((val: boolean) => {
+        if (val) {
+          return this.userService.subscribedToEvents();
+        }
+        throw new Error('Is not authenticated');
+      })
+    ).subscribe({
       next: _response => {
-        console.log(_response);
         this.eventsByUser = _response;
       },
-      error: error => {
-        console.error('There was an error!', error);
-      }
+      error: error => {}
     });
   }
 
@@ -58,12 +75,47 @@ export class OverviewComponent implements OnInit {
     });
   }
 
+  getFormData(object: any) {
+    const formData = new FormData();
+    Object.keys(object).forEach(key => formData.append(key, object[key]));
+    return formData;
+  }
+
+  openWishlistPicker(eventId: number): void {
+    const dialogRef = this.dialog.open(WishlistComponent, {
+      width: '1300px'
+    });
+
+    dialogRef.afterClosed().subscribe(wishlist => {
+      let currentEventIds = wishlist.events.map((event:any) => { return event.id });
+      currentEventIds.push(eventId);
+      currentEventIds = [...new Set(currentEventIds)];
+
+      const object = {
+        name: wishlist.name,
+        eventIds: currentEventIds
+      }
+
+      const fromData = this.getFormData(object);
+
+      this.wishlistService.update(wishlist.id, fromData).subscribe({
+        next: _response => {
+          console.log(_response);
+        },
+        error: error => {
+          console.error('There was an error!', error);
+        }
+      });
+    });
+  }
+
   deleteEvent(id: number) {
     this.eventsService.delete(id).subscribe({
-      next: _response => {
+      next: (_response: any) => {
+        this.ngOnInit();
         console.log(_response);
       },
-      error: error => {
+      error: (error: any) => {
         console.error('There was an error!', error);
       }
     });

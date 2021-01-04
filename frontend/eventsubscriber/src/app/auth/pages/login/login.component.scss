@@ -8,15 +8,6 @@
   min-width: 280px;
 }
 
-.mr-2 {
-  margin-right: 20px;
-}
-
-.forgot-password-link {
-  text-decoration: none;
-  color: black;
-
-  &:hover {
-    color: purple;
-  }
+.mat-card-actions {
+  margin-left: 0px;
 }
