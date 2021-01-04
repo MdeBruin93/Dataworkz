@@ -1,13 +1,12 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+    *ngIf="isLoggedIn$ | async">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item [routerLink]="['/dashboard']">Dashboard</a>
-      <a mat-list-item [routerLink]="['/events']">Events</a>
-      <a mat-list-item href="#" (click)="logout()">Logout</a>
+      <a mat-list-item [routerLink]="['/events/create']">Add event</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -16,11 +15,39 @@
         type="button"
         aria-label="Toggle sidenav"
         mat-icon-button
-        (click)="drawer.toggle()"
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>eventsubscriber</span>
+
+      <span class="logo">eventsubscriber</span>
+
+      <div class="icon-text-wrapper" [routerLink]="['/events']">
+        <mat-icon>event</mat-icon>
+        <span class="toolbar-item-text">Events</span>
+      </div>
+      <div class="icon-text-wrapper" *ngIf="isLoggedIn$ | async" [routerLink]="['/wishlists']">
+        <mat-icon>favorite</mat-icon>
+        <span class="toolbar-item-text">Wishlist</span>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="icon-text-wrapper" [routerLink]="['/login']" *ngIf="!(isLoggedIn$ | async)">
+        <mat-icon>login</mat-icon>
+        <span class="toolbar-item-text">Login</span>
+      </div>
+      <div class="icon-text-wrapper" *ngIf="isLoggedIn$ | async">
+        <mat-icon>account_box</mat-icon>
+        <span class="toolbar-item-text">{{(currentUser$ | async)?.firstName}} {{(currentUser$ | async)?.lastName}}</span>
+      </div>
+      <div class="icon-text-wrapper" (click)="logout()" *ngIf="isLoggedIn$ | async">
+        <mat-icon>logout</mat-icon>
+        <span class="toolbar-item-text">Logout</span>
+      </div>
+      <div class="icon-text-wrapper" [routerLink]="['/register']" *ngIf="!(isLoggedIn$ | async)">
+        <mat-icon>how_to_reg</mat-icon>
+        <span class="toolbar-item-text">Sign up</span>
+      </div>
     </mat-toolbar>
     <!-- Add Content Here -->
   </mat-sidenav-content>

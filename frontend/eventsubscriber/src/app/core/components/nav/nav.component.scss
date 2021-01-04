@@ -11,3 +11,29 @@
   top: 0;
   z-index: 1;
 }
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.logo {
+  margin-right: 5%;
+}
+
+.icon-text-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 20px;
+
+  .toolbar-item-text {
+    margin-left: 5px;
+    font-size: 14px;
+    font-weight: normal;
+  }
+
+  &:hover {
+    color: #0addff;
+    cursor: pointer;
+  }
+}

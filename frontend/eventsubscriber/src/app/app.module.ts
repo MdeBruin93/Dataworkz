@@ -7,6 +7,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { LayoutModule } from '@angular/cdk/layout';
 import { NgxsModule } from '@ngxs/store';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 
 import { MaterialModule } from './material/material.module';
 import { CoreModule } from './core/core.module';
@@ -37,6 +38,9 @@ import { EventsRoutingModule } from './events/events-routing.module';
     HttpClientModule,
     NgxsModule.forRoot(states, {
       developmentMode: !environment.production
+    }),
+    NgxsStoragePluginModule.forRoot({
+      key: ['auth.token', 'auth.currentUser']
     })
   ],
   providers: [],

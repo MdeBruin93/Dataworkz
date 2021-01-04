@@ -13,8 +13,7 @@ import {
 } from './pages';
 
 import {
-  AuthService,
-  StorageService
+  AuthService
 } from './services';
 
 import {
@@ -49,8 +48,7 @@ import { ActivateAccountComponent } from './pages/activate-account/activate-acco
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlingInterceptor, multi: true },
-    AuthService,
-    StorageService
+    AuthService
   ]
 })
 export class AuthModule { }
