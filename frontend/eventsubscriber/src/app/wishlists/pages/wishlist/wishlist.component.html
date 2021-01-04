@@ -4,24 +4,40 @@
         <mat-icon mat-list-icon class="wishlists__add-button">plus</mat-icon>
     </div>
     <ng-container *ngFor="let wishlist of wishlists; index as i">
-        <mat-list-item (click)="toggle[i] = !toggle[i]">
-            <mat-icon mat-list-icon>article</mat-icon>
-            <div mat-line>{{wishlist.name}}</div>
-            <div mat-line> {{wishlist.lastModified | date}} </div>
-            <span>
+        <mat-list-item>
+            <mat-icon mat-list-icon (click)="toggle[i] = !toggle[i]">article</mat-icon>
+            <div mat-line *ngIf="!edit[i]">{{wishlist.name}}</div>
+            <div *ngIf="edit[i]">
+                <form [formGroup]="wishlistEditForm" (ngSubmit)="onSubmitEditForm(wishlist)">
+                    <mat-form-field appearance="fill">
+                        <input matInput formControlName="name" placeholder="Wishlist name" required style="border-top: 0; margin-right: 10px;">
+                        <mat-error *ngIf="wishlistEditForm.controls.name.errors && wishlistEditForm.controls.name.errors.required">Name is required</mat-error>
+                    </mat-form-field>
+                
+                    <mat-card-actions>
+                        <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!wishlistEditForm.valid">Update</button>
+                    </mat-card-actions>
+                </form>
+            </div>
+            <div mat-line *ngIf="!edit[i]"> {{wishlist.lastModified | date}} </div>
+            <span *ngIf="wishlist.events.length" (click)="toggle[i] = !toggle[i]">
                 <mat-icon *ngIf="!toggle[i]">expand_more</mat-icon>
                 <mat-icon *ngIf="toggle[i]">expand_less</mat-icon>
             </span>
             <span>
-                <mat-icon *ngIf="!toggle[i]" (click)="deleteWishlist(wishlist.id)">close</mat-icon>
+                <mat-icon (click)="edit[i] = !edit[i]">edit</mat-icon>
+                <mat-icon (click)="deleteWishlist(wishlist.id)">close</mat-icon>
             </span>
             <button mat-button [mat-dialog-close]="wishlist" cdkFocusInitial>Add</button>
         </mat-list-item>
         <div [hidden]="!toggle[i]" style="margin-left: 25px;">
             <mat-list>
-                <mat-list-item *ngFor="let event of wishlist.events" >
-                    <mat-icon mat-list-icon>event</mat-icon>
+                <mat-list-item *ngFor="let event of wishlist.events">
+                    <mat-icon mat-list-icon [routerLink]="['/events', event.id]">event</mat-icon>
                     <div mat-line>{{event.title}}</div>
+                    <span>
+                        <mat-icon (click)="deleteEventFromWishlist(wishlist, event.id)">close</mat-icon>
+                    </span>
                 </mat-list-item>
             </mat-list>
         </div>

@@ -11,8 +11,10 @@ import { WishlistService } from '../../services';
 })
 export class WishlistComponent implements OnInit {
   wishlistCreateForm: FormGroup = Wishlist.getFormGroup();
+  wishlistEditForm: FormGroup = Wishlist.getFormGroup();
   wishlists: any = [];
   toggle: any = [];
+  edit: any = [];
   panelOpenState = false;
 
   constructor(
@@ -23,7 +25,6 @@ export class WishlistComponent implements OnInit {
   ngOnInit(): void {
     this.wishlistService.findByUser().subscribe({
       next: response => {
-        console.log(response);
         this.wishlists = response;
       },
       error: error => {
@@ -45,6 +46,38 @@ export class WishlistComponent implements OnInit {
     });
   }
 
+  deleteEventFromWishlist(wishlist: any, eventId: number) {
+    let currentEventIds = wishlist.events.map((event:any) => { return event.id });
+    
+    const index = currentEventIds.indexOf(eventId);
+    if (index > -1) {
+      currentEventIds.splice(index, 1);
+    }
+
+    const object = {
+      name: wishlist.name,
+      eventIds: currentEventIds
+    }
+
+    const fromData = this.getFormData(object);
+
+    this.wishlistService.update(wishlist.id, fromData).subscribe({
+      next: _response => {
+        this.ngOnInit();
+        console.log(_response);
+      },
+      error: error => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
+
+  getFormData(object: any) {
+    const formData = new FormData();
+    Object.keys(object).forEach(key => formData.append(key, object[key]));
+    return formData;
+  }
+
   onSubmit() {
     var formData: any = new FormData();
     const name = this.wishlistCreateForm.get('name') || {value: null};
@@ -58,6 +91,29 @@ export class WishlistComponent implements OnInit {
       error: error => {
         this.wishlistCreateForm.reset();
         this.snackBar.open('Failed to create your event');
+        console.error('There was an error!', error);
+      }
+    });
+  }
+
+  onSubmitEditForm(wishlist: any) {
+    const name = this.wishlistEditForm.get('name') || {value: null};
+    let currentEventIds = wishlist.events.map((event:any) => { return event.id });
+    const object = {
+      name: name.value,
+      eventIds: currentEventIds
+    }
+    const fromData = this.getFormData(object);
+    
+    this.wishlistService.update(wishlist.id, fromData).subscribe({
+      next: _response => {
+        this.snackBar.open('Event successfully updated');
+        this.ngOnInit();
+        this.edit = [];
+      },
+      error: error => {
+        this.wishlistCreateForm.reset();
+        this.snackBar.open('Failed to update your event');
         console.error('There was an error!', error);
       }
     });

@@ -1,4 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IUser } from '@core/models';
+
 export interface IEvent {
     title: string;
     description: string;
@@ -11,6 +13,7 @@ export interface IEvent {
 export interface IEventResponse extends IEvent {
     id: number;
     imageUrl: string;
+    user: IUser;
 }
 
 export interface IFileResponse {
