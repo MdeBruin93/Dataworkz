@@ -3,7 +3,9 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
-import { AuthService } from '@auth/services';
+import { Store, Select } from '@ngxs/store';
+import { AuthState, Logout } from '@core/store';
+import { IUser } from '@core/models';
 
 @Component({
   selector: 'app-nav',
@@ -11,6 +13,11 @@ import { AuthService } from '@auth/services';
   styleUrls: ['./nav.component.scss']
 })
 export class NavComponent {
+  @Select(AuthState.isLoggedIn)
+  public isLoggedIn$: Observable<boolean>;
+
+  @Select(AuthState.currentUser)
+  public currentUser$: Observable<IUser>;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -20,11 +27,11 @@ export class NavComponent {
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private authService: AuthService
+    private store: Store
   ) {}
 
   public logout() {
-    this.authService.logout();
+    this.store.dispatch(new Logout());
   }
 
 }

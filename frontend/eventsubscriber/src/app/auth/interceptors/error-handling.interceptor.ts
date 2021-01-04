@@ -1,28 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import {
-  AuthService,
-  StorageService
-} from '../services';
+import { Store } from '@ngxs/store';
+import { Logout } from '@core/store';
 
 @Injectable()
 export class ErrorHandlingInterceptor implements HttpInterceptor {
     constructor(
-      private authService: AuthService,
-      private storageService: StorageService
+      private store: Store
     ) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        return next.handle(request).pipe(catchError(err => {
-            if (err.status === 401) {
-                this.authService.logout();
-                this.storageService.remove();
+        return next.handle(request).pipe(catchError((err: HttpErrorResponse) => {
+            if (!(err instanceof HttpErrorResponse)) {
+              return next.handle(request);
             }
-
-            const error = err.error.message || err.statusText;
+            if (err.status === 401) {
+                this.store.dispatch(new Logout());
+            }
+            const error = err.message || err.error?.message || err.statusText;
             return throwError(error);
         }))
     }
