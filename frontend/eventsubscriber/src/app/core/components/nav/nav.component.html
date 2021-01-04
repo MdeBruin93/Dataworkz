@@ -38,7 +38,7 @@
       </div>
       <div class="icon-text-wrapper" *ngIf="isLoggedIn$ | async">
         <mat-icon>account_box</mat-icon>
-        <span class="toolbar-item-text">{{(currentUser$ | async).firstName}} {{(currentUser$ | async).lastName}}</span>
+        <span class="toolbar-item-text">{{(currentUser$ | async)?.firstName}} {{(currentUser$ | async)?.lastName}}</span>
       </div>
       <div class="icon-text-wrapper" (click)="logout()" *ngIf="isLoggedIn$ | async">
         <mat-icon>logout</mat-icon>
