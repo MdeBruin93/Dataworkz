@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { AuthService } from '@auth/services';
+import { Store } from '@ngxs/store';
+import { Login } from '@core/store';
 
 @Component({
   selector: 'app-login',
@@ -23,26 +24,26 @@ export class LoginComponent implements OnInit {
   passwordHide: boolean = true;
 
   constructor(
-    private snackBar: MatSnackBar,
-    private authService: AuthService,
-    private router: Router
+    private store: Store,
+    private router: Router,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
   }
 
   onSubmit() {
-    this.authService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
-      next: response => {
-        this.router.navigate(['./dashboard']);
-        this.snackBar.open('Login succesfull');
-      },
-      error: error => {
-        this.loginForm.reset();
-        this.snackBar.open('Login failed');
-        console.error('There was an error!', error);
-      }
-  });
+    this.store.dispatch(new Login(this.loginForm.value.email, this.loginForm.value.password)).subscribe(
+    (response) => {
+      if (response.auth.token && response.auth.currentUser) {
+        this.snackBar.open('Login succeeded');
+        this.router.navigate(['/events']);
+      };
+    },
+    (error) => {
+      this.loginForm.reset();
+      this.snackBar.open('Login failed');
+      console.error('There was an error!', error);
+    });
   }
-
 }

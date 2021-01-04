@@ -1,5 +1,9 @@
-import { AppState } from './core/store/app/app.state';
+import {
+  AppState,
+  AuthState
+} from '@core/store';
 
 export const states = [
-  AppState
+  AppState,
+  AuthState
 ];

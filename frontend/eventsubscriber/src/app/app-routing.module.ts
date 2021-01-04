@@ -18,6 +18,7 @@ import {
 import {
   DashboardComponent
 } from './dashboard';
+import { WishlistComponent } from './wishlists';
 import { ActivateAccountComponent } from '@auth/pages/activate-account/activate-account.component';
 
 
@@ -50,8 +51,13 @@ const routes: Routes = [
       {
         path: 'activate-password/:token',
         component: ActivateAccountComponent
+      },
+      {
+        path: 'events',
+        loadChildren: () => import('./events/events.module').then((m) => m.EventsModule),
       }
-    ]
+    ],
+
   },
   {
     path: '',
@@ -64,15 +70,15 @@ const routes: Routes = [
         component: DashboardComponent
       },
       {
-        path: 'events',
-        loadChildren: () => import('./events/events.module').then((m) => m.EventsModule),
+        path: 'wishlists',
+        loadChildren: () => import('./wishlists/wishlists.module').then((m) => m.WishlistsModule),
       },
     ]
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload', })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

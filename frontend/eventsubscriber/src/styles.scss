@@ -2,3 +2,24 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 html, body { height: 100%; margin: 0}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.primary {
+  color: #673ab7;
+}
+
+.link {
+  text-decoration: none;
+  color: #673ab7;
+  &:hover {
+    color:  #0addff;
+    cursor: pointer;
+  }
+}
+
+.mr-2 {
+  margin-right: 20px;
+}
+
+.mat-card-actions {
+  margin-left: 0;
+}

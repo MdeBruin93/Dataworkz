@@ -1,6 +1,8 @@
 package com.dataworks.eventsubscriber.model.dao;
 
 import com.dataworks.eventsubscriber.enums.Role;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +30,8 @@ public class User extends BaseDao {
     private String role;
     @OneToMany(mappedBy = "user")
     private List<Event> events;
+    @OneToMany(mappedBy = "user")
+    private List<Wishlist> wishlists;
     @ManyToMany
     @JoinTable(
             name = "participant",

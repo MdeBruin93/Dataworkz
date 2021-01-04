@@ -3,17 +3,17 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/c
 import { Observable } from 'rxjs';
 
 import {
-  StorageService 
+  AuthService 
  } from '../services';
 
 @Injectable()
 export class BasicAuthInterceptor implements HttpInterceptor {
     constructor(
-      private storageService: StorageService
+      private authService: AuthService
     ) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const currentBasicAuthToken = this.storageService.get();
+        const currentBasicAuthToken = this.authService.getToken();
         if (currentBasicAuthToken) {
             request = request.clone({
                 setHeaders: { 
@@ -21,7 +21,6 @@ export class BasicAuthInterceptor implements HttpInterceptor {
                 }
             });
         }
-
         return next.handle(request);
     }
 }
