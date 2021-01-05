@@ -25,14 +25,14 @@ public class WishlistImplService implements WishlistService {
 
     @Override
     public List<WishlistDto> findByUserId() {
-        var loggedInUser = authService.myDao();
+        var loggedInUser = authService.myDaoOrFail();
         var wishlists = wishlistRepository.findByUserId(loggedInUser.getId());
         return wishListMapper.mapToEventDestinationCollection(wishlists);
     }
 
     @Override
     public WishlistDto findByIdAndUserId(int id) {
-        var loggedInUser = authService.myDao();
+        var loggedInUser = authService.myDaoOrFail();
         var wishlist = wishlistRepository.findByIdAndUserId(id, loggedInUser.getId()).orElseThrow(WishlistNotFoundException::new);
         return wishListMapper.mapToEventDestination(wishlist);
     }
@@ -51,20 +51,26 @@ public class WishlistImplService implements WishlistService {
 
     @Override
     public WishlistDto update(int id, WishlistDto wishlistDto) {
+        var user = authService.myDaoOrFail();
+
         Wishlist wishlist = wishlistRepository.findById(id).orElseThrow(() -> new NotFoundException("wishlist"));
+        var isOwner = wishlist.getUser().getId().equals(user.getId());
+        if (!isOwner) {
+            throw new NotFoundException("wishlist");
+        }
         wishlist.setName(wishlistDto.getName());
 
         wishlist.getEvents().clear();
         addEventsToWishlist(wishlist, wishlistDto.getEventIds());
         wishlistRepository.save(wishlist);
 
-        return wishListMapper.mapToEventDestination(wishlistRepository.save(wishlist));
+        return wishListMapper.mapToEventDestination(wishlist);
     }
 
     @Override
     public void delete(int id) {
+        var loggedInUser = authService.myDaoOrFail();
         var wishlist = wishlistRepository.findById(id).orElseThrow(WishlistNotFoundException::new);
-        var loggedInUser = authService.myDao();
 
         var isOwner = wishlist.getUser().getId().equals(loggedInUser.getId());
         if (!isOwner && !loggedInUser.isAdmin()) {
