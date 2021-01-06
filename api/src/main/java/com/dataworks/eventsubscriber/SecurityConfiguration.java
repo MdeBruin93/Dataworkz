@@ -43,6 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/events/{id}/subscribe").authenticated()
                 .antMatchers(HttpMethod.GET, "/api/events/findbyuser").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/storage/upload").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/questions").authenticated()
 //                .antMatchers("/post/create").authenticated()
                 .and()
                 .httpBasic();
