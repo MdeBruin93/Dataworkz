@@ -34,7 +34,7 @@ public class Event extends BaseDao {
     @ManyToOne
     @JsonIgnoreProperties("events")
     private User user;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Category category;
     @ManyToMany
     @JoinTable(

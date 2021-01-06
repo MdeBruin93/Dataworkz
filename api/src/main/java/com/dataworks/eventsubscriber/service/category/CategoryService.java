@@ -11,6 +11,6 @@ public interface CategoryService {
     CategoryDto update(int id, CategoryDto categoryDto);
     List<CategoryDto> findAll();
     CategoryDto findById(int id);
-    List<CategoryDto> findByEventId();
+    CategoryDto findByEventId(int eventId);
     void delete(int eventId);
 }

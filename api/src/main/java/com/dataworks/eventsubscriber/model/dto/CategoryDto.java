@@ -17,5 +17,4 @@ public class CategoryDto extends BaseDto {
     private String name;
     @NotNull
     private String color;
-    private List<Integer> eventIds;
 }

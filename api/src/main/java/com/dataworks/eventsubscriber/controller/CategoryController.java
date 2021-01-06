@@ -109,7 +109,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/findbyevent")
+    @GetMapping("/findbyevent/{eventId}")
     @Operation(
             summary = "Get categories of a specific event",
             description = "",
@@ -121,9 +121,9 @@ public class CategoryController {
                     content = @Content(schema = @Schema(implementation = CategoryDto.class))),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "500", description = "Internal server error.")})
-    public ResponseEntity findbyevent() {
+    public ResponseEntity findbyevent(@PathVariable int eventId) {
         try {
-            return new ResponseEntity(categoryService.findByEventId(), HttpStatus.OK);
+            return new ResponseEntity(categoryService.findByEventId(eventId), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
