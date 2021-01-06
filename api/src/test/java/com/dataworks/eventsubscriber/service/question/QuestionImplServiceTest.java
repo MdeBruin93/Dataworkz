@@ -1,6 +1,7 @@
 package com.dataworks.eventsubscriber.service.question;
 
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
+import com.dataworks.eventsubscriber.exception.question.QuestionNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.QuestionMapper;
 import com.dataworks.eventsubscriber.model.dao.Event;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
@@ -87,6 +89,103 @@ class QuestionImplServiceTest {
         questionImplService.store(questionDto);
         verify(authService, times(1)).myDaoOrFail();
         verify(questionMapper, times(1)).mapToSource(questionDto);
+        verify(questionMapper, times(1)).mapToDestination(question);
+    }
+
+    @Test
+    void updateWhenUserIsNotLoggedIn_ThenThrowException() {
+        //given
+        var questionId = 1;
+        var questionDto = new QuestionDto();
+        //when
+        when(authService.myDaoOrFail()).thenThrow(UserNotFoundException.class);
+        //then
+        assertThatExceptionOfType(UserNotFoundException.class)
+                .isThrownBy(() -> questionImplService.update(questionId, questionDto));
+        verify(authService, times(1)).myDaoOrFail();
+        verifyNoMoreInteractions(authService, questionRepository);
+    }
+
+    @Test
+    void updateWhenQuestionNotFound_ThenThrowException() {
+        //given
+        var questionId = 1;
+        var questionDto = new QuestionDto();
+        var user = new User();
+        //when
+        when(authService.myDaoOrFail()).thenReturn(user);
+        when(questionRepository.findById(questionId)).thenThrow(QuestionNotFoundException.class);
+
+        //then
+        assertThatExceptionOfType(QuestionNotFoundException.class)
+                .isThrownBy(() -> questionImplService.update(questionId, questionDto));
+        verify(authService, times(1)).myDaoOrFail();
+    }
+
+    @Test
+    void updateWhenUserIsNotOwnerAndNotAdmin_ThenThrowException() {
+        //given
+        var questionId = 1;
+        var user = new User();
+        user.setId(1);
+        user.setRole("ROLE_USER");
+        var owner = new User();
+        user.setId(2);
+        var question = new Question();
+        question.setOwner(owner);
+        var questionDto = new QuestionDto();
+
+        //when
+        when(authService.myDaoOrFail()).thenReturn(user);
+        when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
+        //then
+        assertThatExceptionOfType(QuestionNotFoundException.class)
+                .isThrownBy(() -> questionImplService.update(questionId, questionDto));
+
+    }
+
+    @Test
+    void updateWhenUserIsOwner_ThenSave() {
+        //given
+        var questionId = 1;
+        var user = new User();
+        user.setId(1);
+        user.setRole("ROLE_USER");
+        var owner = new User();
+        owner.setId(1);
+        var question = new Question();
+        question.setOwner(owner);
+        var questionDto = new QuestionDto();
+        //when
+        when(authService.myDaoOrFail()).thenReturn(user);
+        when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
+        when(questionRepository.save(question)).thenReturn(question);
+        when(questionMapper.mapToDestination(question)).thenReturn(questionDto);
+        //then
+        var result = questionImplService.update(questionId, questionDto);
+        assertThat(result).isInstanceOf(QuestionDto.class);
+        verify(questionMapper, times(1)).mapToDestination(question);
+    }
+    @Test
+    void updateWhenUserIsAdmin_ThenSave() {
+        //given
+        var questionId = 1;
+        var user = new User();
+        user.setId(1);
+        user.setRole("ROLE_ADMIN");
+        var owner = new User();
+        owner.setId(1);
+        var question = new Question();
+        question.setOwner(owner);
+        var questionDto = new QuestionDto();
+        //when
+        when(authService.myDaoOrFail()).thenReturn(user);
+        when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
+        when(questionRepository.save(question)).thenReturn(question);
+        when(questionMapper.mapToDestination(question)).thenReturn(questionDto);
+        //then
+        var result = questionImplService.update(questionId, questionDto);
+        assertThat(result).isInstanceOf(QuestionDto.class);
         verify(questionMapper, times(1)).mapToDestination(question);
     }
 }

@@ -1,6 +1,7 @@
 package com.dataworks.eventsubscriber.service.question;
 
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
+import com.dataworks.eventsubscriber.exception.question.QuestionNotFoundException;
 import com.dataworks.eventsubscriber.mapper.QuestionMapper;
 import com.dataworks.eventsubscriber.model.dto.QuestionDto;
 import com.dataworks.eventsubscriber.repository.EventRepository;
@@ -35,7 +36,20 @@ public class QuestionImplService implements QuestionService {
 
     @Override
     public QuestionDto update(int id, QuestionDto questionDto) {
-        return null;
+        var authenticatedUser = authService.myDaoOrFail();
+        var foundQuestion = questionRepository.findById(id)
+                .orElseThrow(() -> new QuestionNotFoundException(id));
+        var isAdmin = authenticatedUser.isAdmin();
+        var isOwner = authenticatedUser.getId().equals(foundQuestion.getOwner().getId());
+
+        //check user is admin or user is owner of the question
+        if (!isAdmin && !isOwner) {
+            throw new QuestionNotFoundException(id);
+        }
+
+        foundQuestion.setText(questionDto.getText());
+
+        return questionMapper.mapToDestination(questionRepository.save(foundQuestion));
     }
 
     @Override
