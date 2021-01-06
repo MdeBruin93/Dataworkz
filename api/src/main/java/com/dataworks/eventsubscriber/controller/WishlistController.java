@@ -59,8 +59,8 @@ public class WishlistController {
                     content = @Content(schema = @Schema(implementation = WishlistDto.class))),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "404", description = "Logged in user not found")})
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity store(@Valid @ModelAttribute WishlistDto wishlistDto, BindingResult bindingResult) {
+    @PostMapping(value = "")
+    public ResponseEntity store(@Valid @RequestBody WishlistDto wishlistDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
         }
@@ -85,7 +85,7 @@ public class WishlistController {
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "404", description = "Logged in user not found or wishlist to update was not found")})
     @PutMapping(value = "/{id}")
-    public ResponseEntity update(@PathVariable("id") int id, @Valid @ModelAttribute WishlistDto wishlistDto, BindingResult bindingResult) {
+    public ResponseEntity update(@PathVariable("id") int id, @Valid @RequestBody WishlistDto wishlistDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
         }

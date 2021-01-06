@@ -6,6 +6,7 @@ import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.WishlistDto;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import com.dataworks.eventsubscriber.service.wishlist.WishlistService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -63,14 +65,17 @@ public class WishlistControllerTest {
     public void store_ShouldReturnANotFound() throws Exception {
         // given
         var wishlistDto = new WishlistDto();
+        wishlistDto.setName("some test wishlist");
+
+        var json = new ObjectMapper().writeValueAsString(wishlistDto);
 
         // when
-        when(wishlistService.store(wishlistDto)).thenThrow(UserNotFoundException.class);
+        when(wishlistService.store(any(WishlistDto.class))).thenThrow(UserNotFoundException.class);
 
         // then
         mockMvc.perform(post("/api/wishlists/")
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .param("name", "some test wishlist"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
                 .andExpect(status().isNotFound());
     }
 
@@ -78,14 +83,17 @@ public class WishlistControllerTest {
     public void store_ShouldSaveSuccessfully() throws Exception {
         // given
         var wishlistDto = new WishlistDto();
+        wishlistDto.setName("some test wishlist");
+
+        var json = new ObjectMapper().writeValueAsString(wishlistDto);
 
         // when
-        when(wishlistService.store(wishlistDto)).thenReturn(wishlistDto);
+        when(wishlistService.store(any(WishlistDto.class))).thenReturn(wishlistDto);
 
         // then
         mockMvc.perform(post("/api/wishlists/")
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .param("name", "some test wishlist"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
                 .andExpect(status().isCreated());
     }
 
@@ -94,15 +102,18 @@ public class WishlistControllerTest {
         // given
         var wishlistId = 1;
         var wishlistDto = new WishlistDto();
+        wishlistDto.setName("some test wishlist");
+
+        var json = new ObjectMapper().writeValueAsString(wishlistDto);
 
         // when
-        when(wishlistService.update(wishlistId, wishlistDto)).thenReturn(wishlistDto);
+        when(wishlistService.update(any(Integer.class), any(WishlistDto.class))).thenReturn(wishlistDto);
 
         // then
         mockMvc.perform(put("/api/wishlists/" + wishlistId)
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .param("name", "some test wishlist"))
-                .andExpect(status().isCreated());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -110,14 +121,17 @@ public class WishlistControllerTest {
         // given
         var wishlistId = 1;
         var wishlistDto = new WishlistDto();
+        wishlistDto.setName("Some test wishlist");
+
+        var json = new ObjectMapper().writeValueAsString(wishlistDto);
 
         // when
-        when(wishlistService.update(wishlistId, wishlistDto)).thenThrow(UserNotFoundException.class);
+        when(wishlistService.update(any(Integer.class), any(WishlistDto.class))).thenThrow(UserNotFoundException.class);
 
         // then
         mockMvc.perform(put("/api/wishlists/" + wishlistId)
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .param("name", "some test wishlist"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
                 .andExpect(status().isNotFound());
     }
 
@@ -126,14 +140,17 @@ public class WishlistControllerTest {
         // given
         var wishlistId = 1;
         var wishlistDto = new WishlistDto();
+        wishlistDto.setName("some test wishlist");
+
+        var json = new ObjectMapper().writeValueAsString(wishlistDto);
 
         // when
-        when(wishlistService.update(wishlistId, wishlistDto)).thenThrow(EventNotFoundException.class);
+        when(wishlistService.update(any(Integer.class), any(WishlistDto.class))).thenThrow(EventNotFoundException.class);
 
         // then
         mockMvc.perform(put("/api/wishlists/" + wishlistId)
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .param("name", "some test wishlist"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
                 .andExpect(status().isNotFound());
     }
 
