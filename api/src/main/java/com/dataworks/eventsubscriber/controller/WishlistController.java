@@ -111,7 +111,11 @@ public class WishlistController {
             @ApiResponse(responseCode = "404", description = "Logged in user not found")})
     @GetMapping("/findbyuser")
     public ResponseEntity findByUser() {
-        return new ResponseEntity(wishlistService.findByUserId(), HttpStatus.OK);
+        try {
+            return new ResponseEntity(wishlistService.findByUserId(), HttpStatus.OK);
+        } catch (UserNotFoundException userNotFoundException) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Operation(

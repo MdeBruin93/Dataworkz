@@ -3,7 +3,6 @@ package com.dataworks.eventsubscriber.controller;
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
-import com.dataworks.eventsubscriber.model.dto.RegisterDto;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import com.dataworks.eventsubscriber.service.event.EventImplService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +18,8 @@ import java.util.Date;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
