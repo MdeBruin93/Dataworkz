@@ -69,6 +69,7 @@ class QuestionControllerTest {
         //given
         var questionDto = new QuestionDto();
         questionDto.setText("Test");
+        questionDto.setEventId(1);
         var json = new ObjectMapper().writeValueAsString(questionDto);
 
         //when
@@ -89,6 +90,7 @@ class QuestionControllerTest {
         //given
         var questionDto = new QuestionDto();
         questionDto.setText("Test");
+        questionDto.setEventId(1);
         var json = new ObjectMapper().writeValueAsString(questionDto);
 
         //when
@@ -109,6 +111,7 @@ class QuestionControllerTest {
         //given
         var questionDto = new QuestionDto();
         questionDto.setText("Test");
+        questionDto.setEventId(1);
         var json = new ObjectMapper().writeValueAsString(questionDto);
 
         //when
