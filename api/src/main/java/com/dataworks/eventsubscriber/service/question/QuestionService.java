@@ -10,6 +10,5 @@ import java.util.List;
 public interface QuestionService {
     QuestionDto store(QuestionDto questionDto);
     QuestionDto update(int id, QuestionDto questionDto);
-    List<QuestionDto> findAll();
-    QuestionDto findById(int id);
+    void delete(int id);
 }

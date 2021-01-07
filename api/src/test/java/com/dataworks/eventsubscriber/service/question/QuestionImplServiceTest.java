@@ -188,4 +188,91 @@ class QuestionImplServiceTest {
         assertThat(result).isInstanceOf(QuestionDto.class);
         verify(questionMapper, times(1)).mapToDestination(question);
     }
+
+    @Test
+    void deleteWhenUserIsNotLoggedIn_ThenThrowException() {
+        //given
+        var questionId = 1;
+        //when
+        when(authService.myDaoOrFail()).thenThrow(UserNotFoundException.class);
+        //then
+        assertThatExceptionOfType(UserNotFoundException.class)
+                .isThrownBy(() -> questionImplService.delete(questionId));
+        verify(authService, times(1)).myDaoOrFail();
+        verifyNoMoreInteractions(authService, questionRepository);
+    }
+
+    @Test
+    void deleteWhenQuestionIsNotFound_ThenThrowException() {
+        //given
+        var questionId = 1;
+        //when
+        when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
+        //then
+        assertThatExceptionOfType(QuestionNotFoundException.class)
+                .isThrownBy(() -> questionImplService.delete(questionId));
+        verify(authService, times(1)).myDaoOrFail();
+        verify(questionRepository, times(1)).findById(questionId);
+    }
+
+    @Test
+    void deleteWhenUserIsNotOwnerAndNotAdmin_ThenThrowException() {
+        //given
+        var questionId = 1;
+        var user = new User();
+        user.setId(1);
+        user.setRole("ROLE_USER");
+        var owner = new User();
+        user.setId(2);
+        var question = new Question();
+        question.setOwner(owner);
+        var questionDto = new QuestionDto();
+
+        //when
+        when(authService.myDaoOrFail()).thenReturn(user);
+        when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
+        //then
+        assertThatExceptionOfType(QuestionNotFoundException.class)
+                .isThrownBy(() -> questionImplService.delete(questionId));
+
+    }
+
+    @Test
+    void deleteWhenUserIsOwner_ThenDelete() {
+        //given
+        var questionId = 1;
+        var user = new User();
+        user.setId(1);
+        user.setRole("ROLE_USER");
+        var owner = new User();
+        owner.setId(1);
+        var question = new Question();
+        question.setOwner(owner);
+        var questionDto = new QuestionDto();
+        //when
+        when(authService.myDaoOrFail()).thenReturn(user);
+        when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
+        //then
+        questionImplService.delete(questionId);
+        verify(questionRepository, times(1)).delete(any(Question.class));
+    }
+    @Test
+    void updateWhenUserIsAdmin_ThenDelete() {
+        //given
+        var questionId = 1;
+        var user = new User();
+        user.setId(1);
+        user.setRole("ROLE_ADMIN");
+        var owner = new User();
+        owner.setId(1);
+        var question = new Question();
+        question.setOwner(owner);
+        var questionDto = new QuestionDto();
+        //when
+        when(authService.myDaoOrFail()).thenReturn(user);
+        when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
+        //then
+        questionImplService.delete(questionId);
+        verify(questionRepository, times(1)).delete(any(Question.class));
+    }
 }

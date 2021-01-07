@@ -53,12 +53,19 @@ public class QuestionImplService implements QuestionService {
     }
 
     @Override
-    public List<QuestionDto> findAll() {
-        return null;
-    }
+    public void delete(int id) {
+        var authenticatedUser = authService.myDaoOrFail();
+        var foundQuestion = questionRepository.findById(id)
+                .orElseThrow(() -> new QuestionNotFoundException(id));
 
-    @Override
-    public QuestionDto findById(int id) {
-        return null;
+        var isAdmin = authenticatedUser.isAdmin();
+        var isOwner = authenticatedUser.getId().equals(foundQuestion.getOwner().getId());
+
+        //check user is admin or user is owner of the question
+        if (!isAdmin && !isOwner) {
+            throw new QuestionNotFoundException(id);
+        }
+
+        questionRepository.delete(foundQuestion);
     }
 }
