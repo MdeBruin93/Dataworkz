@@ -109,7 +109,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/findbyevent/{eventId}")
+    @GetMapping("/{eventId}/events")
     @Operation(
             summary = "Get categories of a specific event",
             description = "",

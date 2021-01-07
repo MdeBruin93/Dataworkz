@@ -43,6 +43,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/events/{id}/subscribe").authenticated()
                 .antMatchers(HttpMethod.GET, "/api/events/findbyuser").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/storage/upload").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/categories").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/categories").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/categories").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/categories").authenticated()
 //                .antMatchers("/post/create").authenticated()
                 .and()
                 .httpBasic();
