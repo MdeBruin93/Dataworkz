@@ -17,6 +17,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -32,7 +33,7 @@ class QuestionControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void createEvent_Unauthorized() throws Exception {
+    void createQuestion_Unauthorized() throws Exception {
         //given
         var questionDto = new QuestionDto();
 
@@ -50,7 +51,7 @@ class QuestionControllerTest {
 
     @Test
     @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
-    void createInvalidEvent_BadRequest() throws Exception {
+    void createInvalidQuestion_BadRequest() throws Exception {
         //given
         var questionDto = new QuestionDto();
         var json = new ObjectMapper().writeValueAsString(questionDto);
@@ -67,7 +68,7 @@ class QuestionControllerTest {
 
     @Test
     @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
-    void createEventWithNotFoundUser_NotFound() throws Exception {
+    void createQuestionWithNotFoundUser_NotFound() throws Exception {
         //given
         var questionDto = new QuestionDto();
         questionDto.setText("Test");
@@ -88,7 +89,7 @@ class QuestionControllerTest {
 
     @Test
     @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
-    void createEventWithNotFoundEvent_NotFound() throws Exception {
+    void createQuestionWithNotFoundQuestion_NotFound() throws Exception {
         //given
         var questionDto = new QuestionDto();
         questionDto.setText("Test");
@@ -109,7 +110,7 @@ class QuestionControllerTest {
 
     @Test
     @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
-    void createEventWithFoundUser_Create() throws Exception {
+    void createQuestionWithFoundUser_Create() throws Exception {
         //given
         var questionDto = new QuestionDto();
         questionDto.setText("Test");
@@ -129,7 +130,7 @@ class QuestionControllerTest {
     }
 
     @Test
-    void updateEvent_Unauthorized() throws Exception {
+    void updateQuestion_Unauthorized() throws Exception {
         //given
         var questionDto = new QuestionDto();
         var questionId = 1;
@@ -148,7 +149,7 @@ class QuestionControllerTest {
 
     @Test
     @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
-    void updateInvalidEvent_BadRequest() throws Exception {
+    void updateInvalidQuestion_BadRequest() throws Exception {
         //given
         var questionDto = new QuestionDto();
         var questionId = 1;
@@ -166,7 +167,7 @@ class QuestionControllerTest {
 
     @Test
     @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
-    void updateEventWithNotFoundUser_NotFound() throws Exception {
+    void updateQuestionWithNotFoundUser_NotFound() throws Exception {
         //given
         var questionId = 1;
         var questionDto = new QuestionDto();
@@ -188,7 +189,7 @@ class QuestionControllerTest {
 
     @Test
     @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
-    void updateEventWithNotFoundEvent_NotFound() throws Exception {
+    void updateQuestionWithNotFoundEvent_NotFound() throws Exception {
         //given
         var questionId = 1;
         var questionDto = new QuestionDto();
@@ -210,7 +211,7 @@ class QuestionControllerTest {
 
     @Test
     @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
-    void updateEventWithNotFoundQuestion_NotFound() throws Exception {
+    void updateQuestionWithNotFoundQuestion_NotFound() throws Exception {
         //given
         var questionId = 1;
         var questionDto = new QuestionDto();
@@ -232,7 +233,7 @@ class QuestionControllerTest {
 
     @Test
     @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
-    void updateEventWithFoundUser_Create() throws Exception {
+    void updateQuestionWithFoundUser_Create() throws Exception {
         //given
         var questionId = 1;
         var questionDto = new QuestionDto();
@@ -250,5 +251,68 @@ class QuestionControllerTest {
                         .content(json))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteQuestion_Unauthorized() throws Exception {
+        //given
+        var questionId = 1;
+
+        //when
+
+        //then
+        mockMvc.perform(
+                delete("/api/questions/" + questionId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void deleteQuestionWithNotFoundUser_NotFound() throws Exception {
+        //given
+        var questionId = 1;
+        //when
+        doThrow(UserNotFoundException.class).when(questionImplService).delete(questionId);
+
+        //then
+        mockMvc.perform(
+                delete("/api/questions/" + questionId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void deleteQuestionWithNotFoundQuestion_NotFound() throws Exception {
+        //given
+        var questionId = 1;
+        //when
+        doThrow(UserNotFoundException.class).when(questionImplService).delete(questionId);
+
+        //then
+        mockMvc.perform(
+                delete("/api/questions/" + questionId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void deleteQuestionWithFoundUser_Delete() throws Exception {
+        //given
+        var questionId = 1;
+
+        //when
+
+        //then
+        mockMvc.perform(
+                delete("/api/questions/" + questionId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 }

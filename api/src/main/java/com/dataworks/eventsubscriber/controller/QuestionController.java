@@ -73,4 +73,14 @@ public class QuestionController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity delete(@PathVariable("id") int id) {
+        try {
+            questionService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (QuestionNotFoundException | UserNotFoundException e) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
 }
