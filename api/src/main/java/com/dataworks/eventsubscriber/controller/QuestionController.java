@@ -74,6 +74,17 @@ public class QuestionController {
         }
     }
 
+    @Operation(
+            summary = "Delete question",
+            description = "",
+            tags = { "Questions" },
+            security = @SecurityRequirement(name = "basicAuth")
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Deleted the question",
+                    content = @Content(schema = @Schema(implementation = QuestionDto.class))),
+            @ApiResponse(responseCode = "401", description = "User is not authorized"),
+            @ApiResponse(responseCode = "404", description = "Question not found or user not found!")})
     @DeleteMapping(value = "/{id}")
     public ResponseEntity delete(@PathVariable("id") int id) {
         try {

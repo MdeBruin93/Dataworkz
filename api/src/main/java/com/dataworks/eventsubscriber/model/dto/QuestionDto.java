@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class QuestionDto {
+    private int id;
     @NotNull
     private String text;
     @NotNull
