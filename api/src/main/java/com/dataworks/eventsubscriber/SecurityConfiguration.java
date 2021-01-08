@@ -46,6 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/questions").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/questions/{id}").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/questions/{id}").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/answers").authenticated()
 //                .antMatchers("/post/create").authenticated()
                 .and()
                 .httpBasic();
