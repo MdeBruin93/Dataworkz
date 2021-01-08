@@ -1,7 +1,15 @@
 package com.dataworks.eventsubscriber.model.dto;
 
-import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
+@Getter
+@Setter
+@Component
+@NoArgsConstructor
 public class AnswerDto {
     private int id;
     @NotNull
