@@ -16,4 +16,5 @@ public class AnswerDto {
     private String text;
     @NotNull
     private Integer questionId;
+    private UserDto owner;
 }
