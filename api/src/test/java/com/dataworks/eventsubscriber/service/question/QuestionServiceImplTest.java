@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class QuestionImplServiceTest {
+class QuestionServiceImplTest {
     @Mock
     QuestionRepository questionRepository;
     @Mock
@@ -34,7 +34,7 @@ class QuestionImplServiceTest {
     @Mock
     QuestionMapper questionMapper;
     @InjectMocks
-    QuestionImplService questionImplService;
+    QuestionServiceImpl questionServiceImpl;
 
     @Test
     void storeWhenUserIsNotLoggedIn_ThenThrowUserNotFoundException() {
@@ -46,7 +46,7 @@ class QuestionImplServiceTest {
 
         //then
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> questionImplService.store(questionDto));
+                .isThrownBy(() -> questionServiceImpl.store(questionDto));
         verify(authService, times(1)).myDaoOrFail();
         verifyNoMoreInteractions(authService, questionRepository);
     }
@@ -65,7 +65,7 @@ class QuestionImplServiceTest {
 
         //then
         assertThatExceptionOfType(EventNotFoundException.class)
-                .isThrownBy(() -> questionImplService.store(questionDto));
+                .isThrownBy(() -> questionServiceImpl.store(questionDto));
         verify(authService, times(1)).myDaoOrFail();
     }
 
@@ -86,7 +86,7 @@ class QuestionImplServiceTest {
         when(questionRepository.save(question)).thenReturn(question);
 
         //then
-        questionImplService.store(questionDto);
+        questionServiceImpl.store(questionDto);
         verify(authService, times(1)).myDaoOrFail();
         verify(questionMapper, times(1)).mapToSource(questionDto);
         verify(questionMapper, times(1)).mapToDestination(question);
@@ -101,7 +101,7 @@ class QuestionImplServiceTest {
         when(authService.myDaoOrFail()).thenThrow(UserNotFoundException.class);
         //then
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> questionImplService.update(questionId, questionDto));
+                .isThrownBy(() -> questionServiceImpl.update(questionId, questionDto));
         verify(authService, times(1)).myDaoOrFail();
         verifyNoMoreInteractions(authService, questionRepository);
     }
@@ -118,7 +118,7 @@ class QuestionImplServiceTest {
 
         //then
         assertThatExceptionOfType(QuestionNotFoundException.class)
-                .isThrownBy(() -> questionImplService.update(questionId, questionDto));
+                .isThrownBy(() -> questionServiceImpl.update(questionId, questionDto));
         verify(authService, times(1)).myDaoOrFail();
     }
 
@@ -140,7 +140,7 @@ class QuestionImplServiceTest {
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         //then
         assertThatExceptionOfType(QuestionNotFoundException.class)
-                .isThrownBy(() -> questionImplService.update(questionId, questionDto));
+                .isThrownBy(() -> questionServiceImpl.update(questionId, questionDto));
 
     }
 
@@ -162,7 +162,7 @@ class QuestionImplServiceTest {
         when(questionRepository.save(question)).thenReturn(question);
         when(questionMapper.mapToDestination(question)).thenReturn(questionDto);
         //then
-        var result = questionImplService.update(questionId, questionDto);
+        var result = questionServiceImpl.update(questionId, questionDto);
         assertThat(result).isInstanceOf(QuestionDto.class);
         verify(questionMapper, times(1)).mapToDestination(question);
     }
@@ -184,7 +184,7 @@ class QuestionImplServiceTest {
         when(questionRepository.save(question)).thenReturn(question);
         when(questionMapper.mapToDestination(question)).thenReturn(questionDto);
         //then
-        var result = questionImplService.update(questionId, questionDto);
+        var result = questionServiceImpl.update(questionId, questionDto);
         assertThat(result).isInstanceOf(QuestionDto.class);
         verify(questionMapper, times(1)).mapToDestination(question);
     }
@@ -197,7 +197,7 @@ class QuestionImplServiceTest {
         when(authService.myDaoOrFail()).thenThrow(UserNotFoundException.class);
         //then
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> questionImplService.delete(questionId));
+                .isThrownBy(() -> questionServiceImpl.delete(questionId));
         verify(authService, times(1)).myDaoOrFail();
         verifyNoMoreInteractions(authService, questionRepository);
     }
@@ -210,7 +210,7 @@ class QuestionImplServiceTest {
         when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
         //then
         assertThatExceptionOfType(QuestionNotFoundException.class)
-                .isThrownBy(() -> questionImplService.delete(questionId));
+                .isThrownBy(() -> questionServiceImpl.delete(questionId));
         verify(authService, times(1)).myDaoOrFail();
         verify(questionRepository, times(1)).findById(questionId);
     }
@@ -233,7 +233,7 @@ class QuestionImplServiceTest {
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         //then
         assertThatExceptionOfType(QuestionNotFoundException.class)
-                .isThrownBy(() -> questionImplService.delete(questionId));
+                .isThrownBy(() -> questionServiceImpl.delete(questionId));
 
     }
 
@@ -253,7 +253,7 @@ class QuestionImplServiceTest {
         when(authService.myDaoOrFail()).thenReturn(user);
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         //then
-        questionImplService.delete(questionId);
+        questionServiceImpl.delete(questionId);
         verify(questionRepository, times(1)).delete(any(Question.class));
     }
     @Test
@@ -272,7 +272,7 @@ class QuestionImplServiceTest {
         when(authService.myDaoOrFail()).thenReturn(user);
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         //then
-        questionImplService.delete(questionId);
+        questionServiceImpl.delete(questionId);
         verify(questionRepository, times(1)).delete(any(Question.class));
     }
 }

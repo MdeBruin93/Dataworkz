@@ -10,11 +10,9 @@ import com.dataworks.eventsubscriber.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Service
-public class QuestionImplService implements QuestionService {
+public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private final EventRepository eventRepository;
     private final QuestionMapper questionMapper;

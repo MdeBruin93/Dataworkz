@@ -5,7 +5,7 @@ import com.dataworks.eventsubscriber.exception.question.QuestionNotFoundExceptio
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.QuestionDto;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
-import com.dataworks.eventsubscriber.service.question.QuestionImplService;
+import com.dataworks.eventsubscriber.service.question.QuestionServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(QuestionController.class)
 class QuestionControllerTest {
     @MockBean
-    QuestionImplService questionImplService;
+    QuestionServiceImpl questionServiceImpl;
     @MockBean
     WebAuthDetailService webAuthDetailService;
     @Autowired
@@ -76,7 +76,7 @@ class QuestionControllerTest {
         var json = new ObjectMapper().writeValueAsString(questionDto);
 
         //when
-        when(questionImplService.store(any(QuestionDto.class))).thenThrow(UserNotFoundException.class);
+        when(questionServiceImpl.store(any(QuestionDto.class))).thenThrow(UserNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -97,7 +97,7 @@ class QuestionControllerTest {
         var json = new ObjectMapper().writeValueAsString(questionDto);
 
         //when
-        when(questionImplService.store(any(QuestionDto.class))).thenThrow(EventNotFoundException.class);
+        when(questionServiceImpl.store(any(QuestionDto.class))).thenThrow(EventNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -118,7 +118,7 @@ class QuestionControllerTest {
         var json = new ObjectMapper().writeValueAsString(questionDto);
 
         //when
-        when(questionImplService.store(any(QuestionDto.class))).thenReturn(questionDto);
+        when(questionServiceImpl.store(any(QuestionDto.class))).thenReturn(questionDto);
 
         //then
         mockMvc.perform(
@@ -176,7 +176,7 @@ class QuestionControllerTest {
         var json = new ObjectMapper().writeValueAsString(questionDto);
 
         //when
-        when(questionImplService.update(any(Integer.class), any(QuestionDto.class))).thenThrow(UserNotFoundException.class);
+        when(questionServiceImpl.update(any(Integer.class), any(QuestionDto.class))).thenThrow(UserNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -198,7 +198,7 @@ class QuestionControllerTest {
         var json = new ObjectMapper().writeValueAsString(questionDto);
 
         //when
-        when(questionImplService.update(any(Integer.class), any(QuestionDto.class))).thenThrow(EventNotFoundException.class);
+        when(questionServiceImpl.update(any(Integer.class), any(QuestionDto.class))).thenThrow(EventNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -220,7 +220,7 @@ class QuestionControllerTest {
         var json = new ObjectMapper().writeValueAsString(questionDto);
 
         //when
-        when(questionImplService.update(any(Integer.class), any(QuestionDto.class))).thenThrow(QuestionNotFoundException.class);
+        when(questionServiceImpl.update(any(Integer.class), any(QuestionDto.class))).thenThrow(QuestionNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -242,7 +242,7 @@ class QuestionControllerTest {
         var json = new ObjectMapper().writeValueAsString(questionDto);
 
         //when
-        when(questionImplService.update(any(Integer.class), any(QuestionDto.class))).thenReturn(questionDto);
+        when(questionServiceImpl.update(any(Integer.class), any(QuestionDto.class))).thenReturn(questionDto);
 
         //then
         mockMvc.perform(
@@ -274,7 +274,7 @@ class QuestionControllerTest {
         //given
         var questionId = 1;
         //when
-        doThrow(UserNotFoundException.class).when(questionImplService).delete(questionId);
+        doThrow(UserNotFoundException.class).when(questionServiceImpl).delete(questionId);
 
         //then
         mockMvc.perform(
@@ -290,7 +290,7 @@ class QuestionControllerTest {
         //given
         var questionId = 1;
         //when
-        doThrow(UserNotFoundException.class).when(questionImplService).delete(questionId);
+        doThrow(UserNotFoundException.class).when(questionServiceImpl).delete(questionId);
 
         //then
         mockMvc.perform(
