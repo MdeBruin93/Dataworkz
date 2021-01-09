@@ -205,9 +205,102 @@ class AnswerServiceImplTest {
         verify(answerMapper, times(1)).mapToEventDestination(answer);
     }
 
+    @Test
+    void deleteWhenUserIsNotLoggedIn_ThenThrowException() {
+        //given
+        var id = 1;
 
+        //when
+        when(authService.myDaoOrFail()).thenThrow(UserNotFoundException.class);
+
+        //then
+        assertThatExceptionOfType(UserNotFoundException.class)
+                .isThrownBy(() -> answerService.delete(id));
+        verify(authService, times(1)).myDaoOrFail();
+        verifyNoMoreInteractions(authService, questionRepository);
+    }
 
     @Test
-    void delete() {
+    void deleteWhenAnswerIsNotFound_ThenThrowException() {
+        //given
+        var id = 1;
+        var loggedInUser = new User();
+        //when
+        when(authService.myDaoOrFail()).thenReturn(loggedInUser);
+        when(answerRepository.findById(id)).thenThrow(AnswerNotFoundException.class);
+
+        //then
+        assertThatExceptionOfType(AnswerNotFoundException.class)
+                .isThrownBy(() -> answerService.delete(id));
+        verify(authService, times(1)).myDaoOrFail();
+        verify(answerRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void deleteWhenUserIsNotAdminAndNotOwner_ThenThrowException() {
+        //given
+        var id = 1;
+        var answerDto = new AnswerDto();
+        var loggedInUser = new User();
+        loggedInUser.setId(1);
+        loggedInUser.setRole("ROLE_USER");
+        var answerOwner = new User();
+        answerOwner.setId(2);
+        var answer = new Answer();
+        answer.setOwner(answerOwner);
+        //when
+        when(authService.myDaoOrFail()).thenReturn(loggedInUser);
+        when(answerRepository.findById(id)).thenReturn(Optional.of(answer));
+        //then
+        assertThatExceptionOfType(AnswerNotFoundException.class)
+                .isThrownBy(() -> answerService.delete(id));
+        verify(authService, times(1)).myDaoOrFail();
+    }
+
+    @Test
+    void deleteWhenUserIsUserAndOwner_ThenUpdate() {
+        //given
+        var id = 1;
+        var answerDto = new AnswerDto();
+        answerDto.setText("Hello world!");
+        var loggedInUser = new User();
+        loggedInUser.setId(1);
+        loggedInUser.setRole("ROLE_USER");
+
+        var answer = new Answer();
+        answer.setOwner(loggedInUser);
+        //when
+        when(authService.myDaoOrFail()).thenReturn(loggedInUser);
+        when(answerRepository.findById(id)).thenReturn(Optional.of(answer));
+        //then
+        answerService.delete(id);
+        verify(authService, times(1)).myDaoOrFail();
+        verify(answerRepository, times(1)).findById(id);
+        verify(answerRepository, times(1)).delete(answer);
+    }
+
+    @Test
+    void deleteWhenUserIsAdmin_ThenDelete() {
+        //given
+        var id = 1;
+        var answerDto = new AnswerDto();
+        answerDto.setText("Hello world!");
+        var loggedInAdmin = new User();
+        loggedInAdmin.setId(1);
+        loggedInAdmin.setRole("ROLE_ADMIN");
+        var owner = new User();
+        owner.setId(2);
+
+
+        var answer = new Answer();
+        answer.setOwner(owner);
+        //when
+        when(authService.myDaoOrFail()).thenReturn(loggedInAdmin);
+        when(answerRepository.findById(id)).thenReturn(Optional.of(answer));
+        //then
+        answerService.delete(id);
+        verify(authService, times(1)).myDaoOrFail();
+        verify(answerRepository, times(1)).findById(id);
+        verify(answerRepository, times(1)).delete(answer);
     }
 }

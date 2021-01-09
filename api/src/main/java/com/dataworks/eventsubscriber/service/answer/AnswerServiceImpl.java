@@ -48,6 +48,16 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public void delete(int id) {
+        var loggedInUser = authService.myDaoOrFail();
+        var foundAnswer = answerRepository.findById(id)
+                .orElseThrow(() -> new AnswerNotFoundException(id));
+        var isAdmin = loggedInUser.isAdmin();
+        var isOwner = loggedInUser.getId().equals(foundAnswer.getOwner().getId());
 
+        if (!isAdmin && !isOwner) {
+            throw new AnswerNotFoundException(id);
+        }
+
+        answerRepository.delete(foundAnswer);
     }
 }
