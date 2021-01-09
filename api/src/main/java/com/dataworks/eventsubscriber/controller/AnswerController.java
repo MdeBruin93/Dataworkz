@@ -75,4 +75,25 @@ public class AnswerController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
+
+    @Operation(
+            summary = "Delete answer",
+            description = "",
+            tags = { "Answers" },
+            security = @SecurityRequirement(name = "basicAuth")
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Deleted the question",
+                    content = @Content(schema = @Schema(implementation = QuestionDto.class))),
+            @ApiResponse(responseCode = "401", description = "User is not authorized"),
+            @ApiResponse(responseCode = "404", description = "Answer not found or user not found!")})
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity delete(@PathVariable("id") int id) {
+        try {
+            answerService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (AnswerNotFoundException | UserNotFoundException e) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
 }

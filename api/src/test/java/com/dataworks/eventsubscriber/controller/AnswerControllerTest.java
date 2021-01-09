@@ -232,4 +232,51 @@ class AnswerControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void deleteAnswer_Unauthorized() throws Exception {
+        //given
+        var answerId = 1;
+
+        //when
+
+        //then
+        mockMvc.perform(
+                delete("/api/answers/" + answerId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void deleteAnswerWithNotFoundUser_NotFound() throws Exception {
+        //given
+        var questionId = 1;
+        //when
+        doThrow(UserNotFoundException.class).when(answerService).delete(questionId);
+
+        //then
+        mockMvc.perform(
+                delete("/api/answers/" + questionId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void deleteAnwerWithFoundUser_Delete() throws Exception {
+        //given
+        var questionId = 1;
+
+        //when
+
+        //then
+        mockMvc.perform(
+                delete("/api/answers/" + questionId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
 }
