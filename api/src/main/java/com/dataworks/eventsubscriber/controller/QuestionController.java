@@ -57,7 +57,7 @@ public class QuestionController {
             security = @SecurityRequirement(name = "basicAuth")
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returns the created question",
+            @ApiResponse(responseCode = "200", description = "Returns the updated question",
                     content = @Content(schema = @Schema(implementation = QuestionDto.class))),
             @ApiResponse(responseCode = "400", description = "Model validation failed."),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),

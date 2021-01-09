@@ -1,5 +1,6 @@
 package com.dataworks.eventsubscriber.controller;
 
+import com.dataworks.eventsubscriber.exception.answer.AnswerNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.question.QuestionNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
@@ -17,10 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -50,6 +48,30 @@ public class AnswerController {
             var question = answerService.store(answerDto);
             return new ResponseEntity<>(question, HttpStatus.CREATED);
         } catch (QuestionNotFoundException | UserNotFoundException exception) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Operation(
+            summary = "Update answer",
+            description = "",
+            tags = { "Answers" },
+            security = @SecurityRequirement(name = "basicAuth")
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns the updated answer",
+                    content = @Content(schema = @Schema(implementation = QuestionDto.class))),
+            @ApiResponse(responseCode = "400", description = "Model validation failed."),
+            @ApiResponse(responseCode = "401", description = "User is not authorized"),
+            @ApiResponse(responseCode = "404", description = "Answer not found or user not found!")})
+    @PutMapping(value = "/{id}")
+    public ResponseEntity update(@PathVariable("id") int id, @Valid @RequestBody AnswerDto answerDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
+
+        try {
+            var event = answerService.update(id, answerDto);
+            return new ResponseEntity<>(event, HttpStatus.OK);
+        } catch (AnswerNotFoundException | UserNotFoundException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }

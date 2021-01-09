@@ -1,8 +1,10 @@
 package com.dataworks.eventsubscriber.controller;
 
+import com.dataworks.eventsubscriber.exception.answer.AnswerNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.question.QuestionNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
+import com.dataworks.eventsubscriber.model.dao.Answer;
 import com.dataworks.eventsubscriber.model.dto.AnswerDto;
 import com.dataworks.eventsubscriber.model.dto.QuestionDto;
 import com.dataworks.eventsubscriber.service.answer.AnswerService;
@@ -127,5 +129,107 @@ class AnswerControllerTest {
                         .content(json))
                 .andDo(print())
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    void updateAnswer_Unauthorized() throws Exception {
+        //given
+        var answerDto = new AnswerDto();
+        var answerId = 1;
+
+        var json = new ObjectMapper().writeValueAsString(answerDto);
+        //when
+
+        //then
+        mockMvc.perform(
+                put("/api/answers/" + answerId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void updateInvalidAnswer_BadRequest() throws Exception {
+        //given
+        var answerDto = new AnswerDto();
+        var answerId = 1;
+        var json = new ObjectMapper().writeValueAsString(answerDto);
+        //when
+
+        //then
+        mockMvc.perform(
+                put("/api/answers/" + answerId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void updateAnswerWithNotFoundUser_NotFound() throws Exception {
+        //given
+        var answerId = 1;
+        var answerDto = new AnswerDto();
+        answerDto.setText("Test");
+        answerDto.setQuestionId(1);
+        var json = new ObjectMapper().writeValueAsString(answerDto);
+
+        //when
+        when(answerService.update(any(Integer.class), any(AnswerDto.class))).thenThrow(UserNotFoundException.class);
+
+        //then
+        mockMvc.perform(
+                put("/api/answers/" + answerId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void updateAnswerWithNotFoundAnswer_NotFound() throws Exception {
+        //given
+        var answerId = 1;
+        var answerDto = new AnswerDto();
+        answerDto.setText("Test");
+        answerDto.setQuestionId(1);
+        var json = new ObjectMapper().writeValueAsString(answerDto);
+
+        //when
+        when(answerService.update(any(Integer.class), any(AnswerDto.class))).thenThrow(AnswerNotFoundException.class);
+
+        //then
+        mockMvc.perform(
+                put("/api/answers/" + answerId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void updateAnswerSuccess_Update() throws Exception {
+        //given
+        var answerId = 1;
+        var answerDto = new AnswerDto();
+        answerDto.setText("Test");
+        answerDto.setQuestionId(1);
+        var json = new ObjectMapper().writeValueAsString(answerDto);
+
+        //when
+        when(answerService.update(any(Integer.class), any(AnswerDto.class))).thenReturn(answerDto);
+
+        //then
+        mockMvc.perform(
+                put("/api/answers/" + answerId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
