@@ -4,10 +4,12 @@ import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.question.QuestionNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.QuestionMapper;
+import com.dataworks.eventsubscriber.model.dao.Answer;
 import com.dataworks.eventsubscriber.model.dao.Event;
 import com.dataworks.eventsubscriber.model.dao.Question;
 import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.QuestionDto;
+import com.dataworks.eventsubscriber.repository.AnswerRepository;
 import com.dataworks.eventsubscriber.repository.EventRepository;
 import com.dataworks.eventsubscriber.repository.QuestionRepository;
 import com.dataworks.eventsubscriber.service.auth.AuthService;
@@ -17,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,6 +34,8 @@ class QuestionServiceImplTest {
     EventRepository eventRepository;
     @Mock
     AuthService authService;
+    @Mock
+    AnswerRepository answerRepository;
     @Mock
     QuestionMapper questionMapper;
     @InjectMocks
@@ -246,12 +251,18 @@ class QuestionServiceImplTest {
         user.setRole("ROLE_USER");
         var owner = new User();
         owner.setId(1);
+        var answer = new Answer();
+        answer.setId(1);
+        var answers = new ArrayList<Answer>();
+        answers.add(answer);
         var question = new Question();
         question.setOwner(owner);
+        question.setAnswers(answers);
         var questionDto = new QuestionDto();
         //when
         when(authService.myDaoOrFail()).thenReturn(user);
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
+
         //then
         questionServiceImpl.delete(questionId);
         verify(questionRepository, times(1)).delete(any(Question.class));
@@ -265,12 +276,18 @@ class QuestionServiceImplTest {
         user.setRole("ROLE_ADMIN");
         var owner = new User();
         owner.setId(1);
+        var answer = new Answer();
+        answer.setId(1);
+        var answers = new ArrayList<Answer>();
+        answers.add(answer);
         var question = new Question();
         question.setOwner(owner);
+        question.setAnswers(answers);
         var questionDto = new QuestionDto();
         //when
         when(authService.myDaoOrFail()).thenReturn(user);
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
+
         //then
         questionServiceImpl.delete(questionId);
         verify(questionRepository, times(1)).delete(any(Question.class));

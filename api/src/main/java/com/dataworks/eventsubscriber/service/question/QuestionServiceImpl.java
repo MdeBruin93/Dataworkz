@@ -4,8 +4,10 @@ import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.question.QuestionNotFoundException;
 import com.dataworks.eventsubscriber.mapper.QuestionMapper;
 import com.dataworks.eventsubscriber.model.dto.QuestionDto;
+import com.dataworks.eventsubscriber.repository.AnswerRepository;
 import com.dataworks.eventsubscriber.repository.EventRepository;
 import com.dataworks.eventsubscriber.repository.QuestionRepository;
+import com.dataworks.eventsubscriber.service.answer.AnswerService;
 import com.dataworks.eventsubscriber.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private final EventRepository eventRepository;
+    private final AnswerRepository answerRepository;
     private final QuestionMapper questionMapper;
     private final AuthService authService;
 
@@ -64,6 +67,8 @@ public class QuestionServiceImpl implements QuestionService {
             throw new QuestionNotFoundException(id);
         }
 
+        var answers = foundQuestion.getAnswers();
+        answers.forEach(answerRepository::delete);
         questionRepository.delete(foundQuestion);
     }
 }
