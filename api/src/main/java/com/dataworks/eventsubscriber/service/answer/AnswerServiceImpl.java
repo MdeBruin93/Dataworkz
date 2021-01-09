@@ -1,5 +1,6 @@
 package com.dataworks.eventsubscriber.service.answer;
 
+import com.dataworks.eventsubscriber.exception.answer.AnswerNotFoundException;
 import com.dataworks.eventsubscriber.exception.question.QuestionNotFoundException;
 import com.dataworks.eventsubscriber.mapper.AnswerMapper;
 import com.dataworks.eventsubscriber.model.dto.AnswerDto;
@@ -30,7 +31,19 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public AnswerDto update(int id, AnswerDto answerDto) {
-        return null;
+        var loggedInUser = authService.myDaoOrFail();
+        var foundAnswer = answerRepository.findById(id)
+                .orElseThrow(() -> new AnswerNotFoundException(id));
+        var isAdmin = loggedInUser.isAdmin();
+        var isOwner = loggedInUser.getId().equals(foundAnswer.getOwner().getId());
+
+        if (!isAdmin && !isOwner) {
+            throw new AnswerNotFoundException(id);
+        }
+
+        foundAnswer.setText(answerDto.getText());
+
+        return answerMapper.mapToEventDestination(answerRepository.save(foundAnswer));
     }
 
     @Override
