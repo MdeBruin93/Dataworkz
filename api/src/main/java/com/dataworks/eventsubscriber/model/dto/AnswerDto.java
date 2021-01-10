@@ -10,8 +10,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Component
 @NoArgsConstructor
-public class AnswerDto {
-    private int id;
+public class AnswerDto extends BaseDto{
     @NotNull
     private String text;
     @NotNull
