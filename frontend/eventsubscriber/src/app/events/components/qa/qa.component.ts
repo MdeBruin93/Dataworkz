@@ -122,14 +122,14 @@ export class QaComponent implements OnInit {
     });
   }
 
-  onSubmitEditAnswer(question: any) {
+  onSubmitEditAnswer(answer: any, question: any) {
     const answerText = this.answerEditForm.get('answer') || {value: null};
     const data = {
       text: answerText.value,
       questionId: question.id
     }
 
-    this.qaService.updateAnswer(question.id, data).subscribe({
+    this.qaService.updateAnswer(answer.id, data).subscribe({
       next: _response => {
         this.snackBar.open('answer successfully updated');
         this.reloadData.emit(true);
