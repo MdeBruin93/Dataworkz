@@ -1,0 +1,23 @@
+
+<div class="categories-container">
+  <mat-card>
+      <mat-card-content>
+        <mat-list *ngIf="(categories$ | async) as categories">
+            <div mat-subheader>
+                Categories
+                <mat-icon mat-list-icon class="wishlists__add-button">plus</mat-icon>
+            </div>
+            <ng-container *ngFor="let category of categories; index as i">
+                <mat-list-item>
+                    <span class="category-name">{{category.name}}</span>
+                    <span>
+                        <mat-icon>edit</mat-icon>
+                        <mat-icon (click)="deletecategory(category.id)">close</mat-icon>
+                    </span>
+                </mat-list-item>
+            </ng-container>
+
+        </mat-list>
+      </mat-card-content>
+  </mat-card>
+</div>

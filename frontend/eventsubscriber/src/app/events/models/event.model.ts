@@ -8,6 +8,7 @@ export interface IEvent {
     maxAmountOfAttendees: number;
     euroAmount: number;
     imageUrl: string;
+    categoryId: number;
 }
 
 export interface IEventResponse extends IEvent {
@@ -42,7 +43,8 @@ export class Event {
         Validators.min(0),
       ]),
       image: new FormControl(null, isImageRequired ? [Validators.required] : []),
-      imageUrl: new FormControl('', [])
+      imageUrl: new FormControl('', []),
+      categoryId: new FormControl('', [Validators.required])
     });
   }
 }

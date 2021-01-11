@@ -2,6 +2,7 @@ package com.dataworks.eventsubscriber.service.event;
 
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedException;
+import com.dataworks.eventsubscriber.mapper.CategoryMapper;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.Event;
@@ -9,6 +10,7 @@ import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.repository.EventRepository;
 import com.dataworks.eventsubscriber.service.auth.AuthService;
+import com.dataworks.eventsubscriber.service.category.CategoryService;
 import com.dataworks.eventsubscriber.service.storage.LocalStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,12 +29,19 @@ public class EventImplService implements EventService {
     private final EventMapper eventMapper;
     private final UserMapper userMapper;
     private final LocalStorageService localStorageService;
+    private final CategoryService categoryService;
+    private final CategoryMapper categoryMapper;
 
     @Override
     public EventDto store(EventDto eventDto) {
         var loggedInUser = authService.myDaoOrFail();
         var mappedEvent = eventMapper.mapToEventSource(eventDto);
+
+        var categoryDto = categoryService.findById(eventDto.getCategoryId());
+        var category = categoryMapper.mapToEventSource(categoryDto);
+
         mappedEvent.setUser(loggedInUser);
+        mappedEvent.setCategory(category);
 
         var savedEvent = eventRepository.save(mappedEvent);
 

@@ -4,7 +4,9 @@ import com.dataworks.eventsubscriber.exception.NotFoundException;
 import com.dataworks.eventsubscriber.mapper.CategoryMapper;
 import com.dataworks.eventsubscriber.model.dao.Category;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
+import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.repository.CategoryRepository;
+import com.dataworks.eventsubscriber.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 public class CategoryImplService implements CategoryService {
     private final CategoryMapper categoryMapper;
     private final CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
 
     @Override
     public CategoryDto store(CategoryDto categoryDto) {
@@ -44,7 +47,7 @@ public class CategoryImplService implements CategoryService {
 
     @Override
     public List<CategoryDto> findAll() {
-        return categoryRepository.findAll(Sort.by("date").descending())
+        return categoryRepository.findAll(Sort.by("name").descending())
                 .stream()
                 .map(categoryMapper::mapToEventDestination)
                 .collect(Collectors.toList());
@@ -52,8 +55,10 @@ public class CategoryImplService implements CategoryService {
 
     @Override
     public CategoryDto findById(int id) {
-        var event = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category"));
-        return categoryMapper.mapToEventDestination(event);
+        var category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category"));
+        var relatedEvents = eventRepository.findByCategoryId(category.getId());
+        category.setEvents(relatedEvents);
+        return categoryMapper.mapToEventDestination(category);
     }
 
     @Override

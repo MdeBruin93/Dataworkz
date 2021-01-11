@@ -7,3 +7,9 @@ export {
   Login,
   Logout
 } from './auth';
+
+export {
+  CategoriesState,
+  LoadCategories,
+  LoadCategory
+} from './categories';

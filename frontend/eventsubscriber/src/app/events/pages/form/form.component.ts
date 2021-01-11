@@ -5,12 +5,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EventsService } from '../../services';
 import { Event } from '../../models';
 
+import { Store, Select} from '@ngxs/store';
+import { CategoriesState, LoadCategories } from '@core/store';
+import { Observable } from 'rxjs';
+import { Category } from '@core/models';
+
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss']
 })
 export class FormComponent implements OnInit {
+  @Select(CategoriesState.categories)
+  public categories$: Observable<any>;
+
   eventId: any;
   eventCreateForm: FormGroup = Event.getFormGroup();
   file: any;
@@ -19,10 +27,12 @@ export class FormComponent implements OnInit {
     private eventService: EventsService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private store: Store
   ) { }
 
   ngOnInit(): void {
+    this.store.dispatch(new LoadCategories());
     this.eventId = this.route.snapshot.paramMap.get('eventId');
     if (this.eventId) {
       this.eventService.findById(this.eventId).subscribe({

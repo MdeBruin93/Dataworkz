@@ -30,6 +30,13 @@
         <span class="toolbar-item-text">Wishlist</span>
       </div>
 
+      <ng-container *ngIf="isLoggedIn$ | async">
+        <div class="icon-text-wrapper" [routerLink]="['/categories']" *appIsAdmin="(currentUser$ | async)?.role">
+          <mat-icon>favorite</mat-icon>
+          <span class="toolbar-item-text">Categories</span>
+        </div>
+      </ng-container>
+
       <div class="spacer"></div>
 
       <div class="icon-text-wrapper" [routerLink]="['/login']" *ngIf="!(isLoggedIn$ | async)">

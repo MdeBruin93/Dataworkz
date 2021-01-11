@@ -17,7 +17,7 @@ export class AuthService {
   ) { }
 
   public isAuthenticated(): boolean {
-    return localStorage.getItem('auth.token') != '';
+    return this.getToken() != "";
   }
 
   public register(data: object): Observable<any> {
@@ -60,6 +60,15 @@ export class AuthService {
       return JSON.parse(user) as IUser;
     }
     return null;
+  }
+
+  public isAdmin(): boolean {
+    const user = this.getCurrentUser();
+    console.log(user);
+    if (!user) {
+      return false;
+    }
+    return user.role === "ROLE_ADMIN";
   }
 
   private encodeBasicAuthCredentials(email: string, password: string) {

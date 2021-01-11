@@ -1,9 +1,11 @@
 import {
   AppState,
-  AuthState
+  AuthState,
+  CategoriesState
 } from '@core/store';
 
 export const states = [
   AppState,
-  AuthState
+  AuthState,
+  CategoriesState
 ];

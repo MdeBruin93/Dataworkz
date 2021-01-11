@@ -5,6 +5,7 @@ import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.service.category.CategoryService;
+import com.dataworks.eventsubscriber.service.event.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,6 +26,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
+    private final EventService eventService;
 
     @Operation(
             summary = "Create category",

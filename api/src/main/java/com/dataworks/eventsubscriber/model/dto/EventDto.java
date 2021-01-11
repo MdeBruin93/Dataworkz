@@ -18,6 +18,8 @@ public class EventDto {
     @NotNull
     private int id;
     @NotNull
+    private int categoryId;
+    @NotNull
     private String title;
     @NotNull
     private String description;

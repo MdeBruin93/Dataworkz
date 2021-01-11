@@ -10,5 +10,6 @@ export {
 } from './services';
 
 export {
-  AuthGuard
+  AuthGuard,
+  AdminGuard
 } from './guards';
