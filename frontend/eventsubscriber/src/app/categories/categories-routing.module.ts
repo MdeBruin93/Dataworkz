@@ -8,11 +8,11 @@ const routes: Routes = [
     component: OverviewComponent
   },
   {
-    path: '/create',
+    path: 'create',
     component: FormComponent
   },
   {
-    path: '/{id}/edit',
+    path: ':id',
     component: FormComponent
   }
 ];

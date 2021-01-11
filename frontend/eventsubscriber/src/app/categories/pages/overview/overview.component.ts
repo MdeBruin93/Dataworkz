@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store, Select } from '@ngxs/store';
-import { CategoriesState, LoadCategories } from '@core/store';
+import { CategoriesState, LoadCategories, DeleteCategory } from '@core/store';
 import { Category } from '@core/models';
 import { Observable } from 'rxjs';
 
@@ -16,22 +17,20 @@ export class OverviewComponent implements OnInit {
   public categoryForm = Category.getFormGroup();
 
   constructor(
-    private store: Store
+    private store: Store,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.store.dispatch(new LoadCategories());
   }
 
-  deletecategory(id: string) {
-    // dispatch delete category
+  deletecategory(id: number) {
+    this.store.dispatch(new DeleteCategory(id));
+    this.store.dispatch(new LoadCategories());
   }
 
-  edit(index: number) {
-    // dispatch save
-  }
-
-  onSubmitCategoryForm(category: Category) {
-    // dispatch save
+  edit(id: number) {
+    this.router.navigate(["categories/create"]);
   }
 }

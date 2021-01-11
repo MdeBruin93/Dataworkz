@@ -11,5 +11,7 @@ export {
 export {
   CategoriesState,
   LoadCategories,
-  LoadCategory
+  LoadCategory,
+  SaveCategory,
+  DeleteCategory
 } from './categories';

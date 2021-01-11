@@ -8,6 +8,7 @@ import { CategoriesService } from './services';
 import { CategoriesRoutingModule } from './categories-routing.module';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -17,9 +18,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   ],
   imports: [
     CommonModule,
+    RouterModule,
     CategoriesRoutingModule,
     MaterialModule,
     ReactiveFormsModule
+
   ],
   providers: [
     CategoriesService

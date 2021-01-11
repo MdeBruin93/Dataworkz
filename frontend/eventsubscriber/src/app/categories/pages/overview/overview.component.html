@@ -11,7 +11,7 @@
                 <mat-list-item>
                     <span class="category-name">{{category.name}}</span>
                     <span>
-                        <mat-icon>edit</mat-icon>
+                        <mat-icon [routerLink]="[category.id]">edit</mat-icon>
                         <mat-icon (click)="deletecategory(category.id)">close</mat-icon>
                     </span>
                 </mat-list-item>

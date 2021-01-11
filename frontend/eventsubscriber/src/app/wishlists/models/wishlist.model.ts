@@ -13,6 +13,7 @@ export interface IWishlist {
 export class Wishlist {
   static getFormGroup() {
     return new FormGroup({
+      id: new FormControl(),
       name: new FormControl('', [
         Validators.required,
         Validators.maxLength(100)

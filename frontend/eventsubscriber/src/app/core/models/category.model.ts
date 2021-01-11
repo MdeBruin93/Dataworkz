@@ -14,6 +14,7 @@ export class Category implements ICategory {
 
   static getFormGroup() {
     return new FormGroup({
+      id: new FormControl(),
       name: new FormControl('', [
         Validators.required,
         Validators.maxLength(100)
