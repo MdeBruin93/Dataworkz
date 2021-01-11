@@ -5,7 +5,6 @@ import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.service.category.CategoryService;
-import com.dataworks.eventsubscriber.service.event.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,7 +25,6 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
-    private final EventService eventService;
 
     @Operation(
             summary = "Create category",
@@ -61,7 +59,7 @@ public class CategoryController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns the updated category",
-                    content = @Content(schema = @Schema(implementation = EventDto.class))),
+                    content = @Content(schema = @Schema(implementation = CategoryDto.class))),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "404", description = "Category not found or Logged in user not found")})
     @PutMapping(value = "/{id}")
@@ -108,26 +106,6 @@ public class CategoryController {
             return new ResponseEntity(categoryService.findById(id), HttpStatus.OK);
         } catch (NotFoundException exception) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/{eventId}/events")
-    @Operation(
-            summary = "Get categories of a specific event",
-            description = "",
-            tags = { "Categories" },
-            security = @SecurityRequirement(name = "basicAuth")
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returns a list of categories.",
-                    content = @Content(schema = @Schema(implementation = CategoryDto.class))),
-            @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "500", description = "Internal server error.")})
-    public ResponseEntity findbyevent(@PathVariable int eventId) {
-        try {
-            return new ResponseEntity(categoryService.findByEventId(eventId), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -4,7 +4,6 @@ import com.dataworks.eventsubscriber.exception.NotFoundException;
 import com.dataworks.eventsubscriber.mapper.CategoryMapper;
 import com.dataworks.eventsubscriber.model.dao.Category;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
-import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.repository.CategoryRepository;
 import com.dataworks.eventsubscriber.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class CategoryImplService implements CategoryService {
+public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
     private final CategoryRepository categoryRepository;
     private final EventRepository eventRepository;
@@ -59,14 +58,6 @@ public class CategoryImplService implements CategoryService {
         var relatedEvents = eventRepository.findByCategoryId(category.getId());
         category.setEvents(relatedEvents);
         return categoryMapper.mapToEventDestination(category);
-    }
-
-    @Override
-    public CategoryDto findByEventId(int eventId) {
-        return categoryRepository.findByEvents_id(eventId)
-                .stream()
-                .map(categoryMapper::mapToEventDestination)
-                .findFirst().orElseThrow(() -> new NotFoundException("Category"));
     }
 
     @Override

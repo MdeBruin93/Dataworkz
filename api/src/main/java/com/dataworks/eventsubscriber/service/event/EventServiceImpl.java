@@ -1,19 +1,18 @@
 package com.dataworks.eventsubscriber.service.event;
 
+import com.dataworks.eventsubscriber.exception.category.CategoryNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedException;
-import com.dataworks.eventsubscriber.mapper.CategoryMapper;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.Event;
 import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
+import com.dataworks.eventsubscriber.repository.CategoryRepository;
 import com.dataworks.eventsubscriber.repository.EventRepository;
 import com.dataworks.eventsubscriber.service.auth.AuthService;
-import com.dataworks.eventsubscriber.service.category.CategoryService;
 import com.dataworks.eventsubscriber.service.storage.LocalStorageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -23,22 +22,20 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class EventImplService implements EventService {
+public class EventServiceImpl implements EventService {
     private final AuthService authService;
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final UserMapper userMapper;
     private final LocalStorageService localStorageService;
-    private final CategoryService categoryService;
-    private final CategoryMapper categoryMapper;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public EventDto store(EventDto eventDto) {
         var loggedInUser = authService.myDaoOrFail();
         var mappedEvent = eventMapper.mapToEventSource(eventDto);
 
-        var categoryDto = categoryService.findById(eventDto.getCategoryId());
-        var category = categoryMapper.mapToEventSource(categoryDto);
+        var category = categoryRepository.findById(eventDto.getCategoryId()).orElseThrow(CategoryNotFoundException::new);
 
         mappedEvent.setUser(loggedInUser);
         mappedEvent.setCategory(category);
@@ -59,6 +56,8 @@ public class EventImplService implements EventService {
             throw new EventNotFoundException();
         }
 
+        var category = categoryRepository.findById(eventDto.getCategoryId()).orElseThrow(CategoryNotFoundException::new);
+
         Event ev = eventFromRepo.get();
         ev.setDate(eventDto.getDate());
         ev.setDescription(eventDto.getDescription());
@@ -66,6 +65,7 @@ public class EventImplService implements EventService {
         ev.setMaxAmountOfAttendees(eventDto.getMaxAmountOfAttendees());
         ev.setTitle(eventDto.getTitle());
         ev.setImageUrl(eventDto.getImageUrl());
+        ev.setCategory(category);
 
         return eventMapper.mapToEventDestination(eventRepository.save(ev));
     }

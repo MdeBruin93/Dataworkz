@@ -18,13 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.dataworks.eventsubscriber.model.dao.User;
 import org.springframework.data.domain.Sort;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import java.util.Optional;
@@ -34,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class EventImplServiceTest {
+class EventServiceImplTest {
     @Mock
     AuthService authService;
     @Mock
@@ -52,7 +48,7 @@ class EventImplServiceTest {
     @Mock
     EventDto eventDto;
     @InjectMocks
-    EventImplService eventImplService;
+    EventServiceImpl eventServiceImpl;
 
     @Test
     public void storeWhenUserIsNotLoggedIn_ThrowUserIsNotLoggedInException() {
@@ -63,7 +59,7 @@ class EventImplServiceTest {
 
         //then
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> eventImplService.store(eventDto));
+                .isThrownBy(() -> eventServiceImpl.store(eventDto));
         verify(authService, times(1)).myDaoOrFail();
         verify(userMapper, times(0)).mapToSource(userDto);
         verify(eventMapper, times(0)).mapToEventSource(eventDto);
@@ -84,7 +80,7 @@ class EventImplServiceTest {
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
 
         //then
-        var result = eventImplService.store(eventDto);
+        var result = eventServiceImpl.store(eventDto);
         assertThat(result).isInstanceOf(EventDto.class);
         verify(authService, times(1)).myDaoOrFail();
         verify(eventMapper, times(1)).mapToEventSource(eventDto);
@@ -106,7 +102,7 @@ class EventImplServiceTest {
 
         //then
         assertThatExceptionOfType(EventNotFoundException.class)
-                .isThrownBy(() -> eventImplService.update(eventId, eventDto));
+                .isThrownBy(() -> eventServiceImpl.update(eventId, eventDto));
         verify(eventRepository, times(1)).findById(eventId);
         verify(eventRepository, times(0)).findByIdAndUser_Id(eventId, userId);
     }
@@ -125,7 +121,7 @@ class EventImplServiceTest {
 
         //then
         assertThatExceptionOfType(EventNotFoundException.class)
-                .isThrownBy(() -> eventImplService.update(eventId, eventDto));
+                .isThrownBy(() -> eventServiceImpl.update(eventId, eventDto));
         verify(eventRepository, times(0)).findById(eventId);
         verify(eventRepository, times(1)).findByIdAndUser_Id(eventId, userId);
     }
@@ -146,7 +142,7 @@ class EventImplServiceTest {
 
 
         //then
-        var result = eventImplService.update(eventId, eventDto);
+        var result = eventServiceImpl.update(eventId, eventDto);
         assertThat(result).isInstanceOf(EventDto.class);
         verify(eventRepository, times(1)).findById(eventId);
         verify(eventRepository, times(0)).findByIdAndUser_Id(eventId, userId);
@@ -168,7 +164,7 @@ class EventImplServiceTest {
 
 
         //then
-        var result = eventImplService.update(eventId, eventDto);
+        var result = eventServiceImpl.update(eventId, eventDto);
         assertThat(result).isInstanceOf(EventDto.class);
         verify(eventRepository, times(0)).findById(eventId);
         verify(eventRepository, times(1)).findByIdAndUser_Id(eventId, userId);
@@ -196,7 +192,7 @@ class EventImplServiceTest {
         when(eventRepository.findAll(Sort.by("date").descending())).thenReturn(events);
 
         // then
-        var result = eventImplService.findAll();
+        var result = eventServiceImpl.findAll();
         assertThat(result.size() == 2).isTrue();
         verify(eventRepository, times(1)).findAll(Sort.by("date").descending());
     }
@@ -210,7 +206,7 @@ class EventImplServiceTest {
 
         //then
         assertThatExceptionOfType(EventNotFoundException.class)
-                .isThrownBy(() -> eventImplService.subscribe(eventId));
+                .isThrownBy(() -> eventServiceImpl.subscribe(eventId));
         verify(authService, times(1)).myDaoOrFail();
     }
 
@@ -227,7 +223,7 @@ class EventImplServiceTest {
 
         //then
         assertThatExceptionOfType(EventUserAlreadySubscribedException.class)
-                .isThrownBy(() -> eventImplService.subscribe(eventId));
+                .isThrownBy(() -> eventServiceImpl.subscribe(eventId));
         verify(authService, times(1)).myDaoOrFail();
         verify(eventRepository, times(1)).findByIdAndSubscribedUsers_Id(eventId, userId);
     }
@@ -246,7 +242,7 @@ class EventImplServiceTest {
         when(eventMapper.mapToEventDestination(event)).thenReturn(new EventDto());
 
         //then
-        var result = eventImplService.subscribe(eventId);
+        var result = eventServiceImpl.subscribe(eventId);
         assertThat(result).isInstanceOf(EventDto.class);
         verify(authService, times(1)).myDaoOrFail();
     }
@@ -268,7 +264,7 @@ class EventImplServiceTest {
         when(eventRepository.findByUserId(userId)).thenReturn(events);
 
         // then
-        var result = eventImplService.findByUserId();
+        var result = eventServiceImpl.findByUserId();
         assertThat(result.stream().count()).isOne();
     }
   
@@ -279,6 +275,6 @@ class EventImplServiceTest {
         // when
 
         // then
-        assertDoesNotThrow(() -> eventImplService.delete(eventId));
+        assertDoesNotThrow(() -> eventServiceImpl.delete(eventId));
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class WishlistImplService implements WishlistService {
+public class WishlistServiceImpl implements WishlistService {
 
     private final AuthService authService;
     private final WishlistRepository wishlistRepository;
