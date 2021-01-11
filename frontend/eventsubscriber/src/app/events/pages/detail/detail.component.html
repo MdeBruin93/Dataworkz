@@ -14,10 +14,16 @@
       <mat-card-footer>
         <span><strong>Maximum number of participants:</strong> {{event.maxAmountOfAttendees}}</span><br>
         <span><strong>Costs of participation:</strong> €{{event.euroAmount}}</span><br>
-        <button mat-raised-button color="primary" [routerLink]="['/events','edit', event.id]">Edit</button>
-        <button mat-raised-button color="primary" (click)="subscribeToEvent(event)">Subscribe</button>
+        <button mat-raised-button color="primary" [routerLink]="['/events','edit', event.id]" *appIsAllowedForOrganizer="event.user.id">Edit</button>
+        <button mat-raised-button color="primary" (click)="subscribeToEvent(event)" *appIsNotAllowedForOrganizer="event.user.id">Subscribe</button>
       </mat-card-footer>
     </mat-card>
+    <app-qa 
+      *ngIf="event"
+      [questions]="event.questions"
+      [eventId]="event.id"
+      (reloadData)="reloadData(event)"
+    ></app-qa>
   </div>
 </div>
 

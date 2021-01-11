@@ -47,4 +47,18 @@ export class DetailComponent implements OnInit {
     return this.eventsService.sanitize(url);
   }
 
+  deleteEvent(id: number) {
+    this.eventsService.delete(id).subscribe({
+      next: _response => {
+        console.log(_response);
+      },
+      error: error => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
+
+  reloadData(_event: boolean) {
+    this.ngOnInit();
+  }
 }

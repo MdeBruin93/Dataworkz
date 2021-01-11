@@ -1,42 +1,43 @@
 package com.dataworks.eventsubscriber.service.storage;
 
-import com.dataworks.eventsubscriber.exception.storage.StorageException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.rest.core.Path;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import com.dataworks.eventsubscriber.exception.storage.StorageException;
+import com.dataworks.eventsubscriber.model.dto.FileDto;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
 public class LocalStorageService implements StorageService {
-    private final String storagePath = "/src/main/resources/static/";
+    private final Path root = Paths.get("src/main/storage");
 
     @Override
-    public String store(MultipartFile file) {
+    public FileDto store(MultipartFile file) {
         if (file.isEmpty()) {
-            throw new StorageException("Failed to store empty file");
+            throw new StorageException("Could not store the file. Because file is empty!");
         }
 
         try {
-            var fileName = file.getOriginalFilename();
-            var is = file.getInputStream();
+            Files.copy(
+                    file.getInputStream(),
+                    this.root.resolve(file.getOriginalFilename()),
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/storage/")
+                    .path(file.getOriginalFilename())
+                    .toUriString();
 
-            var fileStore = new Path(Paths.get("").toAbsolutePath().normalize().toString() + storagePath + fileName);
+            var fileDto = new FileDto();
+            fileDto.setFileUrl(fileDownloadUri);
 
-            Files.copy(is, Paths.get(fileStore.toString()),
-                    StandardCopyOption.REPLACE_EXISTING);
-
-            return file.getOriginalFilename();
-        } catch (IOException e) {
-
-            var msg = String.format("%s", Paths.get("").toAbsolutePath().normalize().toString());
-
-            throw new StorageException(msg, e);
+            return fileDto;
+        } catch (Exception e) {
+            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }
     }
 }

@@ -10,4 +10,5 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     Optional<Event> findByIdAndUser_Id(int id, int userId);
     Optional<Event> findByIdAndSubscribedUsers_Id(int id, int userId);
     List<Event> findByUserId(int userId);
+    List<Event> findBySubscribedUsers_Id(int userId);
 }

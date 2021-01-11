@@ -1,12 +1,15 @@
 package com.dataworks.eventsubscriber.controller;
 
+import com.dataworks.eventsubscriber.exception.PasswordDontMatchException;
 import com.dataworks.eventsubscriber.exception.user.UserAlreadyExistException;
-import com.dataworks.eventsubscriber.model.dto.RegisterDto;
-import com.dataworks.eventsubscriber.model.dto.UserDto;
+import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
+import com.dataworks.eventsubscriber.exception.user.UserTokenNotFoundException;
+import com.dataworks.eventsubscriber.model.dto.*;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import com.dataworks.eventsubscriber.service.auth.WebAuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,7 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,6 +33,8 @@ class AuthControllerTest {
     WebAuthService webAuthService;
     @MockBean
     WebAuthDetailService webAuthDetailService;
+    @Mock
+    UserDto userDto;
     @Autowired
     private MockMvc mockMvc;
 
@@ -103,5 +108,214 @@ class AuthControllerTest {
         // act & assert
         mockMvc.perform(get("/api/auth/my"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void forgotPasswordWhenRequestBodyIsNotValid_ThenThrowBadRequest() throws Exception {
+        //given
+        var forgotPasswordDto = new ForgotPasswordDto();
+        var json = new ObjectMapper().writeValueAsString(forgotPasswordDto);
+        //when
+        //then
+        mockMvc.perform(
+                post("/api/auth/forgot-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void forgotPasswordWhenUserIsNotFound_ThenThrowNotFoundRequest() throws Exception {
+        //given
+        var email = "info@hr.nl";
+        var forgotPasswordDto = new ForgotPasswordDto();
+        forgotPasswordDto.setEmail(email);
+
+        var json = new ObjectMapper().writeValueAsString(forgotPasswordDto);
+        //when
+        when(webAuthService.forgotPassword(email)).thenThrow(UserNotFoundException.class);
+        //then
+        mockMvc.perform(
+                post("/api/auth/forgot-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void forgotPasswordWhenSuccess_ThenReturnNoContentRequest() throws Exception {
+        //given
+        var email = "info@hr.nl";
+        var forgotPasswordDto = new ForgotPasswordDto();
+        forgotPasswordDto.setEmail(email);
+
+        var json = new ObjectMapper().writeValueAsString(forgotPasswordDto);
+        //when
+        //then
+        mockMvc.perform(
+                post("/api/auth/forgot-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void resetPasswordWhenRequestBodyIsNotValid_ThenThrowBadRequest() throws Exception {
+        //given
+        var forgotPasswordDto = new ForgotPasswordDto();
+        var json = new ObjectMapper().writeValueAsString(forgotPasswordDto);
+        //when
+        //then
+        mockMvc.perform(
+                post("/api/auth/reset-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void resetPasswordWhenUserIsNotFound_ThenThrowNotFoundRequest() throws Exception {
+        //given
+        var token = "abc";
+        var password = "123456";
+        var resetPasswordDto = new ResetPasswordDto();
+        resetPasswordDto.setToken(token);
+        resetPasswordDto.setNewPassword(password);
+        resetPasswordDto.setRepeatNewPassword(password);
+        var json = new ObjectMapper().writeValueAsString(resetPasswordDto);
+        //when
+        when(webAuthService.resetPassword(isA(ResetPasswordDto.class)))
+                .thenThrow(UserNotFoundException.class);
+        //then
+        mockMvc.perform(
+                post("/api/auth/reset-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void resetPasswordWhenPasswordDontMatch_ThenThrowBadRequest() throws Exception {
+        //given
+        var token = "abc";
+        var password = "123456";
+        var resetPasswordDto = new ResetPasswordDto();
+        resetPasswordDto.setToken(token);
+        resetPasswordDto.setNewPassword(password);
+        resetPasswordDto.setRepeatNewPassword(password);
+        var json = new ObjectMapper().writeValueAsString(resetPasswordDto);
+        //when
+        when(webAuthService.resetPassword(isA(ResetPasswordDto.class)))
+                .thenThrow(PasswordDontMatchException.class);
+        //then
+        mockMvc.perform(
+                post("/api/auth/reset-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void resetPasswordWhenSuccess_ThenReturnNoContentRequest() throws Exception {
+        //given
+        var token = "abc";
+        var password = "123456";
+        var resetPasswordDto = new ResetPasswordDto();
+        resetPasswordDto.setToken(token);
+        resetPasswordDto.setNewPassword(password);
+        resetPasswordDto.setRepeatNewPassword(password);
+        var json = new ObjectMapper().writeValueAsString(resetPasswordDto);
+
+        //when
+        when(webAuthService.resetPassword(resetPasswordDto)).thenReturn(userDto);
+        //then
+        mockMvc.perform(
+                post("/api/auth/reset-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void activateWhenTokenDtoIsNotValid_ThenThrowBadRequest() throws Exception {
+        //given
+        var token = "abc";
+        var resetPasswordDto = new TokenDto();
+        resetPasswordDto.setToken(token);
+        var json = new ObjectMapper().writeValueAsString(resetPasswordDto);
+
+        //when
+        when(webAuthService.activate(isA(TokenDto.class))).thenThrow(UserTokenNotFoundException.class);
+        //then
+        mockMvc.perform(
+                post("/api/auth/activate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void activateWhenUserTokenIsNotFound_ThenThrowNotFound() throws Exception {
+        //given
+        var token = "abc";
+        var resetPasswordDto = new TokenDto();
+        resetPasswordDto.setToken(token);
+        var json = new ObjectMapper().writeValueAsString(resetPasswordDto);
+
+        //when
+        when(webAuthService.activate(isA(TokenDto.class))).thenThrow(UserTokenNotFoundException.class);
+        //then
+        mockMvc.perform(
+                post("/api/auth/activate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void activateWhenUserNotFound_ThenThrowNotFound() throws Exception {
+        //given
+        var token = "abc";
+        var resetPasswordDto = new TokenDto();
+        resetPasswordDto.setToken(token);
+        var json = new ObjectMapper().writeValueAsString(resetPasswordDto);
+
+        //when
+        when(webAuthService.activate(isA(TokenDto.class))).thenThrow(UserNotFoundException.class);
+        //then
+        mockMvc.perform(
+                post("/api/auth/activate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void activateWhenSuccess_ThenReturnNoContent() throws Exception {
+        //given
+        var token = "abc";
+        var resetPasswordDto = new TokenDto();
+        resetPasswordDto.setToken(token);
+        var json = new ObjectMapper().writeValueAsString(resetPasswordDto);
+
+        //when
+        when(webAuthService.activate(isA(TokenDto.class))).thenReturn(userDto);
+        //then
+        mockMvc.perform(
+                post("/api/auth/activate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 }

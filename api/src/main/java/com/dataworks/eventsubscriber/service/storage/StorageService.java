@@ -1,11 +1,9 @@
 package com.dataworks.eventsubscriber.service.storage;
 
-import io.github.classgraph.Resource;
-import org.springframework.data.rest.core.Path;
+import com.dataworks.eventsubscriber.model.dto.FileDto;
 import org.springframework.web.multipart.MultipartFile;
-
-
+import org.springframework.core.io.Resource;
 
 public interface StorageService {
-    String store(MultipartFile file);
+    FileDto store(MultipartFile file);
 }

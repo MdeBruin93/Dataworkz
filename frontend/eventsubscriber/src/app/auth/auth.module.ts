@@ -13,8 +13,7 @@ import {
 } from './pages';
 
 import {
-  AuthService,
-  StorageService
+  AuthService
 } from './services';
 
 import {
@@ -22,13 +21,15 @@ import {
   ErrorHandlingInterceptor
 } from './interceptors';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegisterComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    ActivateAccountComponent
   ],
   imports: [
     CommonModule,
@@ -47,8 +48,7 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlingInterceptor, multi: true },
-    AuthService,
-    StorageService
+    AuthService
   ]
 })
 export class AuthModule { }

@@ -1,8 +1,8 @@
 .events-overview {
-  background-color: rgb(241, 241, 241);
+  // background-color: rgb(241, 241, 241);
   height: 100%;
   width: 100%;
-  margin-left: 200px;
+  // margin-left: 200px;
 
   button {
     margin: 10px 5px 10px 20px;
@@ -23,6 +23,8 @@
 
       img {
         height: 50%;
+        width: 100%;
+        object-fit: cover;
       }
 
       mat-card-title {

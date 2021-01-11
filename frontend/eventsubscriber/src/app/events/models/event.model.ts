@@ -1,20 +1,27 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IUser } from '@core/models';
+
 export interface IEvent {
     title: string;
     description: string;
     date: Date;
     maxAmountOfAttendees: number;
     euroAmount: number;
-    image: string;
+    imageUrl: string;
 }
 
 export interface IEventResponse extends IEvent {
     id: number;
     imageUrl: string;
+    user: IUser;
+}
+
+export interface IFileResponse {
+  fileUrl: string;
 }
 
 export class Event {
-  static getFormGroup() {
+  static getFormGroup(isImageRequired = false) {
     return new FormGroup({
       title: new FormControl('', [
         Validators.required,
@@ -34,9 +41,8 @@ export class Event {
         Validators.pattern("^[0-9]*$"),
         Validators.min(0),
       ]),
-      image: new FormControl(null, [
-        Validators.required,
-      ])
+      image: new FormControl(null, isImageRequired ? [Validators.required] : []),
+      imageUrl: new FormControl('', [])
     });
   }
 }

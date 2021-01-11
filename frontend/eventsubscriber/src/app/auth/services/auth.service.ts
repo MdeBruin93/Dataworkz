@@ -3,8 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
-
-import { StorageService } from './storage.service';
+import { IUser } from '@core/models';
 
 
 @Injectable({
@@ -14,12 +13,11 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private storageService: StorageService,
     private router: Router
   ) { }
 
   public isAuthenticated(): boolean {
-    return this.storageService.get() != null;
+    return localStorage.getItem('auth.token') != '';
   }
 
   public register(data: object): Observable<any> {
@@ -27,26 +25,44 @@ export class AuthService {
   }
 
   public login(email: string, password: string): Observable<any> {
-    this.storageService.setToken(email, password);
+    this.setToken(email, password);
     return this.http.get(`${environment.apiUrl}/api/auth/my`);
   }
 
   public logout(): void {
-    this.storageService.remove();
-    this.router.navigate(['./login']);
+    localStorage.clear();
   }
 
-  public forgotPassword(data: object): void {
-    console.log(data);
-    // TODO: uncomment when endpoint is added
-    // this.http.post<any>(`${environment.apiUrl}/api/auth/forgot-password`, data);
-    this.router.navigate(['./login']);
+  public forgotPassword(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/api/auth/forgot-password`, data);
   }
 
-  public resetPassword(data: object): void {
-    console.log(data);
-    // TODO: uncomment when endpoint is added
-    // this.http.post<any>(`${environment.apiUrl}/api/auth/reset-password`, data);
-    this.router.navigate(['./login']);
+  public resetPassword(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/api/auth/reset-password`, data);
+  }
+
+  public activateAccount(data: object): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/api/auth/activate`, data);
+  }
+
+  public getToken(): string {
+    let token = localStorage.getItem('auth.token');
+    return token ? token.replace('"',"").replace('"',"") : "";
+  }
+
+  public setToken(email: string, password: string): void {
+    localStorage.setItem('auth.token', this.encodeBasicAuthCredentials(email, password));
+  }
+
+  public getCurrentUser(): IUser | null {
+    const user = localStorage.getItem('auth.currentUser');
+    if (user) {
+      return JSON.parse(user) as IUser;
+    }
+    return null;
+  }
+
+  private encodeBasicAuthCredentials(email: string, password: string) {
+    return window.btoa(email + ':' + password);
   }
 }
