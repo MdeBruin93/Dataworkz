@@ -5,9 +5,11 @@ import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedE
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
+import com.dataworks.eventsubscriber.model.dao.Category;
 import com.dataworks.eventsubscriber.model.dao.Event;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
+import com.dataworks.eventsubscriber.repository.CategoryRepository;
 import com.dataworks.eventsubscriber.repository.EventRepository;
 import com.dataworks.eventsubscriber.service.auth.AuthService;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,8 @@ class EventServiceImplTest {
     @Mock
     EventRepository eventRepository;
     @Mock
+    CategoryRepository categoryRepository;
+    @Mock
     UserMapper userMapper;
     @Mock
     EventMapper eventMapper;
@@ -47,6 +51,8 @@ class EventServiceImplTest {
     UserDto userDto;
     @Mock
     EventDto eventDto;
+    @Mock
+    Category category;
     @InjectMocks
     EventServiceImpl eventServiceImpl;
 
@@ -78,6 +84,7 @@ class EventServiceImplTest {
         when(eventMapper.mapToEventSource(eventDto)).thenReturn(event);
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
+        when(categoryRepository.findById(any(Integer.class))).thenReturn(Optional.of(category));
 
         //then
         var result = eventServiceImpl.store(eventDto);
@@ -87,6 +94,7 @@ class EventServiceImplTest {
         verify(event, times(1)).setUser(user);
         verify(eventRepository, times(1)).save(event);
         verify(eventMapper, times(1)).mapToEventDestination(event);
+        verify(categoryRepository, times(1)).findById(any(Integer.class));
     }
 
     @Test
@@ -139,13 +147,14 @@ class EventServiceImplTest {
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
-
+        when(categoryRepository.findById(any(Integer.class))).thenReturn(Optional.of(category));
 
         //then
         var result = eventServiceImpl.update(eventId, eventDto);
         assertThat(result).isInstanceOf(EventDto.class);
         verify(eventRepository, times(1)).findById(eventId);
         verify(eventRepository, times(0)).findByIdAndUser_Id(eventId, userId);
+        verify(categoryRepository, times(1)).findById(any(Integer.class));
     }
 
     @Test
@@ -161,13 +170,14 @@ class EventServiceImplTest {
         when(eventRepository.findByIdAndUser_Id(eventId, userId)).thenReturn(Optional.of(event));
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
-
+        when(categoryRepository.findById(any(Integer.class))).thenReturn(Optional.of(category));
 
         //then
         var result = eventServiceImpl.update(eventId, eventDto);
         assertThat(result).isInstanceOf(EventDto.class);
         verify(eventRepository, times(0)).findById(eventId);
         verify(eventRepository, times(1)).findByIdAndUser_Id(eventId, userId);
+        verify(categoryRepository, times(1)).findById(any(Integer.class));
     }
 
     @Test
@@ -267,8 +277,8 @@ class EventServiceImplTest {
         var result = eventServiceImpl.findByUserId();
         assertThat(result.stream().count()).isOne();
     }
-  
-    public void deleteWhenEventIsFound_Delete(){
+
+    public void deleteWhenEventIsFound_Delete() {
         // given
         var eventId = 1;
 
