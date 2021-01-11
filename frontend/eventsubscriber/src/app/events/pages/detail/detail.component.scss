@@ -3,14 +3,13 @@
   width: 100%;
 
   .event-detail-container {
-    
-    padding: 40px 0px 40px 220px;
-    align-content: center;
+    width: 80%;
+    margin: auto;    
+    padding: 40px 100px 40px 100px;
   
     mat-card {
-      width: 45%;
-      margin: auto;
       padding-bottom: 40px;
+      margin-bottom: 20px;
 
       img {
         height: 50%;
