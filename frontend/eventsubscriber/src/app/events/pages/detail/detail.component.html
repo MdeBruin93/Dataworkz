@@ -18,6 +18,12 @@
         <button mat-raised-button color="primary" (click)="subscribeToEvent(event)" *appIsNotAllowedForOrganizer="event.user.id">Subscribe</button>
       </mat-card-footer>
     </mat-card>
+    <app-qa 
+      *ngIf="event"
+      [questions]="event.questions"
+      [eventId]="event.id"
+      (reloadData)="reloadData(event)"
+    ></app-qa>
   </div>
 </div>
 
