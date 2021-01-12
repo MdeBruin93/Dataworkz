@@ -125,8 +125,8 @@ public class EventImplService implements EventService {
         }
 
         event.getSubscribedUsers().add(loggedInUser);
-
-        return eventMapper.mapToEventDestination(eventRepository.save(event));
+        var savedEvent = eventRepository.save(event);
+        return findById(savedEvent.getId());
     }
 
     @Override
