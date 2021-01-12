@@ -2,10 +2,14 @@ package com.dataworks.eventsubscriber.service.event;
 
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedException;
+import com.dataworks.eventsubscriber.mapper.AnswerMapper;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
+import com.dataworks.eventsubscriber.mapper.QuestionMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
+import com.dataworks.eventsubscriber.model.dao.Answer;
 import com.dataworks.eventsubscriber.model.dao.Event;
 import com.dataworks.eventsubscriber.model.dao.User;
+import com.dataworks.eventsubscriber.model.dto.AnswerDto;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.repository.EventRepository;
 import com.dataworks.eventsubscriber.service.auth.AuthService;
@@ -26,6 +30,8 @@ public class EventImplService implements EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final UserMapper userMapper;
+    private final QuestionMapper questionMapper;
+    private final AnswerMapper answerMapper;
     private final LocalStorageService localStorageService;
 
     @Override
@@ -72,7 +78,40 @@ public class EventImplService implements EventService {
     @Override
     public EventDto findById(int id) {
         var event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
-        return eventMapper.mapToEventDestination(event);
+        var mappedEvent = eventMapper.mapToEventDestination(event);
+        var mappedQuestions = event.getQuestions().stream().map((question) -> {
+            var mappedQuestion = questionMapper.mapToDestination(question);
+            List<AnswerDto> filteredSuperiorAnswers = question.getAnswers().stream()
+                    .filter(answer -> {
+                        var eventOwner = event.getUser().getId();
+                        var answerOwner = answer.getOwner().getId();
+                        var answerOfAdmin = answer.getOwner().isAdmin();
+
+                        return eventOwner.equals(answerOwner) || answerOfAdmin;
+                    })
+                    .map(answerMapper::mapToEventDestination)
+                    .collect(Collectors.toList());
+
+            List<AnswerDto> filteredUserAnswers = question.getAnswers().stream()
+                    .filter(answer -> {
+                        var eventOwner = event.getUser().getId();
+                        var answerOwner = answer.getOwner().getId();
+                        var answerOfAdmin = answer.getOwner().isAdmin();
+
+                        return !eventOwner.equals(answerOwner) && !answerOfAdmin;
+                    })
+                    .map(answerMapper::mapToEventDestination)
+                    .collect(Collectors.toList());;
+
+            mappedQuestion.setSuperiorAnswers(filteredSuperiorAnswers);
+            mappedQuestion.setUserAnswers(filteredUserAnswers);
+
+            return mappedQuestion;
+        }).collect(Collectors.toList());
+
+        mappedEvent.setQuestions(mappedQuestions);
+
+        return mappedEvent;
     }
 
     @Override
