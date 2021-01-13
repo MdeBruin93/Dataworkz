@@ -27,7 +27,7 @@ jobs:
       run: npm run build
     - name: Test project
       working-directory: ./frontend/eventsubscriber
-      run: npm test
+      run: npm run test-headless
 #     - uses: actions/setup-node@v1
 #       with:
 #         node-version: ${{ matrix.node-version }}
