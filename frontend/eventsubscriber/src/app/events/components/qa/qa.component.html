@@ -12,20 +12,22 @@
                         <textarea matInput formControlName="question" required></textarea>
                         <mat-error *ngIf="qaEditForm.controls.question.errors && qaEditForm.controls.question.errors.required">Question is required</mat-error>
                     </mat-form-field>
-                
+
                     <mat-card-actions>
                         <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!qaEditForm.valid">Update</button>
                     </mat-card-actions>
                 </form>
             </div>
             <div mat-line *ngIf="!edit[i]"> {{question.lastModified | date}} </div>
-            <span>
-                <mat-icon (click)="edit[i] = !edit[i]">edit</mat-icon>
-                <mat-icon (click)="deleteQuestion(question.id)">close</mat-icon>
-            </span>
-            <span>
-                <mat-icon (click)="reply[i] = !reply[i]">reply</mat-icon>
-            </span>
+            <ng-container *ngIf="isLoggedIn$ | async">
+              <span>
+                  <mat-icon (click)="edit[i] = !edit[i]">edit</mat-icon>
+                  <mat-icon (click)="deleteQuestion(question.id)">close</mat-icon>
+              </span>
+              <span>
+                  <mat-icon (click)="reply[i] = !reply[i]">reply</mat-icon>
+              </span>
+            </ng-container>
         </mat-list-item>
         <div *ngIf="reply[i]">
             <form [formGroup]="answerCreateForm" (ngSubmit)="onSubmitAnswer(question)">
@@ -34,48 +36,51 @@
                     <textarea matInput formControlName="answer" required></textarea>
                     <mat-error *ngIf="answerCreateForm.controls.answer.errors && answerCreateForm.controls.answer.errors.required">answer is required</mat-error>
                 </mat-form-field>
-            
+
                 <mat-card-actions>
                     <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!answerCreateForm.valid">Reply</button>
                 </mat-card-actions>
             </form>
         </div>
-        <div *ngFor="let answer of question.answers" style="margin-left: 25px;">
+        <div *ngFor="let answer of question.answers; index as a" style="margin-left: 25px;">
             <mat-list-item>
                 <strong mat-line><mat-icon>reply</mat-icon>{{answer.owner.firstName}} {{answer.owner.lastName}}</strong>
                 <div mat-line>{{answer.text}}</div>
                 <div mat-line>{{answer.lastModified | date}}</div>
                 <span>
-                    <mat-icon (click)="deleteAnswer(answer.id)">close</mat-icon>
+                    <mat-icon (click)="deleteAnswer(answer.id)" *appIsAllowedForOrganizer="answer.owner?.id">close</mat-icon>
                 </span>
                 <span>
-                    <mat-icon (click)="replyAnswer[i] = !replyAnswer[i]">edit</mat-icon>
+                    <mat-icon (click)="replyAnswer[a] = !replyAnswer[a]" *appIsAllowedForOrganizer="answer.owner?.id">edit</mat-icon>
                 </span>
             </mat-list-item>
-        </div>
-        <div *ngIf="replyAnswer[i]">
-            <form [formGroup]="answerEditForm" (ngSubmit)="onSubmitEditAnswer(question)">
-                <mat-form-field appearance="fill">
-                    <mat-label>Your answer</mat-label>
-                    <textarea matInput formControlName="answer" required></textarea>
-                    <mat-error *ngIf="answerEditForm.controls.answer.errors && answerEditForm.controls.answer.errors.required">answer is required</mat-error>
-                </mat-form-field>
-            
-                <mat-card-actions>
-                    <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!answerEditForm.valid">Update</button>
-                </mat-card-actions>
-            </form>
+            <div *ngIf="replyAnswer[a]">
+                <form [formGroup]="answerEditForm" (ngSubmit)="onSubmitEditAnswer(answer, question)">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Your answer</mat-label>
+                        <textarea matInput formControlName="answer" required></textarea>
+                        <mat-error *ngIf="answerEditForm.controls.answer.errors && answerEditForm.controls.answer.errors.required">answer is required</mat-error>
+                    </mat-form-field>
+
+                    <mat-card-actions>
+                        <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!answerEditForm.valid">Update</button>
+                    </mat-card-actions>
+                </form>
+            </div>
         </div>
         <br>
     </ng-container>
 
-    <mat-form-field appearance="fill" style="margin-top: 25px;">
-        <mat-label>Your question</mat-label>
-        <textarea matInput formControlName="question" required></textarea>
-        <mat-error *ngIf="qaCreateform.controls.question.errors && qaCreateform.controls.question.errors.required">Question is required</mat-error>
-    </mat-form-field>
+    <ng-container *ngIf="isLoggedIn$ | async">
+      <mat-form-field appearance="fill" style="margin-top: 25px;">
+          <mat-label>Your question</mat-label>
+          <textarea matInput formControlName="question" required></textarea>
+          <mat-error *ngIf="qaCreateform.controls.question.errors && qaCreateform.controls.question.errors.required">Question is required</mat-error>
+      </mat-form-field>
 
-    <mat-card-actions>
-        <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!qaCreateform.valid">ASK</button>
-    </mat-card-actions>
+      <mat-card-actions>
+          <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!qaCreateform.valid">ASK</button>
+      </mat-card-actions>
+    </ng-container>
+
 </form>
