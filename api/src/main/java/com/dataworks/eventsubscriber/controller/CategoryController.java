@@ -35,7 +35,7 @@ public class CategoryController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns the created category",
-                    content = @Content(schema = @Schema(implementation = EventDto.class))),
+                    content = @Content(schema = @Schema(implementation = CategoryDto.class))),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "404", description = "Logged in user not found")})
     @PostMapping(value = "")
@@ -44,12 +44,8 @@ public class CategoryController {
             return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
         }
 
-        try {
-            var event = categoryService.store(categoryDto);
-            return new ResponseEntity<>(event, HttpStatus.CREATED);
-        } catch (UserNotFoundException userNotFoundException) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
+        var event = categoryService.store(categoryDto);
+        return new ResponseEntity<>(event, HttpStatus.CREATED);
     }
 
     @Operation(

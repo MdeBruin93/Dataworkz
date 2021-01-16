@@ -8,9 +8,9 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public abstract class CategoryMapper {
-    public abstract Category mapToEventSource(CategoryDto destination);
+    public abstract Category mapToCategorySource(CategoryDto destination);
 
-    public abstract CategoryDto mapToEventDestination(Category savedCategory);
+    public abstract CategoryDto mapToCategoryDestination(Category savedCategory);
 
-    public abstract List<CategoryDto> mapToEventDestinationCollection(List<Category> savedCategories);
+    public abstract List<CategoryDto> mapToCategoryDestinationCollection(List<Category> savedCategories);
 }
