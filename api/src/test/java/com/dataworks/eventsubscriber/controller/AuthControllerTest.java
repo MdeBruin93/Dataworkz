@@ -20,8 +20,7 @@ import org.springframework.validation.BindingResult;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,6 +36,71 @@ class AuthControllerTest {
     UserDto userDto;
     @Autowired
     private MockMvc mockMvc;
+
+    @Test
+
+    void myUpdateWhenUserIsNotAuthenticated_ThenNotAuthorized() throws Exception {
+        var userUpdateDto = new UserUpdateDto();
+        var json = new ObjectMapper().writeValueAsString(userUpdateDto);
+
+        mockMvc.perform(
+                put("/api/auth/my")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void myUpdateWhenModelIsNotValid_ThenBadRequest() throws Exception {
+        var userUpdateDto = new UserUpdateDto();
+        var json = new ObjectMapper().writeValueAsString(userUpdateDto);
+
+        mockMvc.perform(
+                put("/api/auth/my")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void myUpdateWhenUserNotFound_ThenNotFound() throws Exception {
+        var userUpdateDto = new UserUpdateDto();
+        userUpdateDto.setFirstName("Ricky");
+        userUpdateDto.setLastName("van Waas");
+        var json = new ObjectMapper().writeValueAsString(userUpdateDto);
+
+        when(webAuthService.myUpdate(any(UserUpdateDto.class))).thenThrow(UserNotFoundException.class);
+
+        mockMvc.perform(
+                put("/api/auth/my")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void myUpdateWhenSuccess_ThenOk() throws Exception {
+        var userUpdateDto = new UserUpdateDto();
+        userUpdateDto.setFirstName("Ricky");
+        userUpdateDto.setLastName("van Waas");
+        var userDto = new UserDto();
+        var json = new ObjectMapper().writeValueAsString(userUpdateDto);
+
+        when(webAuthService.myUpdate(any(UserUpdateDto.class))).thenReturn(userDto);
+
+        mockMvc.perform(
+                put("/api/auth/my")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 
     @Test
     void registerWithValidUser_Register() throws Exception {
