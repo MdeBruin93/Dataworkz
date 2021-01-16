@@ -2,6 +2,7 @@ package com.dataworks.eventsubscriber.service.user;
 
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
+import com.dataworks.eventsubscriber.model.dto.UserBlockDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,19 +31,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto block(int id) {
+    public UserDto update(int id, UserBlockDto userBlockDto) {
         var foundUser = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
-        foundUser.setBlocked(true);
-
-        return userMapper.mapToDestination(userRepository.save(foundUser));
-    }
-
-    @Override
-    public UserDto unblock(int id) {
-        var foundUser = userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
-        foundUser.setBlocked(false);
+        foundUser.setBlocked(userBlockDto.isBlocked());
 
         return userMapper.mapToDestination(userRepository.save(foundUser));
     }

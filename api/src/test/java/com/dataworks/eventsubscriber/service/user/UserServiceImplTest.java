@@ -3,6 +3,7 @@ package com.dataworks.eventsubscriber.service.user;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.User;
+import com.dataworks.eventsubscriber.model.dto.UserBlockDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import com.dataworks.eventsubscriber.service.event.EventImplService;
@@ -97,61 +98,32 @@ class UserServiceImplTest {
     }
 
     @Test
-    void blockWhenUserNotFound_ThenThrowNotFoundException() {
+    void updateWhenUserNotFound_ThenThrowException() {
         //given
         var userId = 1;
+        var foundUser = new User();
+        var userBlockDto = new UserBlockDto();
         //when
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
         //then
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> userService.block(userId));
-        verify(userRepository, times(1)).findById(userId);
-        verifyNoMoreInteractions(userRepository, userMapper);
+                .isThrownBy(() -> userService.update(userId, userBlockDto));
     }
 
     @Test
-    void blockWhenSuccess_ThenUpdate() {
+    void updateWhenSuccess_ThenUpdate() {
         //given
         var userId = 1;
         var foundUser = new User();
         var userDto = new UserDto();
+        var userBlockDto = new UserBlockDto();
         //when
         when(userRepository.findById(userId)).thenReturn(Optional.of(foundUser));
         when(userRepository.save(foundUser)).thenReturn(foundUser);
         when(userMapper.mapToDestination(foundUser)).thenReturn(userDto);
         //then
-        var result = userService.block(userId);
-        assertThat(result).isEqualTo(userDto);
-        verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(1)).save(foundUser);
-        verify(userMapper, times(1)).mapToDestination(foundUser);
-    }
-
-    @Test
-    void unblockWhenUserNotFound_ThenThrowNotFoundException() {
-        //given
-        var userId = 1;
-        //when
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
-        //then
-        assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> userService.unblock(userId));
-        verify(userRepository, times(1)).findById(userId);
-        verifyNoMoreInteractions(userRepository, userMapper);
-    }
-
-    @Test
-    void unblockWhenSuccess_ThenUpdate() {
-        //given
-        var userId = 1;
-        var foundUser = new User();
-        var userDto = new UserDto();
-        //when
-        when(userRepository.findById(userId)).thenReturn(Optional.of(foundUser));
-        when(userRepository.save(foundUser)).thenReturn(foundUser);
-        when(userMapper.mapToDestination(foundUser)).thenReturn(userDto);
-        //then
-        var result = userService.unblock(userId);
+        var result = userService.update(userId, userBlockDto);
         assertThat(result).isEqualTo(userDto);
         verify(userRepository, times(1)).findById(userId);
         verify(userRepository, times(1)).save(foundUser);

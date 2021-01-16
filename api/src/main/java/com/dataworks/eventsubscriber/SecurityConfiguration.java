@@ -49,6 +49,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/answers").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/answers/{id}").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/answers/{id}").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/users/blocked").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/users/{id}").hasRole("ADMIN")
 //                .antMatchers("/post/create").authenticated()
                 .and()
                 .httpBasic();
