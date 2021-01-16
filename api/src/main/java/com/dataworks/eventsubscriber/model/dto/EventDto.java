@@ -18,8 +18,6 @@ public class EventDto {
     @NotNull
     private int id;
     @NotNull
-    private int categoryId;
-    @NotNull
     private String title;
     @NotNull
     private String description;
@@ -35,4 +33,6 @@ public class EventDto {
     private String imageUrl;
     @JsonIgnoreProperties("events")
     private UserDto user;
+
+    private CategoryDto category;
 }

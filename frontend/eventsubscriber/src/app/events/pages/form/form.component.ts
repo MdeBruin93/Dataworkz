@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventsService } from '../../services';
-import { Event } from '../../models';
+import { IEvent, Event, IEventResponse } from '../../models';
 
 import { Store, Select} from '@ngxs/store';
 import { CategoriesState, LoadCategories } from '@core/store';
@@ -22,6 +22,7 @@ export class FormComponent implements OnInit {
   eventId: any;
   eventCreateForm: FormGroup = Event.getFormGroup();
   file: any;
+  currentEvent: Event;
 
   constructor(
     private eventService: EventsService,
@@ -36,8 +37,9 @@ export class FormComponent implements OnInit {
     this.eventId = this.route.snapshot.paramMap.get('eventId');
     if (this.eventId) {
       this.eventService.findById(this.eventId).subscribe({
-        next: response => {
-          this.eventCreateForm.patchValue(response)
+        next: (response: any) => {
+          this.eventCreateForm.patchValue(response);
+          this.eventCreateForm.get('categoryId')?.setValue(response.category.id);
         },
         error: error => {
           this.snackBar.open('Failed to open an event');
@@ -61,6 +63,8 @@ export class FormComponent implements OnInit {
     if (this.eventId) {
       eventData.id = this.eventId;
     }
+
+    eventData.category = {id: eventData.categoryId};
 
     this.eventService.save(eventData, imageUploadFormData).subscribe({
       next: _response => {

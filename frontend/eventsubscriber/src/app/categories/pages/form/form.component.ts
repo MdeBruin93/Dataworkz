@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Category } from '@core/models';
 
 import { Store, Select} from '@ngxs/store';
-import { CategoriesState, LoadCategory, SaveCategory } from '@core/store';
+import { CategoriesState, LoadCategory, SaveCategory, LoadCategories } from '@core/store';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -39,6 +39,7 @@ export class FormComponent implements OnInit {
 
   saveCategory() {
     this.store.dispatch(new SaveCategory(this.categoryForm.value));
+    this.store.dispatch(new LoadCategories());
     this.router.navigate(["/categories"]);
   }
 }

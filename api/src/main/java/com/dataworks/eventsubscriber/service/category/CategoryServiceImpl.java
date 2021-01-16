@@ -1,12 +1,15 @@
 package com.dataworks.eventsubscriber.service.category;
 
 import com.dataworks.eventsubscriber.exception.NotFoundException;
+import com.dataworks.eventsubscriber.exception.category.CategoryContainEventsException;
+import com.dataworks.eventsubscriber.exception.category.CategoryNotFoundException;
 import com.dataworks.eventsubscriber.mapper.CategoryMapper;
 import com.dataworks.eventsubscriber.model.dao.Category;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.repository.CategoryRepository;
 import com.dataworks.eventsubscriber.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -55,13 +58,17 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto findById(int id) {
         var category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category"));
-        var relatedEvents = eventRepository.findByCategoryId(category.getId());
-        category.setEvents(relatedEvents);
         return categoryMapper.mapToEventDestination(category);
     }
 
     @Override
     public void delete(int categoryId) {
+        var foundCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(CategoryNotFoundException::new);
+        var countedEvents = (long) foundCategory.getEvents().size();
+        if (countedEvents > 0) {
+            throw new CategoryContainEventsException();
+        }
         categoryRepository.deleteById(categoryId);
     }
 }

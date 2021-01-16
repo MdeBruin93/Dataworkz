@@ -18,7 +18,4 @@ public class CategoryDto extends BaseDto {
     private String name;
     @NotNull
     private String color;
-
-    @JsonIgnoreProperties("user")
-    private List<EventDto> events;
 }

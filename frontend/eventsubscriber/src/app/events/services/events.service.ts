@@ -30,7 +30,7 @@ export class EventsService {
           event.imageUrl = file.fileUrl;
           return this.http.post<IEventResponse>(`${environment.apiUrl}/api/events`, event);
         })
-      );  
+      );
   }
 
   public storeEventImage(formData: FormData): Observable<IFileResponse> {

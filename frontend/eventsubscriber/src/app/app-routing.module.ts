@@ -62,21 +62,23 @@ const routes: Routes = [
     path: '',
     component: AuthenticatedLayoutComponent,
     canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
     children: [
       {
         path: 'dashboard',
-        component: DashboardComponent
+        component: DashboardComponent,
+        canActivate: [AuthGuard]
       },
       {
         path: 'wishlists',
         loadChildren: () => import('./wishlists/wishlists.module').then((m) => m.WishlistsModule),
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard]
       },
       {
         path: 'categories',
         loadChildren: () => import('./categories/categories.module').then((m) => m.CategoriesModule),
-        canActivate: [AdminGuard],
-        canActivateChild: [AdminGuard]
+        canActivate: [AuthGuard, AdminGuard],
+        canActivateChild: [AuthGuard, AdminGuard]
       }
     ]
   }

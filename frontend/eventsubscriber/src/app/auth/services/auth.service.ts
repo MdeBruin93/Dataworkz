@@ -31,6 +31,7 @@ export class AuthService {
 
   public logout(): void {
     localStorage.clear();
+    this.router.navigate(['/login']);
   }
 
   public forgotPassword(data: object): Observable<any> {

@@ -5,7 +5,7 @@ import { IEventResponse, IEvent } from '../../models/event.model';
 import { Store, Select } from '@ngxs/store';
 import { AuthState, CategoriesState, LoadCategories } from '@core/store';
 import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { WishlistComponent } from 'src/app/wishlists';
 import { WishlistService } from '../../../wishlists/services';
@@ -22,7 +22,7 @@ export class OverviewComponent implements OnInit {
   public isLoggedIn$: Observable<boolean>;
 
   @Select(CategoriesState.categories)
-  public categories$: Observable<Category[]>
+  public categories$: Observable<Category[]>;
 
   public events: any;
   public filteredEvents: any;
@@ -30,9 +30,7 @@ export class OverviewComponent implements OnInit {
   public eventsByUser: any;
   public showSubscribedToEvents: boolean = false;
 
-  public categoryForm = new FormGroup({
-    id: new FormControl("")
-  });
+  public categoriesFormControl = new FormControl([]);
 
   constructor(
     private eventsService: EventsService,
@@ -47,7 +45,9 @@ export class OverviewComponent implements OnInit {
     this.store.dispatch(new LoadCategories());
     this.eventsService.getAll().subscribe({
       next: _response => {
-        this.events = _response;
+        console.log(_response);
+        this.events = _response || [];
+        this.filteredEvents = this.events;
       },
       error: error => {
         console.error('There was an error!', error);
@@ -137,13 +137,6 @@ export class OverviewComponent implements OnInit {
   }
 
   selectCategory() {
-    this.filteredEvents = this.events.filter((event: IEvent) => {
-      const id = this.categoryForm.get('id')?.value;
-      if (event.categoryId == id) {
-        return true;
-      }
-      return false;
-    });
-    console.log(this.filteredEvents);
+    this.filteredEvents = this.events.filter((event: any) => this.categoriesFormControl.value.includes(event.category.id));
   }
 }

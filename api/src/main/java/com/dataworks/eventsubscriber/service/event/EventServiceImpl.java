@@ -35,7 +35,8 @@ public class EventServiceImpl implements EventService {
         var loggedInUser = authService.myDaoOrFail();
         var mappedEvent = eventMapper.mapToEventSource(eventDto);
 
-        var category = categoryRepository.findById(eventDto.getCategoryId()).orElseThrow(CategoryNotFoundException::new);
+        var category = categoryRepository.findById(eventDto.getCategory().getId())
+                .orElseThrow(CategoryNotFoundException::new);
 
         mappedEvent.setUser(loggedInUser);
         mappedEvent.setCategory(category);
@@ -56,7 +57,8 @@ public class EventServiceImpl implements EventService {
             throw new EventNotFoundException();
         }
 
-        var category = categoryRepository.findById(eventDto.getCategoryId()).orElseThrow(CategoryNotFoundException::new);
+        var category = categoryRepository.findById(eventDto.getCategory().getId())
+                .orElseThrow(CategoryNotFoundException::new);
 
         Event ev = eventFromRepo.get();
         ev.setDate(eventDto.getDate());

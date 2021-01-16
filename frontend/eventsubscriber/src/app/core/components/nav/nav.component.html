@@ -33,7 +33,7 @@
 
       <ng-container *ngIf="isLoggedIn$ | async">
         <div class="icon-text-wrapper" [routerLink]="['/categories']" *appIsAdmin="(currentUser$ | async)?.role">
-          <mat-icon>favorite</mat-icon>
+          <mat-icon>category</mat-icon>
           <span class="toolbar-item-text">Categories</span>
         </div>
       </ng-container>

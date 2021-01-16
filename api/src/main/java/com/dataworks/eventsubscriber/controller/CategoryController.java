@@ -1,6 +1,7 @@
 package com.dataworks.eventsubscriber.controller;
 
 import com.dataworks.eventsubscriber.exception.NotFoundException;
+import com.dataworks.eventsubscriber.exception.category.CategoryContainEventsException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
@@ -120,13 +121,16 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Returns a list of categories.",
                     content = @Content(schema = @Schema(implementation = CategoryDto.class))),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
-            @ApiResponse(responseCode = "404", description = "Category not found.")})
+            @ApiResponse(responseCode = "404", description = "Category not found."),
+            @ApiResponse(responseCode = "409", description = "Category contain events.")})
     public ResponseEntity delete(@PathVariable int id) {
         try {
             categoryService.delete(id);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (NotFoundException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } catch (CategoryContainEventsException e) {
+            return new ResponseEntity(HttpStatus.CONFLICT);
         }
     }
 }
