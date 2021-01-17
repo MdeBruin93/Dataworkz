@@ -29,5 +29,15 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Compile with Maven
+      working-directory: ./api
+      run: mvn compile
+    - name: Test with Maven
+      working-directory: ./api
+      run: mvn test
+    - name: Sonarqube with Maven
+      working-directory: ./api
+      run: mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
     - name: Build with Maven
-      run: mvn -B package --file ./api/pom.xml
+      working-directory: ./api
+      run: mvn package
