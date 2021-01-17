@@ -11,18 +11,12 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - name: Setup MySQL
-      # You may pin to the exact commit or the version.
-      # uses: mirromutth/mysql-action@de1fba8b3f90ce8db80f663a7043be3cf3231248
       uses: mirromutth/mysql-action@v1.1
       with:
-        # MYSQL_ROOT_PASSWORD - root superuser password
         mysql root password: '12345678' # optional, default is 
-        # MYSQL_DATABASE - name for the default database that is created
         mysql database: 'java_minor'
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -31,16 +25,14 @@ jobs:
         java-version: 11
     - name: Compile with Maven
       run: mvn compile --file ./api/pom.xml
-#     - name: Test with Maven
-#       run: mvn test --file ./api/pom.xml
-#     - name: Sonarqube with Maven
-#       run: mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar --file ./api/pom.xml
+    - name: Test with Maven
+      run: mvn test --file ./api/pom.xml
     - name: Analyze with SonarCloud
       working-directory: ./api
       run: mvn -B verify sonar:sonar -Dsonar.projectKey=event-subscriber -Dsonar.organization=dataworkz -Dsonar.host.url=https://sonarcloud.io -Dsonar.test.exclusions=**/model/**/*,**/enums/* -Dsonar.login=$SONAR_TOKEN
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: a950ab625d589e31084f5f5151c8ce349546ee4b
-#     - name: Build with Maven
-#       run: mvn package --file ./api/pom.xml
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Build with Maven
+      run: mvn package --file ./api/pom.xml
     
