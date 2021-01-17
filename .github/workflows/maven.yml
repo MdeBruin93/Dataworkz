@@ -30,14 +30,10 @@ jobs:
       with:
         java-version: 11
     - name: Compile with Maven
-      working-directory: ./api
-      run: mvn compile
+      run: mvn compile --file ./api/pom.xml
     - name: Test with Maven
-      working-directory: ./api
-      run: mvn test
+      run: mvn test --file ./api/pom.xml
     - name: Sonarqube with Maven
-      working-directory: ./api
-      run: mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+      run: mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar --file ./api/pom.xml
     - name: Build with Maven
-      working-directory: ./api
-      run: mvn package
+      run: mvn package --file ./api/pom.xml
