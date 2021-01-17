@@ -4,12 +4,19 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Question, Answer } from '../../models';
 import { QaService } from '../../services/qa.service';
 
+import { Store, Select } from '@ngxs/store';
+import { AuthState } from '@core/store';
+import { Observable } from 'rxjs';
+
 @Component({
   selector: 'app-qa',
   templateUrl: './qa.component.html',
   styleUrls: ['./qa.component.scss']
 })
 export class QaComponent implements OnInit {
+  @Select(AuthState.isLoggedIn)
+  public isLoggedIn$: Observable<boolean>;
+
   @Input() eventId: string;
   @Input() questions: any = [];
   @Output() reloadData = new EventEmitter<boolean>();
@@ -122,14 +129,14 @@ export class QaComponent implements OnInit {
     });
   }
 
-  onSubmitEditAnswer(question: any) {
+  onSubmitEditAnswer(answer: any, question: any) {
     const answerText = this.answerEditForm.get('answer') || {value: null};
     const data = {
       text: answerText.value,
       questionId: question.id
     }
 
-    this.qaService.updateAnswer(question.id, data).subscribe({
+    this.qaService.updateAnswer(answer.id, data).subscribe({
       next: _response => {
         this.snackBar.open('answer successfully updated');
         this.reloadData.emit(true);
