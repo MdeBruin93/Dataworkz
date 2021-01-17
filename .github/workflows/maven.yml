@@ -36,7 +36,7 @@ jobs:
 #     - name: Sonarqube with Maven
 #       run: mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar --file ./api/pom.xml
     - name: Analyze with SonarCloud
-      run: ./mvnw -B verify sonar:sonar -Dsonar.projectKey=event-subscriber -Dsonar.organization=dataworkz -Dsonar.host.url=https://sonarcloud.io -Dsonar.test.exclusions=**/model/**/*,**/enums/* -Dsonar.login=$SONAR_TOKEN
+      run: ./api/mvn -B verify sonar:sonar -Dsonar.projectKey=event-subscriber -Dsonar.organization=dataworkz -Dsonar.host.url=https://sonarcloud.io -Dsonar.test.exclusions=**/model/**/*,**/enums/* -Dsonar.login=$SONAR_TOKEN
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: a950ab625d589e31084f5f5151c8ce349546ee4b
