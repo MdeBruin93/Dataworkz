@@ -239,6 +239,56 @@ class EventControllerTest {
     }
 
     @Test
+    void allWhenSuccess_ThenReturnOk() throws Exception {
+        //given
+        var event = new EventDto();
+        var events = new ArrayList<EventDto>();
+        events.add(event);
+        //when
+        when(eventImplService.findAll()).thenReturn(events);
+
+        //then
+        mockMvc.perform(
+                get("/api/events")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findByIdWhenEventNotFound_ThenReturnNotFound() throws Exception {
+        //given
+        var eventId = 1;
+
+        //when
+        when(eventImplService.findById(eventId)).thenThrow(EventNotFoundException.class);
+
+        //then
+        mockMvc.perform(
+                get("/api/events/" + eventId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void findByIdWhenSuccess_ThenReturnOk() throws Exception {
+        //given
+        var eventId = 1;
+        var event = new EventDto();
+
+        //when
+        when(eventImplService.findById(eventId)).thenReturn(event);
+
+        //then
+        mockMvc.perform(
+                get("/api/events/" + eventId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void subscribeEvent_EventUnauthorized() throws Exception {
         //given
         var eventId = 1;
@@ -308,7 +358,7 @@ class EventControllerTest {
     }
 
     @Test
-    void FindByUser_Unauthorized() throws Exception {
+    void findByUser_Unauthorized() throws Exception {
         //given
 
         //when
@@ -322,7 +372,21 @@ class EventControllerTest {
 
     @Test
     @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
-    void FindByUser_Success() throws Exception {
+    void findByUser_Exception() throws Exception {
+        //given
+
+        //when
+        when(eventImplService.findByUserId()).thenThrow(EventNotFoundException.class);
+
+        //then
+        mockMvc.perform(
+                get("/api/events/findbyuser"))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void findByUser_Success() throws Exception {
         //given
 
         //when
