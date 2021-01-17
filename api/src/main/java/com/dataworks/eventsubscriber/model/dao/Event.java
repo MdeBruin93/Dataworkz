@@ -32,6 +32,8 @@ public class Event extends BaseDao {
     private double euroAmount;
     @NotNull
     private String imageUrl;
+    @OneToMany(mappedBy = "owner")
+    private List<Question> questions;
     @ManyToOne
     @JsonIgnoreProperties("events")
     private User user;

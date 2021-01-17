@@ -57,4 +57,8 @@ export class DetailComponent implements OnInit {
       }
     });
   }
+
+  reloadData(_event: boolean) {
+    this.ngOnInit();
+  }
 }

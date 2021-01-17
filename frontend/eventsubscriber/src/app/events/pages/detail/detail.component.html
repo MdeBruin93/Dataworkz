@@ -19,6 +19,12 @@
         <button type="button" mat-raised-button color="primary" (click)="deleteEvent(event.id)" *appIsAllowedForOrganizer="event.user.id">Delete</button>
       </mat-card-footer>
     </mat-card>
+    <app-qa 
+      *ngIf="event"
+      [questions]="event.questions"
+      [eventId]="event.id"
+      (reloadData)="reloadData(event)"
+    ></app-qa>
   </div>
 </div>
 

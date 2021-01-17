@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,4 +36,5 @@ public class EventDto {
     private UserDto user;
 
     private CategoryDto category;
+    private List<QuestionDto> questions;
 }

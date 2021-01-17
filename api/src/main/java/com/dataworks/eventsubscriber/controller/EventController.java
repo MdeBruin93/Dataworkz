@@ -35,6 +35,7 @@ public class EventController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns the created event",
                     content = @Content(schema = @Schema(implementation = EventDto.class))),
+            @ApiResponse(responseCode = "400", description = "Model validation failed."),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "404", description = "Logged in user not found")})
     @PostMapping(value = "")
@@ -60,6 +61,7 @@ public class EventController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns the updated event",
                     content = @Content(schema = @Schema(implementation = EventDto.class))),
+            @ApiResponse(responseCode = "400", description = "Model validation failed."),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "404", description = "Event not found or Logged in user not found")})
     @PutMapping(value = "/{id}")
