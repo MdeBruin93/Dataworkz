@@ -137,6 +137,12 @@ export class OverviewComponent implements OnInit {
   }
 
   selectCategory() {
-    this.filteredEvents = this.events.filter((event: any) => this.categoriesFormControl.value.includes(event.category.id));
+    if (this.categoriesFormControl.value.length == 0) {
+      this.filteredEvents = this.events;
+      return;
+    }
+    this.filteredEvents = this.events.filter((event: any) => {
+      return this.categoriesFormControl.value.includes(event.category.id)
+    });
   }
 }
