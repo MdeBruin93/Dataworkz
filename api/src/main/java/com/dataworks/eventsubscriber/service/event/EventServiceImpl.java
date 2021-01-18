@@ -163,10 +163,12 @@ public class EventServiceImpl implements EventService {
         var event = eventRepository.findById(eventId).orElseThrow(EventNotFoundException::new);
 
         var isOrganizer = authService.myDao().getId().equals(event.getUser().getId());
-        if (authService.myDao().isAdmin() || isOrganizer) {
-            eventRepository.deleteById(eventId);
-        } else {
+        var isAdmin = authService.myDao().isAdmin();
+
+        if (!isOrganizer && !isAdmin) {
             throw new EventNotFoundException();
         }
+
+        eventRepository.deleteById(eventId);
     }
 }
