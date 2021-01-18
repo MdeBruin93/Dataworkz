@@ -8,6 +8,7 @@ import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.Category;
 import com.dataworks.eventsubscriber.model.dao.Event;
 import com.dataworks.eventsubscriber.model.dao.Question;
+import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
@@ -19,18 +20,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.dataworks.eventsubscriber.model.dao.User;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-
-import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 

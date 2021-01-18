@@ -6,8 +6,8 @@ import com.dataworks.eventsubscriber.model.dto.TokenDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import com.dataworks.eventsubscriber.repository.UserTokenRepository;
 import com.dataworks.eventsubscriber.service.email.EmailProvider;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

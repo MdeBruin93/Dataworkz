@@ -1,15 +1,11 @@
 package com.dataworks.eventsubscriber.controller;
 
 import com.dataworks.eventsubscriber.exception.answer.AnswerNotFoundException;
-import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.question.QuestionNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
-import com.dataworks.eventsubscriber.model.dao.Answer;
 import com.dataworks.eventsubscriber.model.dto.AnswerDto;
-import com.dataworks.eventsubscriber.model.dto.QuestionDto;
 import com.dataworks.eventsubscriber.service.answer.AnswerService;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
-import com.dataworks.eventsubscriber.service.question.QuestionServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
