@@ -20,4 +20,6 @@ public class UserDto extends BaseDto {
     private String email;
     @NotNull
     private String role;
+
+    private boolean blocked;
 }

@@ -23,6 +23,7 @@ export class QaComponent implements OnInit {
   reply: any = [];
   edit: any = [];
   replyAnswer: any = [];
+  superiorAnswers: any = [];
   qaCreateform: FormGroup = Question.getFormGroup();
   qaEditForm: FormGroup = Question.getFormGroup();
   answerCreateForm: FormGroup = Answer.getFormGroup();

@@ -40,7 +40,9 @@ public class EventController {
             @ApiResponse(responseCode = "404", description = "Logged in user not found")})
     @PostMapping(value = "")
     public ResponseEntity store(@Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
+        }
 
         try {
             var event = eventService.store(eventDto);
@@ -64,7 +66,9 @@ public class EventController {
             @ApiResponse(responseCode = "404", description = "Event not found or Logged in user not found")})
     @PutMapping(value = "/{id}")
     public ResponseEntity update(@PathVariable("id") int id, @Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
+        }
 
         try {
             var event = eventService.update(id, eventDto);

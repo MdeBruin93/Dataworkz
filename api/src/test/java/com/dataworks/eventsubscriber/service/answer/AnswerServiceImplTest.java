@@ -1,6 +1,5 @@
 package com.dataworks.eventsubscriber.service.answer;
 
-import com.dataworks.eventsubscriber.exception.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.answer.AnswerNotFoundException;
 import com.dataworks.eventsubscriber.exception.question.QuestionNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
@@ -9,9 +8,7 @@ import com.dataworks.eventsubscriber.model.dao.Answer;
 import com.dataworks.eventsubscriber.model.dao.Question;
 import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.AnswerDto;
-import com.dataworks.eventsubscriber.model.dto.QuestionDto;
 import com.dataworks.eventsubscriber.repository.AnswerRepository;
-import com.dataworks.eventsubscriber.repository.EventRepository;
 import com.dataworks.eventsubscriber.repository.QuestionRepository;
 import com.dataworks.eventsubscriber.service.auth.AuthService;
 import org.junit.jupiter.api.Test;
@@ -24,9 +21,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
 class AnswerServiceImplTest {

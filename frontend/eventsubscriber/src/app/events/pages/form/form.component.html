@@ -7,6 +7,16 @@
     </mat-form-field>
     <br>
     <br>
+    <mat-form-field appearance="fill" *ngIf="categories$ | async as categories">
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="categoryId">
+        <mat-option *ngFor="let category of categories" [value]="category.id">
+          {{category.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <br>
     <mat-form-field appearance="fill">
       <mat-label>Description</mat-label>
       <textarea matInput formControlName="description" required></textarea>
