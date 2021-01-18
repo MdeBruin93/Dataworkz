@@ -4,12 +4,19 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Question, Answer } from '../../models';
 import { QaService } from '../../services/qa.service';
 
+import { Store, Select } from '@ngxs/store';
+import { AuthState } from '@core/store';
+import { Observable } from 'rxjs';
+
 @Component({
   selector: 'app-qa',
   templateUrl: './qa.component.html',
   styleUrls: ['./qa.component.scss']
 })
 export class QaComponent implements OnInit {
+  @Select(AuthState.isLoggedIn)
+  public isLoggedIn$: Observable<boolean>;
+
   @Input() eventId: string;
   @Input() questions: any = [];
   @Output() reloadData = new EventEmitter<boolean>();
