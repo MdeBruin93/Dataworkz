@@ -9,6 +9,14 @@ export {
 } from './auth';
 
 export {
+  CategoriesState,
+  LoadCategories,
+  LoadCategory,
+  SaveCategory,
+  DeleteCategory
+} from './categories';
+
+export {
   UsersState,
   LoadUsers,
   LoadBlockedUsers,

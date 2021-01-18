@@ -5,7 +5,7 @@ import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedE
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
-import com.dataworks.eventsubscriber.service.event.EventImplService;
+import com.dataworks.eventsubscriber.service.event.EventServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(EventController.class)
 class EventControllerTest {
     @MockBean
-    EventImplService eventImplService;
+    EventServiceImpl eventServiceImpl;
     @MockBean
     WebAuthDetailService webAuthDetailService;
     @Autowired
@@ -88,7 +88,7 @@ class EventControllerTest {
         var json = new ObjectMapper().writeValueAsString(eventDto);
 
         //when
-        when(eventImplService.store(any(EventDto.class))).thenThrow(UserNotFoundException.class);
+        when(eventServiceImpl.store(any(EventDto.class))).thenThrow(UserNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -113,7 +113,7 @@ class EventControllerTest {
         var json = new ObjectMapper().writeValueAsString(eventDto);
 
         //when
-        when(eventImplService.store(any(EventDto.class))).thenReturn(eventDto);
+        when(eventServiceImpl.store(any(EventDto.class))).thenReturn(eventDto);
 
         //then
         mockMvc.perform(
@@ -174,7 +174,7 @@ class EventControllerTest {
         var json = new ObjectMapper().writeValueAsString(eventDto);
 
         //when
-        when(eventImplService.update(eq(id), any(EventDto.class))).thenThrow(UserNotFoundException.class);
+        when(eventServiceImpl.update(eq(id), any(EventDto.class))).thenThrow(UserNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -200,7 +200,7 @@ class EventControllerTest {
         var json = new ObjectMapper().writeValueAsString(eventDto);
 
         //when
-        when(eventImplService.update(eq(id), any(EventDto.class))).thenThrow(EventNotFoundException.class);
+        when(eventServiceImpl.update(eq(id), any(EventDto.class))).thenThrow(EventNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -226,7 +226,7 @@ class EventControllerTest {
         var json = new ObjectMapper().writeValueAsString(eventDto);
 
         //when
-        when(eventImplService.update(eq(id), any(EventDto.class))).thenReturn(eventDto);
+        when(eventServiceImpl.update(eq(id), any(EventDto.class))).thenReturn(eventDto);
 
         //then
         mockMvc.perform(
@@ -244,7 +244,7 @@ class EventControllerTest {
         var events = new ArrayList<EventDto>();
         events.add(event);
         //when
-        when(eventImplService.findAll()).thenReturn(events);
+        when(eventServiceImpl.findAll()).thenReturn(events);
 
         //then
         mockMvc.perform(
@@ -260,7 +260,7 @@ class EventControllerTest {
         var eventId = 1;
 
         //when
-        when(eventImplService.findById(eventId)).thenThrow(EventNotFoundException.class);
+        when(eventServiceImpl.findById(eventId)).thenThrow(EventNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -277,7 +277,7 @@ class EventControllerTest {
         var event = new EventDto();
 
         //when
-        when(eventImplService.findById(eventId)).thenReturn(event);
+        when(eventServiceImpl.findById(eventId)).thenReturn(event);
 
         //then
         mockMvc.perform(
@@ -292,7 +292,7 @@ class EventControllerTest {
         //given
         var eventId = 1;
         //when
-        when(eventImplService.subscribe(eventId)).thenThrow(EventNotFoundException.class);
+        when(eventServiceImpl.subscribe(eventId)).thenThrow(EventNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -306,7 +306,7 @@ class EventControllerTest {
         //given
         var eventId = 1;
         //when
-        when(eventImplService.subscribe(eventId)).thenThrow(EventNotFoundException.class);
+        when(eventServiceImpl.subscribe(eventId)).thenThrow(EventNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -320,7 +320,7 @@ class EventControllerTest {
         //given
         var eventId = 1;
         //when
-        when(eventImplService.subscribe(eventId)).thenThrow(EventNotFoundException.class);
+        when(eventServiceImpl.subscribe(eventId)).thenThrow(EventNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -334,7 +334,7 @@ class EventControllerTest {
         //given
         var eventId = 1;
         //when
-        when(eventImplService.subscribe(eventId)).thenThrow(EventUserAlreadySubscribedException.class);
+        when(eventServiceImpl.subscribe(eventId)).thenThrow(EventUserAlreadySubscribedException.class);
 
         //then
         mockMvc.perform(
@@ -348,7 +348,7 @@ class EventControllerTest {
         //given
         var eventId = 1;
         //when
-        when(eventImplService.subscribe(eventId)).thenReturn(new EventDto());
+        when(eventServiceImpl.subscribe(eventId)).thenReturn(new EventDto());
 
         //then
         mockMvc.perform(
@@ -361,7 +361,7 @@ class EventControllerTest {
         //given
 
         //when
-        when(eventImplService.findByUserId()).thenReturn(new ArrayList<EventDto>());
+        when(eventServiceImpl.findByUserId()).thenReturn(new ArrayList<EventDto>());
 
         //then
         mockMvc.perform(
@@ -375,7 +375,7 @@ class EventControllerTest {
         //given
 
         //when
-        when(eventImplService.findByUserId()).thenThrow(EventNotFoundException.class);
+        when(eventServiceImpl.findByUserId()).thenThrow(EventNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -389,7 +389,7 @@ class EventControllerTest {
         //given
 
         //when
-        when(eventImplService.findByUserId()).thenReturn(new ArrayList<EventDto>());
+        when(eventServiceImpl.findByUserId()).thenReturn(new ArrayList<EventDto>());
 
         //then
         mockMvc.perform(
@@ -422,7 +422,7 @@ class EventControllerTest {
         var json = new ObjectMapper().writeValueAsString(new EventDto());
 
         // when
-        doThrow(EventNotFoundException.class).when(eventImplService).delete(eventId);
+        doThrow(EventNotFoundException.class).when(eventServiceImpl).delete(eventId);
 
         // then
         mockMvc.perform(

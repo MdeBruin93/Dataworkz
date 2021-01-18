@@ -34,6 +34,8 @@ public class EventDto {
     private String imageUrl;
     @JsonIgnoreProperties("events")
     private UserDto user;
+
+    private CategoryDto category;
     private List<UserDto> subscribedUsers;
     private List<QuestionDto> questions;
 }

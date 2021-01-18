@@ -8,14 +8,15 @@ import { NavComponent } from './components/nav/nav.component';
 import { UnauthenticatedLayoutComponent } from './components/unauthenticated-layout/unauthenticated-layout.component';
 import { AuthenticatedLayoutComponent } from './components/authenticated-layout/authenticated-layout.component';
 
-import { IsLoggedInDirective } from './directives';
+import { IsLoggedInDirective, IsAdminDirective } from './directives';
 
 @NgModule({
   declarations: [
     NavComponent,
     UnauthenticatedLayoutComponent,
     AuthenticatedLayoutComponent,
-    IsLoggedInDirective
+    IsLoggedInDirective,
+    IsAdminDirective
   ],
   imports: [
     CommonModule,
@@ -27,7 +28,8 @@ import { IsLoggedInDirective } from './directives';
     NavComponent,
     UnauthenticatedLayoutComponent,
     AuthenticatedLayoutComponent,
-    IsLoggedInDirective
+    IsLoggedInDirective,
+    IsAdminDirective
   ]
 })
 export class CoreModule { }

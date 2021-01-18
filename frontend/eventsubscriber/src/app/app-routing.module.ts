@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AuthGuard } from './auth';
+import { AuthGuard, AdminGuard } from './auth';
 
 import {
   AuthenticatedLayoutComponent,
@@ -18,7 +18,6 @@ import {
 import {
   DashboardComponent
 } from './dashboard';
-import { WishlistComponent } from './wishlists';
 import { ActivateAccountComponent } from '@auth/pages/activate-account/activate-account.component';
 
 
@@ -63,20 +62,28 @@ const routes: Routes = [
     path: '',
     component: AuthenticatedLayoutComponent,
     canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
     children: [
       {
         path: 'dashboard',
-        component: DashboardComponent
+        component: DashboardComponent,
+        canActivate: [AuthGuard]
       },
       {
         path: 'wishlists',
         loadChildren: () => import('./wishlists/wishlists.module').then((m) => m.WishlistsModule),
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard]
+      },
+      {
+        path: 'categories',
+        loadChildren: () => import('./categories/categories.module').then((m) => m.CategoriesModule),
+        canActivate: [AuthGuard, AdminGuard],
+        canActivateChild: [AuthGuard, AdminGuard]
       },
       {
         path: 'users',
         loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
-      },
+      }
     ]
   }
 ];

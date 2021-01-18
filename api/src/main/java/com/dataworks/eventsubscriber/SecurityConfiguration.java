@@ -1,5 +1,6 @@
 package com.dataworks.eventsubscriber;
 
+import com.dataworks.eventsubscriber.enums.Role;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,6 +45,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/events/{id}/subscribe").authenticated()
                 .antMatchers(HttpMethod.GET, "/api/events/findbyuser").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/storage/upload").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/categories").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/categories/{id}").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/categories").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/categories").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/categories").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/questions").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/questions/{id}").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/questions/{id}").authenticated()

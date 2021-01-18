@@ -1,14 +1,16 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventsService, UserService } from '../../services';
-import { IEventResponse } from '../../models/event.model';
+import { IEventResponse, IEvent } from '../../models/event.model';
 import { Store, Select } from '@ngxs/store';
-import { AuthState } from '@core/store';
+import { AuthState, CategoriesState, LoadCategories } from '@core/store';
 import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { WishlistComponent } from 'src/app/wishlists';
 import { WishlistService } from '../../../wishlists/services';
+import { Category } from '@core/models';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-overview',
@@ -19,10 +21,16 @@ export class OverviewComponent implements OnInit {
   @Select(AuthState.isLoggedIn)
   public isLoggedIn$: Observable<boolean>;
 
+  @Select(CategoriesState.categories)
+  public categories$: Observable<Category[]>;
+
   public events: any;
+  public filteredEvents: any;
   public clickedEventId: string = '';
   public eventsByUser: any;
   public showSubscribedToEvents: boolean = false;
+
+  public categoriesFormControl = new FormControl([]);
 
   constructor(
     private eventsService: EventsService,
@@ -34,9 +42,12 @@ export class OverviewComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.store.dispatch(new LoadCategories());
     this.eventsService.getAll().subscribe({
       next: _response => {
-        this.events = _response;
+        console.log(_response);
+        this.events = _response || [];
+        this.filteredEvents = this.events;
       },
       error: error => {
         console.error('There was an error!', error);
@@ -123,5 +134,15 @@ export class OverviewComponent implements OnInit {
 
   sanitize(url: string) {
     return this.eventsService.sanitize(url);
+  }
+
+  selectCategory() {
+    if (this.categoriesFormControl.value.length == 0) {
+      this.filteredEvents = this.events;
+      return;
+    }
+    this.filteredEvents = this.events.filter((event: any) => {
+      return this.categoriesFormControl.value.includes(event.category.id)
+    });
   }
 }
