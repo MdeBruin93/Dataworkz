@@ -16,11 +16,11 @@ export class WishlistService {
     return this.http.get<any[]>(`${environment.apiUrl}/api/wishlists/findbyuser`);
   }
 
-  public update(id: number, formData: FormData): Observable<any> {
+  public update(id: number, formData: any): Observable<any> {
     return this.http.put<any>(`${environment.apiUrl}/api/wishlists/${id}`, formData);
   }
 
-  public create(formData: FormData): Observable<any> {
+  public create(formData: any): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/api/wishlists/`, formData);
   }
 
