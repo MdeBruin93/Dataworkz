@@ -22,8 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -245,7 +244,7 @@ class EventControllerTest {
         var events = new ArrayList<EventDto>();
         events.add(event);
         //when
-        when(eventImplService.findAll()).thenReturn(events);
+        when(eventServiceImpl.findAll()).thenReturn(events);
 
         //then
         mockMvc.perform(
@@ -261,7 +260,7 @@ class EventControllerTest {
         var eventId = 1;
 
         //when
-        when(eventImplService.findById(eventId)).thenThrow(EventNotFoundException.class);
+        when(eventServiceImpl.findById(eventId)).thenThrow(EventNotFoundException.class);
 
         //then
         mockMvc.perform(
@@ -278,7 +277,7 @@ class EventControllerTest {
         var event = new EventDto();
 
         //when
-        when(eventImplService.findById(eventId)).thenReturn(event);
+        when(eventServiceImpl.findById(eventId)).thenReturn(event);
 
         //then
         mockMvc.perform(
@@ -376,7 +375,7 @@ class EventControllerTest {
         //given
 
         //when
-        when(eventImplService.findByUserId()).thenThrow(EventNotFoundException.class);
+        when(eventServiceImpl.findByUserId()).thenThrow(EventNotFoundException.class);
 
         //then
         mockMvc.perform(

@@ -7,6 +7,7 @@ import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.Category;
 import com.dataworks.eventsubscriber.model.dao.Event;
+import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.CategoryRepository;
@@ -78,6 +79,8 @@ class EventServiceImplTest {
     public void storeWhenUserIsLoggedIn_Store() {
         //given
         User foundLoggedInUser = user;
+        eventDto = new EventDto();
+        eventDto.setCategory(new CategoryDto());
 
         //when
         when(authService.myDaoOrFail()).thenReturn(foundLoggedInUser);
@@ -140,6 +143,8 @@ class EventServiceImplTest {
         //given
         var eventId = 1;
         var userId = 1;
+        eventDto = new EventDto();
+        eventDto.setCategory(new CategoryDto());
 
         //when
         when(authService.myDaoOrFail()).thenReturn(user);
@@ -162,6 +167,8 @@ class EventServiceImplTest {
         //given
         var eventId = 1;
         var userId = 1;
+        eventDto = new EventDto();
+        eventDto.setCategory(new CategoryDto());
 
         //when
         when(authService.myDaoOrFail()).thenReturn(user);
