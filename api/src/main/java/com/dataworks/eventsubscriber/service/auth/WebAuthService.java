@@ -70,7 +70,8 @@ public class WebAuthService implements AuthService {
             return null;
         }
 
-        return userRepository.findByEmail(authentication.getName()).get();
+        return userRepository.findByEmail(authentication.getName())
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Override
