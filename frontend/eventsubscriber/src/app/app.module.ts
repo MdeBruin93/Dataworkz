@@ -19,6 +19,7 @@ import { AuthRoutingModule } from './auth/auth-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { EventsModule } from './events/events.module';
 import { EventsRoutingModule } from './events/events-routing.module';
+import { UsersModule } from './users/users.module';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { EventsRoutingModule } from './events/events-routing.module';
     }),
     NgxsStoragePluginModule.forRoot({
       key: ['auth.token', 'auth.currentUser']
-    })
+    }),
+    UsersModule
   ],
   providers: [],
   bootstrap: [AppComponent]

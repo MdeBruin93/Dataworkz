@@ -27,6 +27,8 @@ public class User extends BaseDao {
     @NotNull
     private boolean emailVerified;
     @NotNull
+    private boolean blocked;
+    @NotNull
     private String role;
     @OneToMany(mappedBy = "user")
     private List<Event> events;

@@ -11,15 +11,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDto extends BaseDto {
+public class UserUpdateDto {
     @NotNull
     private String firstName;
     @NotNull
     private String lastName;
-    @NotNull
-    private String email;
-    @NotNull
-    private String role;
-
-    private boolean blocked;
 }
