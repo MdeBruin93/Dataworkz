@@ -3,7 +3,6 @@ package com.dataworks.eventsubscriber.controller;
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.question.QuestionNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
-import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.model.dto.QuestionDto;
 import com.dataworks.eventsubscriber.service.question.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;

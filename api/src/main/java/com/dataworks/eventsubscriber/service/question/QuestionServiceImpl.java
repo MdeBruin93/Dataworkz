@@ -7,7 +7,6 @@ import com.dataworks.eventsubscriber.model.dto.QuestionDto;
 import com.dataworks.eventsubscriber.repository.AnswerRepository;
 import com.dataworks.eventsubscriber.repository.EventRepository;
 import com.dataworks.eventsubscriber.repository.QuestionRepository;
-import com.dataworks.eventsubscriber.service.answer.AnswerService;
 import com.dataworks.eventsubscriber.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,6 @@
 package com.dataworks.eventsubscriber.controller;
 
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
-import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.model.dto.UserBlockDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.service.event.EventService;

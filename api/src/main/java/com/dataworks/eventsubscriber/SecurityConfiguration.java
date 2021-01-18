@@ -1,6 +1,5 @@
 package com.dataworks.eventsubscriber;
 
-import com.dataworks.eventsubscriber.enums.Role;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
