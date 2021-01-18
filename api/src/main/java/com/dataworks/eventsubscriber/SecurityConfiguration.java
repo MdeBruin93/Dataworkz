@@ -35,6 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/auth/my").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/auth/my").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/auth/forgot-password").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/auth/reset-password").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/events").permitAll()
@@ -55,6 +56,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/answers").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/answers/{id}").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/answers/{id}").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/users/blocked").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/users/{id}").hasRole("ADMIN")
 //                .antMatchers("/post/create").authenticated()
                 .and()
                 .httpBasic();

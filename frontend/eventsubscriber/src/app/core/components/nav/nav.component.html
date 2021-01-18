@@ -30,6 +30,10 @@
         <mat-icon>favorite</mat-icon>
         <span class="toolbar-item-text">Wishlist</span>
       </div>
+      <div class="icon-text-wrapper" *ngIf="isLoggedIn$ | async" [routerLink]="['/users']">
+        <mat-icon>people</mat-icon>
+        <span class="toolbar-item-text">Users</span>
+      </div>
 
       <ng-container *ngIf="isLoggedIn$ | async">
         <div class="icon-text-wrapper" [routerLink]="['/categories']" *appIsAdmin="(currentUser$ | async)?.role">
@@ -44,7 +48,7 @@
         <mat-icon>login</mat-icon>
         <span class="toolbar-item-text">Login</span>
       </div>
-      <div class="icon-text-wrapper" *ngIf="isLoggedIn$ | async">
+      <div class="icon-text-wrapper" *ngIf="isLoggedIn$ | async" [routerLink]="['/users/settings']">
         <mat-icon>account_box</mat-icon>
         <span class="toolbar-item-text">{{(currentUser$ | async)?.firstName}} {{(currentUser$ | async)?.lastName}}</span>
       </div>
