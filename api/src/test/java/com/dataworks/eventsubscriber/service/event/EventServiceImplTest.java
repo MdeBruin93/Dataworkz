@@ -7,6 +7,7 @@ import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.Category;
 import com.dataworks.eventsubscriber.model.dao.Event;
+import com.dataworks.eventsubscriber.model.dao.Question;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
@@ -26,6 +27,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -248,8 +250,15 @@ class EventServiceImplTest {
     @Test
     public void subscribeWhenEventIsFound_Subscribe() {
         //given
+        var users = new ArrayList<User>();
+        var questions = new ArrayList<Question>();
         var eventId = 1;
         var userId = 1;
+        event = new Event();
+        event.setId(eventId);
+        event.setSubscribedUsers(users);
+        event.setQuestions(questions);
+
         //when
         when(authService.myDaoOrFail()).thenReturn(user);
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));

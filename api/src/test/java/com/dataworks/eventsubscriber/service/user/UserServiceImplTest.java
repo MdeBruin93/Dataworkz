@@ -6,7 +6,6 @@ import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.UserBlockDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.UserRepository;
-import com.dataworks.eventsubscriber.service.event.EventImplService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,12 +13,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
