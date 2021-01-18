@@ -12,6 +12,7 @@ import com.dataworks.eventsubscriber.model.dto.WishlistDto;
 import com.dataworks.eventsubscriber.repository.EventRepository;
 import com.dataworks.eventsubscriber.repository.WishlistRepository;
 import com.dataworks.eventsubscriber.service.auth.AuthService;
+import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -47,6 +48,8 @@ public class WishlistImplServiceTests {
     List<WishlistDto> wishlistDtos;
     @Mock
     EventRepository eventRepository;
+    @Mock
+    WebAuthDetailService webAuthDetailService;
     @InjectMocks
     WishlistServiceImpl wishlistService;
 

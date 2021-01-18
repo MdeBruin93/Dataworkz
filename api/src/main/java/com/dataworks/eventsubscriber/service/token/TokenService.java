@@ -1,7 +1,6 @@
 package com.dataworks.eventsubscriber.service.token;
 
 import com.dataworks.eventsubscriber.model.dto.TokenDto;
-import lombok.experimental.Accessors;
 import org.springframework.stereotype.Service;
 
 @Service
