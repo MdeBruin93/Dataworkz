@@ -82,11 +82,11 @@ class UserToUserDetailsAdapterTest {
     @Test
     void isCredentialsNonExpired() {
         //given
-        var returnNonExpired = true;
+        var returnCredentialsNonExpired = true;
         //when
         //then
-        var result = userToUserDetailsAdapter.isAccountNonExpired();
-        assertThat(result).isEqualTo(returnNonExpired);
+        var result = userToUserDetailsAdapter.isCredentialsNonExpired();
+        assertThat(result).isEqualTo(returnCredentialsNonExpired);
     }
 
     @Test
