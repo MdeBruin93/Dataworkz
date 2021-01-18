@@ -188,4 +188,23 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void subscriptionsWhenUserIsNotLoggedIn_ThenThrowException() throws Exception {
+        mockMvc.perform(
+                get("/api/users/subscriptions")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void subscriptionsWhenSuccess_ThenReturnList() throws Exception {
+        mockMvc.perform(
+                get("/api/users/subscriptions")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

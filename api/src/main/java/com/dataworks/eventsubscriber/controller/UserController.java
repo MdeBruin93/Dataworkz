@@ -1,6 +1,8 @@
 package com.dataworks.eventsubscriber.controller;
 
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
+
+import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.model.dto.UserBlockDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.service.event.EventService;
@@ -32,7 +34,8 @@ public class UserController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns a list of users.",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))) })
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+            @ApiResponse(responseCode = "401", description = "User is not authorized")})
     @GetMapping("")
     public ResponseEntity findAll() {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
@@ -45,7 +48,8 @@ public class UserController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns a list of users.",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))) })
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
+            @ApiResponse(responseCode = "401", description = "User is not authorized")})
     @GetMapping("/blocked")
     public ResponseEntity findAllBlocked() {
         return new ResponseEntity<>(userService.findAllBlocked(), HttpStatus.OK);
@@ -68,12 +72,18 @@ public class UserController {
         }
     }
 
+    @Operation(
+            summary = "Returns a list of the subscribed events",
+            description = "Returns a array of event objects.",
+            tags = { "Events" }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns a list of events.",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = EventDto.class)))),
+            @ApiResponse(responseCode = "401", description = "User is not authorized")
+    })
     @GetMapping("/subscriptions")
     public ResponseEntity subscriptions() {
-        try {
-            return new ResponseEntity(eventService.findBySubscribedUsers(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(eventService.findBySubscribedUsers(), HttpStatus.OK);
     }
 }

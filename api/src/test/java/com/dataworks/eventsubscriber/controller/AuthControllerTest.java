@@ -313,7 +313,6 @@ class AuthControllerTest {
         //given
         var token = "abc";
         var resetPasswordDto = new TokenDto();
-        resetPasswordDto.setToken(token);
         var json = new ObjectMapper().writeValueAsString(resetPasswordDto);
 
         //when
@@ -324,7 +323,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test

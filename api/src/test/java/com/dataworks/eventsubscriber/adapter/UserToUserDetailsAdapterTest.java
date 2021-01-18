@@ -72,11 +72,12 @@ class UserToUserDetailsAdapterTest {
     @Test
     void isAccountNonLocked() {
         //given
-        var returnNonLocked = true;
+        var returnIsBlocked = false;
         //when
+        when(user.isBlocked()).thenReturn(returnIsBlocked);
         //then
         var result = userToUserDetailsAdapter.isAccountNonLocked();
-        assertThat(result).isEqualTo(returnNonLocked);
+        assertThat(result).isEqualTo(!returnIsBlocked);
     }
 
     @Test

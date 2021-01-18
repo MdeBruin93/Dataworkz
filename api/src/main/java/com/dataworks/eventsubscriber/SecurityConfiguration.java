@@ -56,6 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/api/users/blocked").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/api/users/{id}").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/users/subscriptions").authenticated()
 //                .antMatchers("/post/create").authenticated()
                 .and()
                 .httpBasic();

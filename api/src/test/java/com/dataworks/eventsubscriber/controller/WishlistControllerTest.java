@@ -62,6 +62,22 @@ public class WishlistControllerTest {
     }
 
     @Test
+    public void store_ShouldReturnABadRequest() throws Exception {
+        // given
+        var wishlistDto = new WishlistDto();
+
+        var json = new ObjectMapper().writeValueAsString(wishlistDto);
+
+        // when
+
+        // then
+        mockMvc.perform(post("/api/wishlists/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void store_ShouldReturnANotFound() throws Exception {
         // given
         var wishlistDto = new WishlistDto();
@@ -95,6 +111,23 @@ public class WishlistControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void update_ShouldReturnABadRequest() throws Exception {
+        // given
+        var wishlistId = 1;
+        var wishlistDto = new WishlistDto();
+
+        var json = new ObjectMapper().writeValueAsString(wishlistDto);
+
+        // when
+
+        // then
+        mockMvc.perform(put("/api/wishlists/" + wishlistId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
