@@ -10,6 +10,11 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Setup MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql root password: '12345678' # optional, default is 
+          mysql database: 'java_minor'
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
