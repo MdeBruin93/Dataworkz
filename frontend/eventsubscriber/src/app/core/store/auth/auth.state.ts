@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { State, Selector, StateContext, Action } from '@ngxs/store';
 
 import { AuthStateModel } from './auth.state-model';
-import { Login, Logout } from './auth.actions';
+import { Login, Logout, SetCurrentUser } from './auth.actions';
 import { IUser } from '@core/models/user.model';
 
 import { AuthService } from '@auth/services';
@@ -44,12 +44,19 @@ export class AuthState {
 
     if (currentUser && token) {
       ctx.patchState({ currentUser: currentUser, token: token});
-    } 
+    }
   }
 
   @Action(Logout)
   public logout(ctx: StateContext<AuthStateModel>): void {
     this.authService.logout();
     ctx.patchState({ currentUser: null, token: '' });
+  }
+
+  @Action(SetCurrentUser)
+  public async SetCurrentUser(ctx: StateContext<AuthStateModel>, { data }: SetCurrentUser): Promise<void> {
+    if (data) {
+      ctx.patchState({ currentUser: data});
+    }
   }
 }

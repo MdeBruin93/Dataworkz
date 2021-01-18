@@ -16,7 +16,7 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
-    "module": "es2020",
+    "module": "esNext",
     "lib": [
       "es2018",
       "dom"
@@ -26,13 +26,14 @@
       "@core/*": ["src/app/core/*"],
       "@shared/*": ["src/app/shared/*"],
       "@auth/*": ["src/app/auth/*"],
-      "@dashboard/*": ["src/app/dashboard/*"]
+      "@dashboard/*": ["src/app/dashboard/*"],
+      "@categories/*": ["src/app/categories/*"]
     }
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
-    
+
   }
 }

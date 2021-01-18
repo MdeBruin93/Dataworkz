@@ -50,7 +50,7 @@ public class WishlistImplServiceTests {
     @Mock
     WebAuthDetailService webAuthDetailService;
     @InjectMocks
-    WishlistImplService wishlistImplService;
+    WishlistServiceImpl wishlistService;
 
     @Test
     public void findByUserId_ShouldThrowUserIsNotLoggedInException() {
@@ -61,7 +61,7 @@ public class WishlistImplServiceTests {
 
         // then
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> wishlistImplService.findByUserId());
+                .isThrownBy(() -> wishlistService.findByUserId());
         verify(authService, times(1)).myDaoOrFail();
     }
 
@@ -75,7 +75,7 @@ public class WishlistImplServiceTests {
         when(wishListMapper.mapToEventDestinationCollection(wishlists)).thenReturn(wishlistDtos);
 
         // when
-        var wishlistDtos = wishlistImplService.findByUserId();
+        var wishlistDtos = wishlistService.findByUserId();
 
         // then
         assertThat(wishlistDtos).hasSize(0);
@@ -92,7 +92,7 @@ public class WishlistImplServiceTests {
 
         // then
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> wishlistImplService.findByUserId());
+                .isThrownBy(() -> wishlistService.findByUserId());
         verify(authService, times(1)).myDaoOrFail();
     }
 
@@ -109,7 +109,7 @@ public class WishlistImplServiceTests {
         when(wishListMapper.mapToEventDestination(wishlist)).thenReturn(wishlistDto);
 
         // when
-        var wishlistDto = wishlistImplService.findByIdAndUserId(wishListId);
+        var wishlistDto = wishlistService.findByIdAndUserId(wishListId);
 
         // then
         assertThat(wishlistDto).isNotNull();
@@ -126,7 +126,7 @@ public class WishlistImplServiceTests {
 
         // then
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> wishlistImplService.store(new WishlistDto()));
+                .isThrownBy(() -> wishlistService.store(new WishlistDto()));
         verify(authService, times(1)).myDaoOrFail();
     }
 
@@ -142,7 +142,7 @@ public class WishlistImplServiceTests {
         when(wishlistRepository.save(wishlist)).thenReturn(wishlist);
 
         // when
-        savedWishlistDto = wishlistImplService.store(wishlistDto);
+        savedWishlistDto = wishlistService.store(wishlistDto);
 
         // then
         assertThat(savedWishlistDto).isNotNull();
@@ -174,7 +174,7 @@ public class WishlistImplServiceTests {
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
 
         // when
-        savedWishlistDto = wishlistImplService.store(wishlistDto);
+        savedWishlistDto = wishlistService.store(wishlistDto);
 
         // then
         assertThat(savedWishlistDto).isNotNull();
@@ -195,7 +195,7 @@ public class WishlistImplServiceTests {
 
         // then
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> wishlistImplService.update(wishlistId, new WishlistDto()));
+                .isThrownBy(() -> wishlistService.update(wishlistId, new WishlistDto()));
         verify(authService, times(1)).myDaoOrFail();
     }
 
@@ -219,7 +219,7 @@ public class WishlistImplServiceTests {
         when(wishlistRepository.findById(wishlistId)).thenReturn(Optional.of(wishlist));
 
         // when
-        savedWishlistDto = wishlistImplService.update(wishlistId, wishlistDto);
+        savedWishlistDto = wishlistService.update(wishlistId, wishlistDto);
 
         // then
         assertThat(savedWishlistDto).isNotNull();
@@ -256,7 +256,7 @@ public class WishlistImplServiceTests {
         when(wishlistRepository.findById(wishlistId)).thenReturn(Optional.of(wishlist));
 
         // when
-        savedWishlistDto = wishlistImplService.update(wishlistId, wishlistDto);
+        savedWishlistDto = wishlistService.update(wishlistId, wishlistDto);
 
         // then
         assertThat(savedWishlistDto).isNotNull();
@@ -277,7 +277,7 @@ public class WishlistImplServiceTests {
 
         // then
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> wishlistImplService.delete(wishlistId));
+                .isThrownBy(() -> wishlistService.delete(wishlistId));
         verify(authService, times(1)).myDaoOrFail();
     }
 
@@ -301,7 +301,7 @@ public class WishlistImplServiceTests {
 
         // then
         assertThatExceptionOfType(WishlistNotFoundException.class)
-                .isThrownBy(() -> wishlistImplService.delete(wishlistId));
+                .isThrownBy(() -> wishlistService.delete(wishlistId));
 
         verify(authService, times(1)).myDaoOrFail();
         verify(wishlistRepository, times(1)).findById(wishlistId);
@@ -326,7 +326,7 @@ public class WishlistImplServiceTests {
         when(wishlistRepository.findById(wishlistId)).thenReturn(Optional.of(wishlist));
 
         // then
-        wishlistImplService.delete(wishlistId);
+        wishlistService.delete(wishlistId);
 
         verify(authService, times(1)).myDaoOrFail();
         verify(wishlistRepository, times(1)).findById(wishlistId);
@@ -351,7 +351,7 @@ public class WishlistImplServiceTests {
         when(wishlistRepository.findById(wishlistId)).thenReturn(Optional.of(wishlist));
 
         // then
-        wishlistImplService.delete(wishlistId);
+        wishlistService.delete(wishlistId);
 
         verify(authService, times(1)).myDaoOrFail();
         verify(wishlistRepository, times(1)).findById(wishlistId);

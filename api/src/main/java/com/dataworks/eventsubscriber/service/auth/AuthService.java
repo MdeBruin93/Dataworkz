@@ -1,10 +1,7 @@
 package com.dataworks.eventsubscriber.service.auth;
 
 import com.dataworks.eventsubscriber.model.dao.User;
-import com.dataworks.eventsubscriber.model.dto.RegisterDto;
-import com.dataworks.eventsubscriber.model.dto.ResetPasswordDto;
-import com.dataworks.eventsubscriber.model.dto.TokenDto;
-import com.dataworks.eventsubscriber.model.dto.UserDto;
+import com.dataworks.eventsubscriber.model.dto.*;
 
 public interface AuthService {
     UserDto register(RegisterDto registerDto);
@@ -16,6 +13,8 @@ public interface AuthService {
     User myDao();
 
     User myDaoOrFail();
+
+    UserDto myUpdate(UserUpdateDto userDto);
 
     TokenDto forgotPassword(String email);
 
