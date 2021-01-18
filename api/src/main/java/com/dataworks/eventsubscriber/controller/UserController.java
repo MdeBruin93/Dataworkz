@@ -1,6 +1,7 @@
 package com.dataworks.eventsubscriber.controller;
 
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
+
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.model.dto.UserBlockDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
@@ -79,9 +80,10 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns a list of events.",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = EventDto.class)))),
-            @ApiResponse(responseCode = "401", description = "User is not authorized") })
+            @ApiResponse(responseCode = "401", description = "User is not authorized")
+    })
     @GetMapping("/subscriptions")
     public ResponseEntity subscriptions() {
-        return new ResponseEntity(eventService.findBySubscribedUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(eventService.findBySubscribedUsers(), HttpStatus.OK);
     }
 }
