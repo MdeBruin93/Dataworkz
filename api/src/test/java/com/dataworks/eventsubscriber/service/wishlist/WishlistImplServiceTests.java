@@ -1,6 +1,7 @@
 package com.dataworks.eventsubscriber.service.wishlist;
 
 import com.dataworks.eventsubscriber.enums.Role;
+import com.dataworks.eventsubscriber.exception.NotFoundException;
 import com.dataworks.eventsubscriber.exception.WishlistNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.WishListMapper;
@@ -194,6 +195,27 @@ public class WishlistImplServiceTests {
         assertThatExceptionOfType(UserNotFoundException.class)
                 .isThrownBy(() -> wishlistService.update(wishlistId, new WishlistDto()));
         verify(authService, times(1)).myDaoOrFail();
+    }
+
+    @Test
+    public void update_ShouldThrowExceptionWhenLoggedInUserIsNotOwner() {
+        //given
+        var loggedInUser = new User();
+        loggedInUser.setId(1);
+        var wishlistOwner = new User();
+        wishlistOwner.setId(2);
+        var wishlistId = 1;
+        var wishlist = new Wishlist();
+        wishlist.setId(wishlistId);
+        wishlist.setUser(wishlistOwner);
+
+        //when
+        when(authService.myDaoOrFail()).thenReturn(loggedInUser);
+        when(wishlistRepository.findById(wishlist.getId())).thenReturn(Optional.of(wishlist));
+
+        //then
+        assertThatExceptionOfType(NotFoundException.class)
+                .isThrownBy(() -> wishlistService.update(wishlistId, new WishlistDto()));
     }
 
     @Test
