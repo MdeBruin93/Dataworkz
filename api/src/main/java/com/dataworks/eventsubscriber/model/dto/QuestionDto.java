@@ -18,5 +18,6 @@ public class QuestionDto extends BaseDto {
     @NotNull
     private Integer eventId;
     private UserDto owner;
-    private List<AnswerDto> answers;
+    private List<AnswerDto> userAnswers;
+    private List<AnswerDto> superiorAnswers;
 }

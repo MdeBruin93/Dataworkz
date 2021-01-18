@@ -46,7 +46,7 @@ public class UserToUserDetailsAdapter implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !user.isBlocked();
     }
 
     @Override
@@ -56,6 +56,6 @@ public class UserToUserDetailsAdapter implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.user.isEmailVerified();
+        return user.isEmailVerified();
     }
 }

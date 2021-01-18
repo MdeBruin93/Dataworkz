@@ -7,10 +7,7 @@ import com.dataworks.eventsubscriber.mapper.RegisterMapper;
 import com.dataworks.eventsubscriber.mapper.TokenMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.User;
-import com.dataworks.eventsubscriber.model.dto.RegisterDto;
-import com.dataworks.eventsubscriber.model.dto.ResetPasswordDto;
-import com.dataworks.eventsubscriber.model.dto.TokenDto;
-import com.dataworks.eventsubscriber.model.dto.UserDto;
+import com.dataworks.eventsubscriber.model.dto.*;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import com.dataworks.eventsubscriber.service.token.ActivateAccountTokenService;
 import com.dataworks.eventsubscriber.service.token.ResetPasswordTokenService;
@@ -85,6 +82,16 @@ public class WebAuthService implements AuthService {
         }
 
         return dao;
+    }
+
+    @Override
+    public UserDto myUpdate(UserUpdateDto userDto) {
+        var loggedInUser = myDaoOrFail();
+
+        loggedInUser.setFirstName(userDto.getFirstName());
+        loggedInUser.setLastName(userDto.getLastName());
+
+        return userMapper.mapToDestination(userRepository.save(loggedInUser));
     }
 
     @Override

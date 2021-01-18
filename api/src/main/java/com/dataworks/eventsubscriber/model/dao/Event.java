@@ -1,10 +1,10 @@
 package com.dataworks.eventsubscriber.model.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -37,6 +37,8 @@ public class Event extends BaseDao {
     @ManyToOne
     @JsonIgnoreProperties("events")
     private User user;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Category category;
     @ManyToMany
     @JoinTable(
             name = "wishlist_event",
