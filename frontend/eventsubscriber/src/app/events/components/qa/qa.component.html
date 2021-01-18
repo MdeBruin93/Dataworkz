@@ -42,7 +42,33 @@
                 </mat-card-actions>
             </form>
         </div>
-        <div *ngFor="let answer of question.answers; index as a" style="margin-left: 25px;">
+        <div *ngFor="let answer of question.superiorAnswers; index as s" style="margin-left: 25px;">
+            <mat-list-item>
+                <strong mat-line style="color: green;"><mat-icon>reply</mat-icon>{{answer.owner.firstName}} {{answer.owner.lastName}} (event owner)</strong>
+                <div mat-line>{{answer.text}}</div>
+                <div mat-line>{{answer.lastModified | date}}</div>
+                <span>
+                    <mat-icon (click)="deleteAnswer(answer.id)">close</mat-icon>
+                </span>
+                <span>
+                    <mat-icon (click)="superiorAnswers[s] = !superiorAnswers[s]">edit</mat-icon>
+                </span>
+            </mat-list-item>
+            <div *ngIf="superiorAnswers[s]">
+                <form [formGroup]="answerEditForm" (ngSubmit)="onSubmitEditAnswer(answer, question)">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Your answer</mat-label>
+                        <textarea matInput formControlName="answer" required></textarea>
+                        <mat-error *ngIf="answerEditForm.controls.answer.errors && answerEditForm.controls.answer.errors.required">answer is required</mat-error>
+                    </mat-form-field>
+                
+                    <mat-card-actions>
+                        <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!answerEditForm.valid">Update</button>
+                    </mat-card-actions>
+                </form>
+            </div>
+        </div>
+        <div *ngFor="let answer of question.userAnswers; index as a" style="margin-left: 25px;">
             <mat-list-item>
                 <strong mat-line><mat-icon>reply</mat-icon>{{answer.owner.firstName}} {{answer.owner.lastName}}</strong>
                 <div mat-line>{{answer.text}}</div>
