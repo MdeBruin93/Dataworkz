@@ -148,7 +148,7 @@ public class EventController {
                     content = @Content(schema = @Schema(implementation = EventDto.class))),
             @ApiResponse(responseCode = "401", description = "User is not authorized"),
             @ApiResponse(responseCode = "500", description = "Internal server error.")})
-    public ResponseEntity findbyuser() {
+    public ResponseEntity findByUser() {
         try {
             return new ResponseEntity(eventService.findByUserId(), HttpStatus.OK);
         } catch (Exception e) {
