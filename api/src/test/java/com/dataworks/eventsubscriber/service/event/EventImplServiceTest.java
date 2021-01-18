@@ -6,6 +6,7 @@ import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.Event;
+import com.dataworks.eventsubscriber.model.dao.Question;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.EventRepository;
@@ -217,6 +218,7 @@ class EventImplServiceTest {
         var id = 1;
         var event = new Event();
         var eventDto = new EventDto();
+        event.setQuestions(new ArrayList<Question>());
         //when
         when(eventRepository.findById(id)).thenReturn(Optional.of(event));
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
