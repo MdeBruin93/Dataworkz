@@ -44,6 +44,27 @@ public class AuthController {
     }
 
     @Operation(
+            summary = "Update information of the logged in user",
+            description = "Returns user object with basic autorization.",
+            tags = { "Authentication" },
+            security = @SecurityRequirement(name = "basicAuth")
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "When user is found update",
+                    content = @Content(schema = @Schema(implementation = UserDto.class))),
+            @ApiResponse(responseCode = "401", description = "When user is not found with the basic autorization credentials.")})
+    @PutMapping("/my")
+    public ResponseEntity myUpdate(@Valid @RequestBody UserUpdateDto userUpdateDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return new ResponseEntity(bindingResult.getFieldErrors(), HttpStatus.BAD_REQUEST);
+
+        try {
+            return new ResponseEntity<>(authService.myUpdate(userUpdateDto), HttpStatus.OK);
+        } catch (UserNotFoundException exception) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Operation(
             summary = "Register a new user",
             description = "When user is registered then return a new user object.",
             tags = { "Authentication" }

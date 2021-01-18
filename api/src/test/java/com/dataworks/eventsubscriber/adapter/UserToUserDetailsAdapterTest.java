@@ -72,21 +72,22 @@ class UserToUserDetailsAdapterTest {
     @Test
     void isAccountNonLocked() {
         //given
-        var returnNonLocked = true;
+        var returnIsBlocked = false;
         //when
+        when(user.isBlocked()).thenReturn(returnIsBlocked);
         //then
         var result = userToUserDetailsAdapter.isAccountNonLocked();
-        assertThat(result).isEqualTo(returnNonLocked);
+        assertThat(result).isEqualTo(!returnIsBlocked);
     }
 
     @Test
     void isCredentialsNonExpired() {
         //given
-        var returnNonExpired = true;
+        var returnCredentialsNonExpired = true;
         //when
         //then
-        var result = userToUserDetailsAdapter.isAccountNonExpired();
-        assertThat(result).isEqualTo(returnNonExpired);
+        var result = userToUserDetailsAdapter.isCredentialsNonExpired();
+        assertThat(result).isEqualTo(returnCredentialsNonExpired);
     }
 
     @Test

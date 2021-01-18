@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IUser } from '@core/models';
+import { IUser, Category } from '@core/models';
 
 export interface IEvent {
     title: string;
@@ -8,12 +8,14 @@ export interface IEvent {
     maxAmountOfAttendees: number;
     euroAmount: number;
     imageUrl: string;
+    category: Category;
 }
 
 export interface IEventResponse extends IEvent {
     id: number;
     imageUrl: string;
     user: IUser;
+    categoryId: number;
 }
 
 export interface IFileResponse {
@@ -42,7 +44,8 @@ export class Event {
         Validators.min(0),
       ]),
       image: new FormControl(null, isImageRequired ? [Validators.required] : []),
-      imageUrl: new FormControl('', [])
+      imageUrl: new FormControl('', []),
+      categoryId: new FormControl('', [Validators.required])
     });
   }
 }

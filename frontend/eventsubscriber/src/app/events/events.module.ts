@@ -12,13 +12,15 @@ import { DetailComponent } from './pages/detail/detail.component';
 import { OverviewComponent } from './pages/overview/overview.component';
 import { SharedModule } from '../shared';
 import { WishlistsModule } from '../wishlists/wishlists.module';
+import { QaComponent } from './components/qa/qa.component';
 
 
 @NgModule({
   declarations: [
     FormComponent,
     DetailComponent,
-    OverviewComponent
+    OverviewComponent,
+    QaComponent
   ],
   imports: [
     CommonModule,

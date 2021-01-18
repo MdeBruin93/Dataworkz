@@ -4,7 +4,8 @@ import com.dataworks.eventsubscriber.enums.TokenType;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Entity

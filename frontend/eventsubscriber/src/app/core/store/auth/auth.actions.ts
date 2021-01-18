@@ -10,3 +10,9 @@ export class Logout {
 
   public constructor() {}
 }
+
+export class SetCurrentUser {
+  static readonly type = '[Auth] Set current user';
+
+  public constructor(public data: any) {}
+}

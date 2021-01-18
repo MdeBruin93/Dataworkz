@@ -2,12 +2,10 @@ package com.dataworks.eventsubscriber.service.auth;
 
 import com.dataworks.eventsubscriber.exception.user.UserAlreadyExistException;
 import com.dataworks.eventsubscriber.mapper.RegisterMapper;
+import com.dataworks.eventsubscriber.mapper.TokenMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.User;
-import com.dataworks.eventsubscriber.model.dto.RegisterDto;
-import com.dataworks.eventsubscriber.model.dto.TokenDto;
-import com.dataworks.eventsubscriber.model.dto.UserDto;
-import com.dataworks.eventsubscriber.model.dto.UserTokenDto;
+import com.dataworks.eventsubscriber.model.dto.*;
 import com.dataworks.eventsubscriber.repository.UserRepository;
 import com.dataworks.eventsubscriber.service.token.ActivateAccountTokenService;
 import com.dataworks.eventsubscriber.service.token.ResetPasswordTokenService;
@@ -44,9 +42,11 @@ class WebAuthServiceTest {
     @Mock
     PasswordEncoder passwordEncoder;
     @Mock
+    ActivateAccountTokenService activateAccountTokenService;
+    @Mock
     ResetPasswordTokenService resetPasswordTokenService;
     @Mock
-    ActivateAccountTokenService activateAccountTokenService;
+    TokenMapper tokenMapper;
     @Mock
     TokenDto tokenDto;
     @InjectMocks
@@ -91,7 +91,7 @@ class WebAuthServiceTest {
     }
 
     @Test
-    void forgotPassword() {
+    void forgotPasswordWhenSuccess_ThenForgotPassword() {
         //given
         var email = "info@hr.nl";
         //when
@@ -103,7 +103,35 @@ class WebAuthServiceTest {
     }
 
     @Test
-    void activate() {
+    void resetPasswordWhenSuccess_ThenResetPassword() {
+        //given
+        var resetPasswordDto = new ResetPasswordDto();
+        resetPasswordDto.setNewPassword("abcdef");
+        var tokenDto = new TokenDto();
+        var userEmail = "ricky@hr.nl";
+        var foundUser = new User();
+        foundUser.setEmail(userEmail);
+        var userDto = new UserDto();
+
+        //when
+        when(tokenMapper.mapResetPasswordDtoToSource(resetPasswordDto)).thenReturn(tokenDto);
+        when(resetPasswordTokenService.setTokenDto(tokenDto)).thenReturn(resetPasswordTokenService);
+        when(resetPasswordTokenService.getEmail()).thenReturn(userEmail);
+        when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(user));
+        when(userMapper.mapToDestination(user)).thenReturn(userDto);
+
+        //then
+        var result = webAuthService.resetPassword(resetPasswordDto);
+        assertThat(result).isInstanceOf(UserDto.class);
+        verify(tokenMapper, times(1)).mapResetPasswordDtoToSource(resetPasswordDto);
+        verify(resetPasswordTokenService, times(1)).setTokenDto(tokenDto);
+        verify(resetPasswordTokenService, times(1)).verify();
+        verify(resetPasswordTokenService, times(1)).getEmail();
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void activateWhenSuccess_ThenActivate() {
         //given
         var email = "info@hr.nl";
         //when

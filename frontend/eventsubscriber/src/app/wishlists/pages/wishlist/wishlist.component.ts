@@ -59,9 +59,7 @@ export class WishlistComponent implements OnInit {
       eventIds: currentEventIds
     }
 
-    const fromData = this.getFormData(object);
-
-    this.wishlistService.update(wishlist.id, fromData).subscribe({
+    this.wishlistService.update(wishlist.id, object).subscribe({
       next: _response => {
         this.ngOnInit();
         console.log(_response);
@@ -72,18 +70,14 @@ export class WishlistComponent implements OnInit {
     });
   }
 
-  getFormData(object: any) {
-    const formData = new FormData();
-    Object.keys(object).forEach(key => formData.append(key, object[key]));
-    return formData;
-  }
-
   onSubmit() {
-    var formData: any = new FormData();
     const name = this.wishlistCreateForm.get('name') || {value: null};
-    formData.append("name", name.value);
 
-    this.wishlistService.create(formData).subscribe({
+    const object = {
+      name: name.value
+    }
+
+    this.wishlistService.create(object).subscribe({
       next: _response => {
         this.snackBar.open('Event successfully created');
         this.ngOnInit();
@@ -103,9 +97,8 @@ export class WishlistComponent implements OnInit {
       name: name.value,
       eventIds: currentEventIds
     }
-    const fromData = this.getFormData(object);
     
-    this.wishlistService.update(wishlist.id, fromData).subscribe({
+    this.wishlistService.update(wishlist.id, object).subscribe({
       next: _response => {
         this.snackBar.open('Event successfully updated');
         this.ngOnInit();

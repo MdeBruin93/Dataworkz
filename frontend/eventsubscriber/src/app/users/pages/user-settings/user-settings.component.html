@@ -1,0 +1,24 @@
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="userSettingsForm" (ngSubmit)="onSubmit()">
+        <h3>Edit account</h3>
+        <mat-form-field appearance="fill">
+            <mat-label>Firstname</mat-label>
+            <input matInput formControlName="firstName" required>
+            <mat-error *ngIf="userSettingsForm.controls.firstName.errors && userSettingsForm.controls.firstName.errors.required">Firstname is required</mat-error>
+        </mat-form-field>
+        <br>
+        <br>
+        <mat-form-field appearance="fill">
+          <mat-label>Lastname</mat-label>
+          <input matInput formControlName="lastName" required>
+          <mat-error *ngIf="userSettingsForm.controls.lastName.errors && userSettingsForm.controls.lastName.errors.required">Lastname is required</mat-error>
+        </mat-form-field>
+        <br>
+        <br>
+        <mat-card-actions>
+            <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!userSettingsForm.valid">SAVE</button>
+        </mat-card-actions>
+    </form>
+  </mat-card-content>
+</mat-card>

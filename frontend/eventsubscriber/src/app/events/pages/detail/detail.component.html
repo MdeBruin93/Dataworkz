@@ -16,8 +16,15 @@
         <span><strong>Costs of participation:</strong> €{{event.euroAmount}}</span><br>
         <button mat-raised-button color="primary" [routerLink]="['/events','edit', event.id]" *appIsAllowedForOrganizer="event.user.id">Edit</button>
         <button mat-raised-button color="primary" (click)="subscribeToEvent(event)" *appIsNotAllowedForOrganizer="event.user.id">Subscribe</button>
+        <button type="button" mat-raised-button color="primary" (click)="deleteEvent(event.id)" *appIsAllowedForOrganizer="event.user.id">Delete</button>
       </mat-card-footer>
     </mat-card>
+    <app-qa 
+      *ngIf="event"
+      [questions]="event.questions"
+      [eventId]="event.id"
+      (reloadData)="reloadData(event)"
+    ></app-qa>
   </div>
 </div>
 
