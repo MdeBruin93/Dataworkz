@@ -109,20 +109,52 @@ class UserServiceImplTest {
     }
 
     @Test
-    void updateWhenSuccess_ThenUpdate() {
+    void updateWhenUserIsBlocked_ThenDescriptionIsSet() {
         //given
-        var userId = 1;
         var foundUser = new User();
-        var userDto = new UserDto();
+        foundUser.setId(1);
         var userBlockDto = new UserBlockDto();
+        userBlockDto.setBlocked(true);
+        userBlockDto.setDescription("Yes nice description");
+        var userDto = new UserDto();
+
         //when
-        when(userRepository.findById(userId)).thenReturn(Optional.of(foundUser));
+        when(userRepository.findById(foundUser.getId())).thenReturn(Optional.of(foundUser));
         when(userRepository.save(foundUser)).thenReturn(foundUser);
         when(userMapper.mapToDestination(foundUser)).thenReturn(userDto);
+
         //then
-        var result = userService.update(userId, userBlockDto);
+        var result = userService.update(foundUser.getId(), userBlockDto);
         assertThat(result).isEqualTo(userDto);
-        verify(userRepository, times(1)).findById(userId);
+        assertThat(foundUser.getBlockedDescription()).isEqualTo("Yes nice description");
+        verify(userRepository, times(1)).findById(foundUser.getId());
+        verify(userRepository, times(1)).save(foundUser);
+        verify(userMapper, times(1)).mapToDestination(foundUser);
+    }
+
+
+
+    @Test
+    void updateWhenUserIsNotBlocked_ThenDescriptionIsSet() {
+        //given
+        var foundUser = new User();
+        foundUser.setId(1);
+        var userBlockDto = new UserBlockDto();
+        userBlockDto.setBlocked(false);
+        userBlockDto.setDescription("Yes nice description");
+        var userDto = new UserDto();
+
+        //when
+        when(userRepository.findById(foundUser.getId())).thenReturn(Optional.of(foundUser));
+        when(userRepository.save(foundUser)).thenReturn(foundUser);
+        when(userMapper.mapToDestination(foundUser)).thenReturn(userDto);
+
+        //then
+        var result = userService.update(foundUser.getId(), userBlockDto);
+        assertThat(result).isEqualTo(userDto);
+        assertThat(foundUser.isBlocked()).isFalse();
+        assertThat(foundUser.getBlockedDescription()).isNull();
+        verify(userRepository, times(1)).findById(foundUser.getId());
         verify(userRepository, times(1)).save(foundUser);
         verify(userMapper, times(1)).mapToDestination(foundUser);
     }
