@@ -1,22 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { QaService } from '../../services/qa.service';
 
 import { QaComponent } from './qa.component';
 
 describe('QaComponent', () => {
   let component: QaComponent;
-  let fixture: ComponentFixture<QaComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ QaComponent ]
-    })
-    .compileComponents();
-  });
+  let qaService: QaService;
+  let snackBar: MatSnackBar;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QaComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new QaComponent(
+      qaService,
+      snackBar
+    );
   });
 
   it('should create', () => {

@@ -1,22 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { WishlistService } from '../../services';
 
 import { WishlistComponent } from './wishlist.component';
 
 describe('WishlistComponent', () => {
   let component: WishlistComponent;
-  let fixture: ComponentFixture<WishlistComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ WishlistComponent ]
-    })
-    .compileComponents();
-  });
+  let wishlistService: WishlistService;
+  let snackBar: MatSnackBar;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WishlistComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new WishlistComponent(
+      wishlistService,
+      snackBar
+    );
   });
 
   it('should create', () => {
