@@ -7,6 +7,7 @@ import com.dataworks.eventsubscriber.exception.user.UserTokenNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.*;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import com.dataworks.eventsubscriber.service.auth.WebAuthService;
+import com.dataworks.eventsubscriber.service.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -29,6 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthControllerTest {
     @MockBean
     BindingResult bindingResult;
+    @MockBean
+    UserService userService;
     @MockBean
     WebAuthService webAuthService;
     @MockBean

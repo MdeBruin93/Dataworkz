@@ -22,6 +22,7 @@ import java.util.Base64;
 
 @ControllerAdvice
 @RequiredArgsConstructor
+
 public class BasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private final UserService userService;
 
