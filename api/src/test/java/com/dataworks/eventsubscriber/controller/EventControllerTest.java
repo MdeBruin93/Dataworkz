@@ -6,6 +6,7 @@ import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import com.dataworks.eventsubscriber.service.event.EventServiceImpl;
+import com.dataworks.eventsubscriber.service.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class EventControllerTest {
     @MockBean
     EventServiceImpl eventServiceImpl;
+    @MockBean
+    UserService userService;
     @MockBean
     WebAuthDetailService webAuthDetailService;
     @Autowired
