@@ -29,11 +29,11 @@ jobs:
     - name: Test project
       working-directory: ./frontend/eventsubscriber
       run: npm run test-headless
+      
     - name: Sonar Scan
       uses: sijomc/sonarscan-action@1.1
       with:
         # SonarQube server URL
         host: https://sonarcloud.io
         projectKey: event-subscriber-frontend
-        organization: dataworkz
-        login: ${{ secrets.SONAR_TOKEN }}
+        login: 8a38f4ab3e9324a5f4b53d588e26f5cc33133682
