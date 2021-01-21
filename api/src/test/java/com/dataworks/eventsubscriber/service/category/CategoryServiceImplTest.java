@@ -1,5 +1,6 @@
 package com.dataworks.eventsubscriber.service.category;
 
+import com.dataworks.eventsubscriber.exception.NotFoundException;
 import com.dataworks.eventsubscriber.exception.category.CategoryContainEventsException;
 import com.dataworks.eventsubscriber.exception.category.CategoryNotFoundException;
 import com.dataworks.eventsubscriber.mapper.CategoryMapper;
@@ -50,6 +51,21 @@ public class CategoryServiceImplTest {
         verify(categoryMapper, times(1)).mapToCategorySource(categoryDto);
         verify(categoryMapper, times(1)).mapToCategoryDestination(category);
         verify(categoryRepository, times(1)).save(category);
+    }
+
+    @Test
+    public void updateWhenCategoryNotFound_ThenThrowException() {
+        //given
+        var categoryId = 1;
+        var categoryDto = new CategoryDto();
+        //when
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
+        //then
+        assertThatExceptionOfType(NotFoundException.class)
+                .isThrownBy(() -> categoryService.update(categoryId, categoryDto));
+        verify(categoryRepository, times(1)).findById(categoryId);
+        verifyNoInteractions(categoryMapper);
+        verifyNoMoreInteractions(categoryRepository);
     }
 
     @Test

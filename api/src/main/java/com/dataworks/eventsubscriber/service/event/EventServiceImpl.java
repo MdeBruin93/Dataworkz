@@ -7,7 +7,6 @@ import com.dataworks.eventsubscriber.mapper.AnswerMapper;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.QuestionMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
-import com.dataworks.eventsubscriber.model.dao.Answer;
 import com.dataworks.eventsubscriber.model.dao.Event;
 import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.AnswerDto;
@@ -163,10 +162,12 @@ public class EventServiceImpl implements EventService {
         var event = eventRepository.findById(eventId).orElseThrow(EventNotFoundException::new);
 
         var isOrganizer = authService.myDao().getId().equals(event.getUser().getId());
-        if (authService.myDao().isAdmin() || isOrganizer) {
-            eventRepository.deleteById(eventId);
-        } else {
+        var isAdmin = authService.myDao().isAdmin();
+
+        if (!isOrganizer && !isAdmin) {
             throw new EventNotFoundException();
         }
+
+        eventRepository.deleteById(eventId);
     }
 }

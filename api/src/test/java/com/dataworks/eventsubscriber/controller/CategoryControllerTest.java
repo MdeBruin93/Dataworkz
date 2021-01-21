@@ -1,5 +1,7 @@
 package com.dataworks.eventsubscriber.controller;
 
+import com.dataworks.eventsubscriber.exception.NotFoundException;
+import com.dataworks.eventsubscriber.exception.category.CategoryContainEventsException;
 import com.dataworks.eventsubscriber.exception.category.CategoryNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
@@ -18,8 +20,7 @@ import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -89,7 +90,6 @@ public class CategoryControllerTest {
         var json = new ObjectMapper().writeValueAsString(categoryDto);
 
         //when
-        when(categoryService.store(any(CategoryDto.class))).thenReturn(categoryDto);
 
         // act & assert
         mockMvc.perform(
@@ -124,6 +124,26 @@ public class CategoryControllerTest {
 
     @Test
     @WithMockUser(username = "michael@hr.nl", password = "123456", roles = "ADMIN")
+    public void updateEmptyCategory_ShouldBeBadRequest() throws Exception {
+        // given
+        var categoryId = 1;
+        var categoryDto = new CategoryDto();
+
+        var json = new ObjectMapper().writeValueAsString(categoryDto);
+
+        //when
+
+        // act & assert
+        mockMvc.perform(
+                put("/api/categories/" + categoryId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "michael@hr.nl", password = "123456", roles = "ADMIN")
     public void updateUpdatesTheCategory_ShouldThrowCategoryNotFoundException() throws Exception {
         // given
         var categoryDto = new CategoryDto();
@@ -146,7 +166,7 @@ public class CategoryControllerTest {
 
     @Test
     @WithMockUser(username = "michael@hr.nl", password = "123456", roles = "USER")
-    public void findall_ShouldBeSuccessful() throws Exception {
+    public void findAll_ShouldBeSuccessful() throws Exception {
         // given
         var categories = new ArrayList<CategoryDto>();
 
@@ -155,7 +175,7 @@ public class CategoryControllerTest {
 
         // act & assert
         mockMvc.perform(
-                get("/api/categories/" + 1))
+                get("/api/categories"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -189,6 +209,35 @@ public class CategoryControllerTest {
                 get("/api/categories/" + 1))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "user@hr.nl", password = "123456", roles = "ADMIN")
+    public void deleteWhenCategoryNotFound_ThenThrowException() throws Exception {
+        // given
+        var categoryId = 1;
+        //when
+        doThrow(NotFoundException.class).when(categoryService).delete(categoryId);
+
+        // act & assert
+        mockMvc.perform(
+                delete("/api/categories/" + 1))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteWhenCategoryIsAttached_ThenThrowException() throws Exception {
+        // given
+        var categoryId = 1;
+        //when
+        doThrow(CategoryContainEventsException.class).when(categoryService).delete(categoryId);
+
+        // act & assert
+        mockMvc.perform(
+                delete("/api/categories/" + 1))
+                .andDo(print())
+                .andExpect(status().isConflict());
     }
 
     @Test
