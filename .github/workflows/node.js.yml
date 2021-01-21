@@ -25,6 +25,6 @@ jobs:
     - name: Build project
       working-directory: ./frontend/eventsubscriber
       run: npm run build
-#    - name: Test project
-#      working-directory: ./frontend/eventsubscriber
-#      run: npm run test-headless
+    - name: Test project
+      working-directory: ./frontend/eventsubscriber
+      run: npm run test-headless
