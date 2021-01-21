@@ -33,6 +33,8 @@ public class Event extends BaseDao {
     private String imageUrl;
     @OneToMany(mappedBy = "owner")
     private List<Question> questions;
+    @OneToMany(mappedBy = "event", orphanRemoval = true)
+    private List<Tag> tags;
     @ManyToOne
     @JsonIgnoreProperties("events")
     private User user;
