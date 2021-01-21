@@ -41,3 +41,4 @@ jobs:
            -Dsonar.host.url=https://sonarcloud.io/
            -Dsonar.projectKey=event-subscriber-frontend
            -Dsonar.projectBaseDir=./frontend
+           -Dsonar.coverage.exclusions=*.spec.ts
