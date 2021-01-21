@@ -29,11 +29,14 @@ jobs:
     - name: Test project
       working-directory: ./frontend/eventsubscriber
       run: npm run test-headless
-      
-    - name: Sonar Scan
-      uses: sijomc/sonarscan-action@1.1
-      with:
-        # SonarQube server URL
-        host: https://sonarcloud.io
-        projectKey: event-subscriber-frontend
-        login: 8a38f4ab3e9324a5f4b53d588e26f5cc33133682
+    - name: Setup sonarqube
+      uses: warchant/setup-sonar-scanner@v3
+    - name: Run sonarqube
+      env:
+        # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: sonar-scanner
+           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+           -Dsonar.organization=dataworkz
+           -Dsonar.host.url=https://sonarcloud.io/
+           -Dsonar.projectKey=event-subscriber-frontend
