@@ -1,22 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '@auth/services';
 
 import { ResetPasswordComponent } from './reset-password.component';
 
 describe('ResetPasswordComponent', () => {
   let component: ResetPasswordComponent;
-  let fixture: ComponentFixture<ResetPasswordComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ ResetPasswordComponent ]
-    })
-    .compileComponents();
-  });
+  let authService: AuthService;
+  let route: ActivatedRoute;
+  let router: Router;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ResetPasswordComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new ResetPasswordComponent(
+      authService,
+      route,
+      router
+    );
   });
 
   it('should create', () => {

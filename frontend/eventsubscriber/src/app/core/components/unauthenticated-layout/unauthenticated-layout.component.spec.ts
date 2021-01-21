@@ -4,19 +4,9 @@ import { UnauthenticatedLayoutComponent } from './unauthenticated-layout.compone
 
 describe('UnauthenticatedLayoutComponent', () => {
   let component: UnauthenticatedLayoutComponent;
-  let fixture: ComponentFixture<UnauthenticatedLayoutComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ UnauthenticatedLayoutComponent ]
-    })
-    .compileComponents();
-  });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UnauthenticatedLayoutComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new UnauthenticatedLayoutComponent();
   });
 
   it('should create', () => {
