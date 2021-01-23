@@ -9,8 +9,11 @@ import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,5 +67,16 @@ public class CategoryServiceImpl implements CategoryService {
         foundCategory.setDeleted(true);
 
         categoryRepository.save(foundCategory);
+    }
+
+    @Override
+    @Scheduled(fixedDelay = 1000)
+    public void deleteExpired() {
+        categoryRepository.findAllByEndDateAndDeletedIsFalse(LocalDate.now())
+                .forEach((category) -> {
+                    System.out.println("Delete category:" + category.getId());
+
+                    this.delete(category.getId());
+                });
     }
 }

@@ -15,7 +15,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -168,5 +170,37 @@ public class CategoryServiceImplTest {
         // then
         verify(categoryRepository, times(1)).findById(categoryId);
         verify(categoryRepository, times(1)).save(category);
+    }
+
+    @Test
+    public void deleteExpiredWhenNoCategoriesFound_ThenDoNothing() {
+        //given
+        var returnedList = new ArrayList<Category>();
+        //when
+        when(categoryRepository.findAllByEndDateAndDeletedIsFalse(any(LocalDate.class))).thenReturn(returnedList);
+
+        //then
+        categoryService.deleteExpired();
+        verify(categoryRepository, times(1)).findAllByEndDateAndDeletedIsFalse(any(LocalDate.class));
+        verify(categoryRepository, times(0)).findById(anyInt());
+        verify(categoryRepository, times(0)).save(any(Category.class));
+    }
+
+    @Test
+    public void deleteExpiredWhenCategoriesFound_ThenDelete() {
+        //given
+        var category = new Category();
+        category.setId(1);
+        var returnedList = new ArrayList<Category>();
+        returnedList.add(category);
+        //when
+        when(categoryRepository.findAllByEndDateAndDeletedIsFalse(any(LocalDate.class))).thenReturn(returnedList);
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+
+        //then
+        categoryService.deleteExpired();
+        verify(categoryRepository, times(1)).findAllByEndDateAndDeletedIsFalse(any(LocalDate.class));
+        verify(categoryRepository, times(1)).findById(category.getId());
+        verify(categoryRepository, times(1)).save(any(Category.class));
     }
 }
