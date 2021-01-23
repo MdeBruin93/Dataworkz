@@ -1,6 +1,5 @@
 package com.dataworks.eventsubscriber.model.dto;
 
-import com.dataworks.eventsubscriber.model.dao.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,5 +38,6 @@ public class EventDto {
     private CategoryDto category;
     private List<UserDto> subscribedUsers;
     private List<QuestionDto> questions;
-    private List<Tag> tags;
+    private List<TagDto> tags;
+    private List<Integer> tagIds;
 }

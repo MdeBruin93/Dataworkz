@@ -4,16 +4,16 @@ import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
+import com.dataworks.eventsubscriber.mapper.TagMapper;
 import com.dataworks.eventsubscriber.mapper.UserMapper;
-import com.dataworks.eventsubscriber.model.dao.Category;
-import com.dataworks.eventsubscriber.model.dao.Event;
-import com.dataworks.eventsubscriber.model.dao.Question;
-import com.dataworks.eventsubscriber.model.dao.User;
+import com.dataworks.eventsubscriber.model.dao.*;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
+import com.dataworks.eventsubscriber.model.dto.TagDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
 import com.dataworks.eventsubscriber.repository.CategoryRepository;
 import com.dataworks.eventsubscriber.repository.EventRepository;
+import com.dataworks.eventsubscriber.repository.TagRepository;
 import com.dataworks.eventsubscriber.service.auth.AuthService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +41,10 @@ class EventServiceImplTest {
     EventRepository eventRepository;
     @Mock
     CategoryRepository categoryRepository;
+    @Mock
+    TagRepository tagRepository;
+    @Mock
+    TagMapper tagMapper;
     @Mock
     UserMapper userMapper;
     @Mock
@@ -191,6 +195,12 @@ class EventServiceImplTest {
     @Test
     public void retrieveAllEventSortedOnDate() {
         // Given
+        var eventDto = new EventDto();
+        eventDto.setId(1);
+        var tags = new ArrayList<Tag>();
+        var tag = new Tag();
+        tags.add(tag);
+        var tagDtos = new ArrayList<TagDto>();
         var events = new ArrayList<Event>();
         var dateOne = LocalDate.of(2020, 2, 1);
         var dateTwo = LocalDate.of(2020, 2, 2);
@@ -208,11 +218,17 @@ class EventServiceImplTest {
 
         // when
         when(eventRepository.findAll(Sort.by("date").descending())).thenReturn(events);
+        when(eventMapper.mapToEventDestination(any(Event.class))).thenReturn(eventDto);
+        when(tagRepository.findByEvent_id(any(Integer.class))).thenReturn(tags);
+        when(tagMapper.mapToEventDestinationCollection(any())).thenReturn(tagDtos);
 
         // then
         var result = eventServiceImpl.findAll();
         assertThat(result.size() == 2).isTrue();
         verify(eventRepository, times(1)).findAll(Sort.by("date").descending());
+        verify(eventMapper, times(2)).mapToEventDestination(any(Event.class));
+        verify(tagRepository, times(2)).findByEvent_id(anyInt());
+        verify(tagMapper, times(2)).mapToEventDestinationCollection(tags);
     }
 
     @Test

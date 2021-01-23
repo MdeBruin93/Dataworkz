@@ -33,7 +33,12 @@ public class Event extends BaseDao {
     private String imageUrl;
     @OneToMany(mappedBy = "owner")
     private List<Question> questions;
-    @OneToMany(mappedBy = "event", orphanRemoval = true)
+    @ManyToMany()
+    @JoinTable(
+            name = "event_tags",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private List<Tag> tags;
     @ManyToOne
     @JsonIgnoreProperties("events")

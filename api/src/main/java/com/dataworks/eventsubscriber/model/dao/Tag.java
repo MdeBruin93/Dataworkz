@@ -5,7 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,6 +16,11 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Tag extends BaseDao {
     private String name;
-    @ManyToOne()
-    private Event event;
+    @ManyToMany()
+    @JoinTable(
+            name = "event_tags",
+            joinColumns = @JoinColumn(name = "tag_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    private List<Event> event;
 }
