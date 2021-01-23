@@ -34,9 +34,7 @@ export class CategoriesState {
 
   @Action(LoadCategories)
   public async loadCategories(ctx: StateContext<CategoriesStateModel>, { }: LoadCategories): Promise<void> {
-    const categories = await this.categoriesService.getAll().toPromise();
-    console.log(categories);
-    ctx.patchState({ categories: categories });
+    await this.getCategories(ctx);
   }
 
   @Action(LoadCategory)
@@ -54,5 +52,12 @@ export class CategoriesState {
   @Action(DeleteCategory)
   public async DeleteCategory(ctx: StateContext<CategoriesStateModel>, { id }: DeleteCategory): Promise<void> {
     await this.categoriesService.delete(id).toPromise();
+    await this.getCategories(ctx);
+  }
+
+  private async getCategories(ctx: StateContext<CategoriesStateModel>) {
+    let categories = await this.categoriesService.getAll().toPromise();
+    categories = categories.filter((c) => !c.deleted);
+    ctx.patchState({ categories: categories });
   }
 }
