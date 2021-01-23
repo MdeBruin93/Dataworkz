@@ -9,11 +9,11 @@ import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 import {Category} from '@core/models';
 import {defer} from 'rxjs';
+import Spy = jasmine.Spy;
 
 describe('AuthService', () => {
   let router: SpyObj<Router>;
   let httpClientMock: SpyObj<HttpClient>;
-  let authService: AuthService;
 
   const authObject = {
     id: 1,
@@ -31,9 +31,6 @@ describe('AuthService', () => {
 
   it('should be created', () => {
     expect(authService).toBeTruthy();
-  });
-
-  describe('isAuthenticated', () => {
   });
 
   describe('register', () => {
@@ -105,7 +102,7 @@ describe('AuthService', () => {
     it('should account when success', () => {
       httpClientMock.post.and.returnValue(defer(() => Promise.resolve(authObject)));
 
-      authService.resetPassword(authObject).subscribe(
+      authService.activateAccount(authObject).subscribe(
         reset => expect(reset).toEqual(authObject, 'Expected authObject are not equal'),
         fail
       );
