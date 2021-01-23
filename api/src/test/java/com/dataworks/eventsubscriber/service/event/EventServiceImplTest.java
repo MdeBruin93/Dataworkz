@@ -88,7 +88,7 @@ class EventServiceImplTest {
         when(eventMapper.mapToEventSource(eventDto)).thenReturn(event);
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
-        when(categoryRepository.findById(any(Integer.class))).thenReturn(Optional.of(category));
+        when(categoryRepository.findByIdAndDeletedIsFalse(any(Integer.class))).thenReturn(Optional.of(category));
 
         //then
         var result = eventServiceImpl.store(eventDto);
@@ -98,7 +98,7 @@ class EventServiceImplTest {
         verify(event, times(1)).setUser(user);
         verify(eventRepository, times(1)).save(event);
         verify(eventMapper, times(1)).mapToEventDestination(event);
-        verify(categoryRepository, times(1)).findById(any(Integer.class));
+        verify(categoryRepository, times(1)).findByIdAndDeletedIsFalse(any(Integer.class));
     }
 
     @Test
@@ -153,14 +153,14 @@ class EventServiceImplTest {
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
-        when(categoryRepository.findById(any(Integer.class))).thenReturn(Optional.of(category));
+        when(categoryRepository.findByIdAndDeletedIsFalse(any(Integer.class))).thenReturn(Optional.of(category));
 
         //then
         var result = eventServiceImpl.update(eventId, eventDto);
         assertThat(result).isInstanceOf(EventDto.class);
         verify(eventRepository, times(1)).findById(eventId);
         verify(eventRepository, times(0)).findByIdAndUser_Id(eventId, userId);
-        verify(categoryRepository, times(1)).findById(any(Integer.class));
+        verify(categoryRepository, times(1)).findByIdAndDeletedIsFalse(any(Integer.class));
     }
 
     @Test
@@ -178,14 +178,14 @@ class EventServiceImplTest {
         when(eventRepository.findByIdAndUser_Id(eventId, userId)).thenReturn(Optional.of(event));
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
-        when(categoryRepository.findById(any(Integer.class))).thenReturn(Optional.of(category));
+        when(categoryRepository.findByIdAndDeletedIsFalse(any(Integer.class))).thenReturn(Optional.of(category));
 
         //then
         var result = eventServiceImpl.update(eventId, eventDto);
         assertThat(result).isInstanceOf(EventDto.class);
         verify(eventRepository, times(0)).findById(eventId);
         verify(eventRepository, times(1)).findByIdAndUser_Id(eventId, userId);
-        verify(categoryRepository, times(1)).findById(any(Integer.class));
+        verify(categoryRepository, times(1)).findByIdAndDeletedIsFalse(any(Integer.class));
     }
 
     @Test
