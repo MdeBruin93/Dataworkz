@@ -167,23 +167,6 @@ public class CategoryServiceImplTest {
 
         // then
         verify(categoryRepository, times(1)).findById(categoryId);
-    }
-
-    @Test
-    public void deleteDeleteASpecificCategory_ShouldThrowCategoryContainEventsException() {
-        // given
-        var category = new Category();
-        var events = new ArrayList<Event>();
-        events.add(new Event());
-        category.setEvents(events);
-
-        when(categoryRepository.findById(anyInt())).thenReturn(Optional.of(category));
-
-        // when
-        assertThatExceptionOfType(CategoryContainEventsException.class)
-                .isThrownBy(() -> categoryService.delete(anyInt()));
-
-        // then
-        verify(categoryRepository, times(1)).findById(anyInt());
+        verify(categoryRepository, times(1)).save(category);
     }
 }

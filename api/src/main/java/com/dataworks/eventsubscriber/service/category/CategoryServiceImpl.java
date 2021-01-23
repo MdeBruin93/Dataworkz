@@ -61,11 +61,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(int categoryId) {
         var foundCategory = categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
+        foundCategory.setDeleted(true);
 
-        var countedEvents = foundCategory.getEvents().size();
-        if (countedEvents > 0) {
-            throw new CategoryContainEventsException();
-        }
-        categoryRepository.deleteById(categoryId);
+        categoryRepository.save(foundCategory);
     }
 }

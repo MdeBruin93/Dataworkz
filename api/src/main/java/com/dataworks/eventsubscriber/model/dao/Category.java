@@ -19,6 +19,8 @@ public class Category extends BaseDao {
     private String name;
     @NotNull
     private String color;
+    @NotNull
+    private boolean deleted;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private List<Event> events;
 }
