@@ -85,10 +85,4 @@ describe('EventsService', () => {
     );
     expect(httpClientSpy.get.calls.count()).toBe(1, 'one call');
   });
-
-  it('should return sanitized url', () => {
-    const sanitizedUrl = eventsService.sanitize('/test/test.jpg');
-    expect(sanitizedUrl).toEqual('/test/test.jpg');
-  });
-
 });
