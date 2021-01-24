@@ -3,8 +3,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventsService } from '../../services';
-import { IEvent, Event, IEventResponse } from '../../models';
+import { EventsService, TagsService } from '../../services';
+import { IEvent, Event, IEventResponse, ITag } from '../../models';
 
 import { Store, Select} from '@ngxs/store';
 import { CategoriesState, LoadCategories } from '@core/store';
@@ -29,9 +29,10 @@ export class FormComponent implements OnInit {
 
   tagCtrl = new FormControl();
   filteredTags: Observable<string[]>;
-  tags: string[] = ['Rotterdam'];
-  allTags: string[] = ['Rotterdam', 'Sport', 'Tech'];
+  tags: string[] = [];
+  allTags: string[] = [];
   availableTags: string[] = [];
+  tagObjects: ITag[] = [];
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
@@ -41,17 +42,35 @@ export class FormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
-    private store: Store
+    private store: Store,
+    private tagsService: TagsService
   ) { }
 
   ngOnInit(): void {
     this.store.dispatch(new LoadCategories());
     this.eventId = this.route.snapshot.paramMap.get('eventId');
+
+    this.tagsService.getAll().subscribe((tags) => {
+      this.tagObjects = tags;
+      this.allTags = tags.map((t) => t.name);
+      this.availableTags = this.allTags.filter((t) => !this.tags.includes(t));
+      this.filteredTags = this.tagCtrl.valueChanges.pipe(
+          startWith(null),
+          map((tag: string | null) => {
+            return tag ? this._filter(tag) : this.availableTags.slice()
+          }));
+      this.getEventData(tags);
+    })
+  }
+
+  getEventData(tags: ITag[]) {
     if (this.eventId) {
       this.eventService.findById(this.eventId).subscribe({
         next: (response: any) => {
           this.eventCreateForm.patchValue(response);
           this.eventCreateForm.get('categoryId')?.setValue(response.category.id);
+          this.tags = response.tags.map((t: ITag) => t.name);
+          this.availableTags = this.allTags.filter((t) => !this.tags.includes(t));
         },
         error: error => {
           this.snackBar.open('Failed to open an event');
@@ -61,14 +80,6 @@ export class FormComponent implements OnInit {
     } else {
       this.eventCreateForm = Event.getFormGroup(true);
     }
-
-    this.availableTags = this.allTags.filter((t) => !this.tags.includes(t));
-    this.filteredTags = this.tagCtrl.valueChanges.pipe(
-        startWith(null),
-        map((tag: string | null) => {
-          console.log(tag);
-          return tag ? this._filter(tag) : this.availableTags.slice()
-        }));
   }
 
   onSubmit() {
@@ -85,6 +96,7 @@ export class FormComponent implements OnInit {
     }
 
     eventData.category = {id: eventData.categoryId};
+    eventData.tagIds = this.tagObjects.filter((to) => this.tags.findIndex((t) => t == to.name) != -1).map((t) => t.id);
 
     this.eventService.save(eventData, imageUploadFormData).subscribe({
       next: _response => {
@@ -105,15 +117,17 @@ export class FormComponent implements OnInit {
     this.file = target.files[0];
   }
 
-  add(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-
-    console.log(value);
-
+  add(): void {
+    let value = this.tagInput.nativeElement.value;
     if ((value || '').trim()) {
-      this.tags.push(value.trim());
-      this.tagInput.nativeElement.value = '';
+      const tagName = value.trim().toLowerCase();
+
+      this.tagsService.create({name: tagName}).subscribe((data) => {
+        this.tagObjects.push(data);
+        this.allTags.push(tagName);
+        this.tags.push(tagName);
+        this.tagInput.nativeElement.value = '';
+      });
     }
 
     this.tagCtrl.setValue(null);

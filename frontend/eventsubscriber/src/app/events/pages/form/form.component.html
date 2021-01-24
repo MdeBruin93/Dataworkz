@@ -1,4 +1,4 @@
-<form [formGroup]="eventCreateForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="eventCreateForm" (ngSubmit)="onSubmit()" *ngIf="eventCreateForm">
     <h3>Create Event</h3>
     <mat-form-field appearance="fill">
         <mat-label>Title</mat-label>
@@ -68,10 +68,8 @@
           #tagInput
           [formControl]="tagCtrl"
           [matAutocomplete]="auto"
-          [matChipInputFor]="chipList"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          (matChipInputTokenEnd)="add($event)">
-          <mat-icon (click)="add(tagInput)">add</mat-icon>
+          [matChipInputFor]="chipList">
+          <mat-icon (click)="add()">add</mat-icon>
       </mat-chip-list>
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
         <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
