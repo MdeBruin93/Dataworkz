@@ -29,10 +29,12 @@
         <mat-icon>favorite</mat-icon>
         <span class="toolbar-item-text">Wishlist</span>
       </div>
-      <div class="icon-text-wrapper" *ngIf="isLoggedIn$ | async" [routerLink]="['/users']">
-        <mat-icon>people</mat-icon>
-        <span class="toolbar-item-text">Users</span>
-      </div>
+      <ng-container *ngIf="isLoggedIn$ | async">
+        <div class="icon-text-wrapper" *appIsAdmin="(currentUser$ | async)?.role" [routerLink]="['/users']">
+          <mat-icon>people</mat-icon>
+          <span class="toolbar-item-text">Users</span>
+        </div>
+      </ng-container>
 
       <ng-container *ngIf="isLoggedIn$ | async">
         <div class="icon-text-wrapper" [routerLink]="['/categories']" *appIsAdmin="(currentUser$ | async)?.role">
