@@ -17,6 +17,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTableModule} from '@angular/material/table';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [],
@@ -37,7 +39,9 @@ import {MatTableModule} from '@angular/material/table';
     MatExpansionModule,
     MatDialogModule,
     MatSelectModule,
-    MatTableModule
+    MatTableModule,
+    MatChipsModule,
+    MatAutocompleteModule
   ],
   exports: [
     MatSidenavModule,
@@ -55,7 +59,9 @@ import {MatTableModule} from '@angular/material/table';
     MatExpansionModule,
     MatDialogModule,
     MatSelectModule,
-    MatTableModule
+    MatTableModule,
+    MatChipsModule,
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule { }

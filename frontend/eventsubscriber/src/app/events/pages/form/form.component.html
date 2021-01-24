@@ -50,6 +50,39 @@
 
     <br>
     <br>
+    <br>
+
+    <mat-form-field class="chip-list">
+      <mat-label>Tags</mat-label>
+      <mat-chip-list #chipList aria-label="Tags selection">
+        <mat-chip
+          *ngFor="let tag of tags"
+          [selectable]="true"
+          [removable]="true"
+          (removed)="removeTag(tag)">
+          {{tag}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="New tag..."
+          #tagInput
+          [formControl]="tagCtrl"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event)">
+          <mat-icon (click)="add(tagInput)">add</mat-icon>
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+          {{tag}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <br>
+    <br>
+
     <mat-card-actions>
         <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!eventCreateForm.valid">SAVE</button>
     </mat-card-actions>
