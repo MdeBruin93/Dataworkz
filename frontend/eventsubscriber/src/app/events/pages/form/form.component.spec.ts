@@ -12,15 +12,11 @@ import { defer } from 'rxjs';
 
 describe('FormComponent', () => {
   let component: FormComponent;
-  let eventService: EventsService;
-  let route: ActivatedRoute;
-  let routerMock: SpyObj<ActivatedRoute>;
-  let router: Router;
-  let snackBar: MatSnackBar;
+  let activateRouteMock: SpyObj<ActivatedRoute>;
+  let routerMock: SpyObj<Router>;
   let snackBarMock: SpyObj<MatSnackBar>;
   let storeMock: SpyObj<Store>;
   let eventServiceMock: SpyObj<EventsService>;
-  let store: Store;
 
   const eventObject = {
     id: 1,
@@ -72,11 +68,12 @@ describe('FormComponent', () => {
     storeMock = createSpyObj('Store', ['dispatch']);
     snackBarMock = createSpyObj('MatSnackBar', ['open']);
     eventServiceMock = createSpyObj('EventService', ['subscribe', 'findById', 'save']);
-    routerMock = createSpyObj('ActivatedRoute', ['toStrings', 'navigate'], {snapshot: {params: {eventId: undefined}}});
+    activateRouteMock = createSpyObj('ActivatedRoute', ['toStrings', 'navigate'], {snapshot: {params: {eventId: undefined}}});
+    routerMock = createSpyObj('Router', ['navigate']);
     component = new FormComponent(
       eventServiceMock,
+      activateRouteMock,
       routerMock,
-      router,
       snackBarMock,
       storeMock
     );
@@ -95,7 +92,7 @@ describe('FormComponent', () => {
     it('should find an event', () => {
       const expectedEvent: IEventResponse = eventObject;
       // @ts-ignore
-      Object.getOwnPropertyDescriptor(routerMock, 'snapshot').get.and.returnValue({params: {eventId: eventObject.id}});
+      Object.getOwnPropertyDescriptor(activateRouteMock, 'snapshot').get.and.returnValue({params: {eventId: eventObject.id}});
       eventServiceMock.findById.withArgs(eventObject.id)
         .and.returnValue(defer(() => Promise.resolve(expectedEvent)));
 
@@ -106,7 +103,7 @@ describe('FormComponent', () => {
     it('should not find an event', () => {
       const expectedEvent: IEventResponse = eventObject;
       // @ts-ignore
-      Object.getOwnPropertyDescriptor(routerMock, 'snapshot').get.and.returnValue({params: {eventId: eventObject.id}});
+      Object.getOwnPropertyDescriptor(activateRouteMock, 'snapshot').get.and.returnValue({params: {eventId: eventObject.id}});
       eventServiceMock.findById.withArgs(eventObject.id)
         .and.returnValue(defer(() => Promise.reject()));
 
@@ -119,6 +116,8 @@ describe('FormComponent', () => {
     it('should save an event', () => {
       const expectedEvent: IEventResponse = eventObject;
       eventServiceMock.save.and.returnValue(defer(() => Promise.resolve(expectedEvent)));
+      eventServiceMock.save.and.returnValue(defer(() => Promise.resolve(expectedEvent)));
+
 
       component.onSubmit();
       expect(eventServiceMock.save).toHaveBeenCalled();
