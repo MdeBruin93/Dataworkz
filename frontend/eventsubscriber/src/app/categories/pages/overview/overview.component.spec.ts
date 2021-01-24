@@ -1,22 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { Store } from '@ngxs/store';
 
 import { OverviewComponent } from './overview.component';
 
 describe('OverviewComponent', () => {
   let component: OverviewComponent;
-  let fixture: ComponentFixture<OverviewComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ OverviewComponent ]
-    })
-    .compileComponents();
-  });
+  let store: Store;
+  let router: Router;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OverviewComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new OverviewComponent(
+      store,
+      router
+    );
   });
 
   it('should create', () => {
