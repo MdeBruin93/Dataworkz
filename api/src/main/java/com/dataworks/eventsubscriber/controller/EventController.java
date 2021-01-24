@@ -1,5 +1,6 @@
 package com.dataworks.eventsubscriber.controller;
 
+import com.dataworks.eventsubscriber.exception.category.CategoryNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
@@ -47,7 +48,7 @@ public class EventController {
         try {
             var event = eventService.store(eventDto);
             return new ResponseEntity<>(event, HttpStatus.CREATED);
-        } catch (UserNotFoundException userNotFoundException) {
+        } catch (CategoryNotFoundException | UserNotFoundException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
@@ -73,7 +74,7 @@ public class EventController {
         try {
             var event = eventService.update(id, eventDto);
             return new ResponseEntity<>(event, HttpStatus.OK);
-        } catch (EventNotFoundException | UserNotFoundException e) {
+        } catch (CategoryNotFoundException | EventNotFoundException | UserNotFoundException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }

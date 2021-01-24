@@ -21,7 +21,6 @@ public class Event extends BaseDao {
     @NotNull
     private String description;
     @NotNull
-    //@todo add annotation
     private Date date;
     @NotNull
     @Min(1)
