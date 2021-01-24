@@ -52,18 +52,19 @@ describe('EventsService', () => {
     httpMock = TestBed.get(HttpTestingController);
   });
 
-  it(`test save(), update flow`, async(inject([HttpTestingController, EventsService],
+  it(`test save(), create flow`, async(inject([HttpTestingController, EventsService],
     (httpClient: HttpTestingController, eventsService: EventsService) => {
-      spy = spyOn(eventsService, 'update').and.callThrough();
+      event.id = undefined;
+      spy = spyOn(eventsService, 'create').and.callThrough()
       eventsService.save(event, formData);
       expect(spy).toHaveBeenCalled();
     }))
   );
 
-  it(`test save(), create flow`, async(inject([HttpTestingController, EventsService],
+  it(`test save(), update flow`, async(inject([HttpTestingController, EventsService],
     (httpClient: HttpTestingController, eventsService: EventsService) => {
-      event.id = undefined;
-      spy = spyOn(eventsService, 'create').and.callThrough()
+      event.id = 1;
+      spy = spyOn(eventsService, 'update').and.callThrough();
       eventsService.save(event, formData);
       expect(spy).toHaveBeenCalled();
     }))
