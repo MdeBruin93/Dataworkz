@@ -2,11 +2,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
 import { IEventResponse } from '../models';
 
 import { EventsService } from './events.service';
-import { Observable, of } from 'rxjs';
 
 describe('EventsService', () => {
   let service: EventsService;
@@ -56,18 +54,22 @@ describe('EventsService', () => {
   it(`test save(), create flow`, async(inject([HttpTestingController, EventsService],
     (httpClient: HttpTestingController, eventsService: EventsService) => {
       event.id = undefined;
-      spy = spyOn(eventsService, 'create').and.callThrough()
+      const spyUpdate = spyOn(eventsService, 'update').and.callThrough();
+      const spyCreate = spyOn(eventsService, 'create').and.callThrough();
       eventsService.save(event, formData);
-      expect(spy).toHaveBeenCalled();
+      expect(spyCreate).toHaveBeenCalled();
+      expect(spyUpdate).not.toHaveBeenCalled();
     }))
   );
 
   it(`test save(), update flow`, async(inject([HttpTestingController, EventsService],
     (httpClient: HttpTestingController, eventsService: EventsService) => {
       event.id = 1;
-      spy = spyOn(eventsService, 'update').and.callThrough();
+      const spyUpdate = spyOn(eventsService, 'update').and.callThrough();
+      const spyCreate = spyOn(eventsService, 'create').and.callThrough();
       eventsService.save(event, formData);
-      expect(spy).toHaveBeenCalled();
+      expect(spyUpdate).toHaveBeenCalled();
+      expect(spyCreate).not.toHaveBeenCalled();
     }))
   );
 
@@ -142,4 +144,11 @@ describe('EventsService', () => {
       httpMock.verify();
     }))
   );
+
+  // it(`test sanitize()`, async(inject([HttpTestingController, EventsService, DomSanitizer],
+  //   (httpClient: HttpTestingController, eventsService: EventsService, sanitizer: DomSanitizer, ) => {
+  //     eventsService.sanitize('string');
+  //     expect(spy).toHaveBeenCalled();
+  //   }))
+  // );
 });
