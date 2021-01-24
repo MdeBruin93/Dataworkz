@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { EventsService, UserService } from '../../services';
+import { EventsService, UserService, TagsService } from '../../services';
 import { IEventResponse, IEvent } from '../../models/event.model';
 import { Store, Select } from '@ngxs/store';
 import { AuthState, CategoriesState, LoadCategories } from '@core/store';
@@ -21,8 +21,8 @@ export class OverviewComponent implements OnInit {
   @Select(AuthState.isLoggedIn)
   public isLoggedIn$: Observable<boolean>;
 
-  @Select(CategoriesState.categories)
-  public categories$: Observable<Category[]>;
+  @Select(CategoriesState.filterCategories)
+  public filterCategories$: Observable<Category[]>;
 
   public events: any;
   public filteredEvents: any;
@@ -31,6 +31,8 @@ export class OverviewComponent implements OnInit {
   public showSubscribedToEvents: boolean = false;
 
   public categoriesFormControl = new FormControl([]);
+  public selectedTags: any[] = [];
+  public tags: any[] = [];
 
   constructor(
     private eventsService: EventsService,
@@ -38,11 +40,15 @@ export class OverviewComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private store: Store,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private tagsService: TagsService
   ) { }
 
   ngOnInit(): void {
     this.store.dispatch(new LoadCategories());
+    this.tagsService.getAll().subscribe((tags) => {
+      this.tags = tags;
+    });
     this.eventsService.getAll().subscribe({
       next: _response => {
         console.log(_response);
@@ -137,12 +143,42 @@ export class OverviewComponent implements OnInit {
   }
 
   selectCategory() {
-    if (this.categoriesFormControl.value.length == 0) {
+    this.filterEvents();
+  }
+
+  selectTag(tag: any) {
+    this.selectedTags = tag.value;
+    this.filterEvents();
+  }
+
+  filterEvents() {
+    if (this.categoriesFormControl.value.length == 0 && this.selectedTags.length == 0) {
       this.filteredEvents = this.events;
       return;
     }
-    this.filteredEvents = this.events.filter((event: any) => {
-      return this.categoriesFormControl.value.includes(event.category.id)
-    });
+
+    let tempFilterEvents = this.events;
+
+    if (this.categoriesFormControl.value.length > 0) {
+      tempFilterEvents = tempFilterEvents.filter((event: any) => {
+        return this.categoriesFormControl.value.includes(event.category.id)
+      });
+    }
+
+    if (this.selectedTags.length > 0) {
+      tempFilterEvents = tempFilterEvents.filter((e:IEventResponse) => {
+        let containTag = false;
+        for (var eventTag of e.tags) {
+          const index = this.selectedTags.findIndex((st:any) => {
+            return st == eventTag.id;
+          });
+          if (index != -1) {
+            containTag = true;
+          }
+        }
+        return containTag;
+      });
+    }
+    this.filteredEvents = tempFilterEvents;
   }
 }

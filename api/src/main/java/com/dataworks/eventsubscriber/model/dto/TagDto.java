@@ -6,17 +6,12 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 @Getter
 @Setter
 @Component
 @NoArgsConstructor
-public class CategoryDto extends BaseDto {
+public class TagDto extends BaseDto {
     @NotNull
     private String name;
-    @NotNull
-    private String color;
-    private LocalDate endDate;
-    private boolean deleted;
 }

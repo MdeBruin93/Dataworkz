@@ -9,6 +9,7 @@ import { UnauthenticatedLayoutComponent } from './components/unauthenticated-lay
 import { AuthenticatedLayoutComponent } from './components/authenticated-layout/authenticated-layout.component';
 
 import { IsLoggedInDirective, IsAdminDirective } from './directives';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { IsLoggedInDirective, IsAdminDirective } from './directives';
     UnauthenticatedLayoutComponent,
     AuthenticatedLayoutComponent,
     IsLoggedInDirective,
-    IsAdminDirective
+    IsAdminDirective,
+    NotFoundComponent
   ],
   imports: [
     CommonModule,

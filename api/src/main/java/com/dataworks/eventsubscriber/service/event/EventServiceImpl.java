@@ -3,22 +3,25 @@ package com.dataworks.eventsubscriber.service.event;
 import com.dataworks.eventsubscriber.exception.category.CategoryNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedException;
+import com.dataworks.eventsubscriber.exception.tag.TagNotFoundException;
 import com.dataworks.eventsubscriber.mapper.AnswerMapper;
 import com.dataworks.eventsubscriber.mapper.EventMapper;
 import com.dataworks.eventsubscriber.mapper.QuestionMapper;
-import com.dataworks.eventsubscriber.mapper.UserMapper;
+import com.dataworks.eventsubscriber.mapper.TagMapper;
 import com.dataworks.eventsubscriber.model.dao.Event;
+import com.dataworks.eventsubscriber.model.dao.Tag;
 import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.AnswerDto;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.repository.CategoryRepository;
 import com.dataworks.eventsubscriber.repository.EventRepository;
+import com.dataworks.eventsubscriber.repository.TagRepository;
 import com.dataworks.eventsubscriber.service.auth.AuthService;
-import com.dataworks.eventsubscriber.service.storage.LocalStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,10 +32,10 @@ public class EventServiceImpl implements EventService {
     private final AuthService authService;
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
-    private final UserMapper userMapper;
     private final QuestionMapper questionMapper;
+    private final TagRepository tagRepository;
+    private final TagMapper tagMapper;
     private final AnswerMapper answerMapper;
-    private final LocalStorageService localStorageService;
     private final CategoryRepository categoryRepository;
 
     @Override
@@ -40,11 +43,13 @@ public class EventServiceImpl implements EventService {
         var loggedInUser = authService.myDaoOrFail();
         var mappedEvent = eventMapper.mapToEventSource(eventDto);
 
-        var category = categoryRepository.findById(eventDto.getCategory().getId())
+        var category = categoryRepository.findByIdAndDeletedIsFalse(eventDto.getCategory().getId())
                 .orElseThrow(CategoryNotFoundException::new);
 
         mappedEvent.setUser(loggedInUser);
         mappedEvent.setCategory(category);
+
+        addTagsToEvent(mappedEvent, eventDto.getTagIds());
 
         var savedEvent = eventRepository.save(mappedEvent);
 
@@ -62,7 +67,7 @@ public class EventServiceImpl implements EventService {
             throw new EventNotFoundException();
         }
 
-        var category = categoryRepository.findById(eventDto.getCategory().getId())
+        var category = categoryRepository.findByIdAndDeletedIsFalse(eventDto.getCategory().getId())
                 .orElseThrow(CategoryNotFoundException::new);
 
         Event ev = eventFromRepo.get();
@@ -74,15 +79,23 @@ public class EventServiceImpl implements EventService {
         ev.setImageUrl(eventDto.getImageUrl());
         ev.setCategory(category);
 
+        addTagsToEvent(ev, eventDto.getTagIds());
+
         return eventMapper.mapToEventDestination(eventRepository.save(ev));
     }
 
     @Override
     public List<EventDto> findAll() {
-        return eventRepository.findAll(Sort.by("date").descending())
+        var eventDtos = eventRepository.findAll(Sort.by("date").descending())
                 .stream()
                 .map(eventMapper::mapToEventDestination)
                 .collect(Collectors.toList());
+
+        for (var eventDto : eventDtos) {
+            var tags = tagRepository.findByEvent_id(eventDto.getId());
+            eventDto.setTags(tagMapper.mapToEventDestinationCollection(tags));
+        }
+        return eventDtos;
     }
 
     @Override
@@ -169,5 +182,17 @@ public class EventServiceImpl implements EventService {
         }
 
         eventRepository.deleteById(eventId);
+    }
+
+    private void addTagsToEvent(Event event, List<Integer> tagIds) {
+        if (event == null || tagIds == null) {
+            return;
+        }
+        var tags = new ArrayList<Tag>();
+        for (var tagId : tagIds) {
+            var tag = tagRepository.findById(tagId).orElseThrow(() -> new TagNotFoundException(tagId));
+            tags.add(tag);
+        }
+        event.setTags(tags);
     }
 }

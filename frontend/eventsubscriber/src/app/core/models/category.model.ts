@@ -5,11 +5,14 @@ export class Category implements ICategory {
   public id: number | undefined;
   public name: string;
   public color: string;
+  public endDate: Date | undefined;
+  public deleted: boolean;
 
-  constructor(name: string, color: string, id?: number) {
+  constructor(name: string, color: string, id?: number, endDate?: Date) {
     this.id = id;
     this.name = name;
     this.color = color;
+    this.endDate = endDate;
   }
 
   static getFormGroup() {
@@ -18,7 +21,8 @@ export class Category implements ICategory {
       name: new FormControl('', [
         Validators.required,
         Validators.maxLength(100)
-      ])
+      ]),
+      endDate: new FormControl(null, [])
     });
   }
 }

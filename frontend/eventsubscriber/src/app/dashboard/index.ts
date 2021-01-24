@@ -1,3 +1,0 @@
-export {
-  DashboardComponent
-} from './pages';

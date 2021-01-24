@@ -21,7 +21,6 @@ public class Event extends BaseDao {
     @NotNull
     private String description;
     @NotNull
-    //@todo add annotation
     private Date date;
     @NotNull
     @Min(1)
@@ -33,6 +32,13 @@ public class Event extends BaseDao {
     private String imageUrl;
     @OneToMany(mappedBy = "owner")
     private List<Question> questions;
+    @ManyToMany()
+    @JoinTable(
+            name = "event_tags",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags;
     @ManyToOne
     @JsonIgnoreProperties("events")
     private User user;

@@ -10,3 +10,8 @@ export {
   Question,
   Answer
 } from './qa.model';
+
+export {
+  ITag,
+  Tag
+} from './tag.model';
