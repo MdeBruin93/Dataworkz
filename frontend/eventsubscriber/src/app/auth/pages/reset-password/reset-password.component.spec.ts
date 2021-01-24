@@ -11,17 +11,17 @@ describe('ResetPasswordComponent', () => {
   let component: ResetPasswordComponent;
   let authService: AuthService;
   let authServiceMock: SpyObj<AuthService>;
-  let route: ActivatedRoute;
-  let router: Router;
-  let routerMock: SpyObj<ActivatedRoute>;
+  let activatedRouterMock: SpyObj<ActivatedRoute>;
+  let routerMock: SpyObj<Router>;
 
   beforeEach(() => {
     authServiceMock = createSpyObj('AuthService', ['resetPassword']);
-    routerMock = createSpyObj('ActivatedRoute', ['toStrings', 'navigate'], {snapshot: {params: {token: undefined}}});
+    activatedRouterMock = createSpyObj('ActivatedRoute', ['toStrings', 'navigate'], {snapshot: {params: {token: undefined}}});
+    routerMock = createSpyObj('Router', ['navigate']);
     component = new ResetPasswordComponent(
       authServiceMock,
-      routerMock,
-      router
+      activatedRouterMock,
+      routerMock
     );
   });
 
@@ -32,7 +32,7 @@ describe('ResetPasswordComponent', () => {
   describe('ngOnInit()', () => {
     it('should set token from url', () => {
       // @ts-ignore
-      Object.getOwnPropertyDescriptor(routerMock, 'snapshot').get.and.returnValue({params: {token: '1'}});
+      Object.getOwnPropertyDescriptor(activatedRouterMock, 'snapshot').get.and.returnValue({params: {token: '1'}});
       component.ngOnInit();
       expect(component.token).toEqual('1');
     });
