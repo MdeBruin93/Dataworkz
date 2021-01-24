@@ -6,7 +6,11 @@ import com.dataworks.eventsubscriber.model.dto.TagDto;
 import com.dataworks.eventsubscriber.repository.EventRepository;
 import com.dataworks.eventsubscriber.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -14,6 +18,14 @@ public class TagServiceImpl implements TagService {
     final TagRepository tagRepository;
     final EventRepository eventRepository;
     final TagMapper tagMapper;
+
+    @Override
+    public List<TagDto> findAll() {
+        return tagRepository.findAll(Sort.by("Name"))
+                .stream()
+                .map(tagMapper::mapToEventDestination)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public TagDto store(TagDto tagDto) {

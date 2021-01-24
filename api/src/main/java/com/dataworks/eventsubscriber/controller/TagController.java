@@ -23,6 +23,11 @@ import javax.validation.Valid;
 public class TagController {
     final TagService tagService;
 
+    @GetMapping("")
+    public ResponseEntity findAll(){
+        return new ResponseEntity(tagService.findAll(), HttpStatus.OK);
+    }
+
     @PostMapping("")
     @Operation(
             summary = "Create or update a tag",
