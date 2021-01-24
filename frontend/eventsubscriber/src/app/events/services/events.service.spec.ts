@@ -53,18 +53,22 @@ describe('EventsService', () => {
   it(`test save(), create flow`, async(inject([HttpTestingController, EventsService],
     (httpClient: HttpTestingController, eventsService: EventsService) => {
       event.id = undefined;
-      spy = spyOn(eventsService, 'create').and.callThrough()
+      const spyUpdate = spyOn(eventsService, 'update').and.callThrough();
+      const spyCreate = spyOn(eventsService, 'create').and.callThrough();
       eventsService.save(event, formData);
-      expect(spy).toHaveBeenCalled();
+      expect(spyCreate).toHaveBeenCalled();
+      expect(spyUpdate).not.toHaveBeenCalled();
     }))
   );
 
   it(`test save(), update flow`, async(inject([HttpTestingController, EventsService],
     (httpClient: HttpTestingController, eventsService: EventsService) => {
       event.id = 1;
-      spy = spyOn(eventsService, 'update').and.callThrough();
+      const spyUpdate = spyOn(eventsService, 'update').and.callThrough();
+      const spyCreate = spyOn(eventsService, 'create').and.callThrough();
       eventsService.save(event, formData);
-      expect(spy).toHaveBeenCalled();
+      expect(spyUpdate).toHaveBeenCalled();
+      expect(spyCreate).not.toHaveBeenCalled();
     }))
   );
 
@@ -139,4 +143,11 @@ describe('EventsService', () => {
       httpMock.verify();
     }))
   );
+
+  // it(`test sanitize()`, async(inject([HttpTestingController, EventsService, DomSanitizer],
+  //   (httpClient: HttpTestingController, eventsService: EventsService, sanitizer: DomSanitizer, ) => {
+  //     eventsService.sanitize('string');
+  //     expect(spy).toHaveBeenCalled();
+  //   }))
+  // );
 });
