@@ -42,8 +42,7 @@ export class LoginComponent implements OnInit {
     },
     (error) => {
       this.loginForm.reset();
-      this.snackBar.open('Login failed');
-      console.error('There was an error!', error);
+      this.snackBar.open(error.error.message || "Login failed");
     });
   }
 }

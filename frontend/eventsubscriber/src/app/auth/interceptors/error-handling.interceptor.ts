@@ -20,8 +20,7 @@ export class ErrorHandlingInterceptor implements HttpInterceptor {
             if (err.status === 401) {
                 this.store.dispatch(new Logout());
             }
-            const error = err.message || err.error?.message || err.statusText;
-            return throwError(error);
+            return throwError(err);
         }))
     }
 }

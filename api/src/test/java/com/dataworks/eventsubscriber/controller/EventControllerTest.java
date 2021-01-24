@@ -1,5 +1,6 @@
 package com.dataworks.eventsubscriber.controller;
 
+import com.dataworks.eventsubscriber.exception.category.CategoryNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.event.EventUserAlreadySubscribedException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
@@ -75,6 +76,31 @@ class EventControllerTest {
                         .content(json))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void createEventWithNotFoundCategory_NotFound() throws Exception {
+        //given
+        var eventDto = new EventDto();
+        eventDto.setTitle("Test");
+        eventDto.setDate(new Date());
+        eventDto.setDescription("Test");
+        eventDto.setEuroAmount(5);
+        eventDto.setMaxAmountOfAttendees(1);
+        eventDto.setImageUrl("test.png");
+        var json = new ObjectMapper().writeValueAsString(eventDto);
+
+        //when
+        when(eventServiceImpl.store(any(EventDto.class))).thenThrow(CategoryNotFoundException.class);
+
+        //then
+        mockMvc.perform(
+                post("/api/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -160,6 +186,32 @@ class EventControllerTest {
                         .content(json))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "ricky@hr.nl", password = "123456", roles = "USER")
+    void updateEventWithNotFoundCategory_NotFound() throws Exception {
+        //given
+        var id = 1;
+        var eventDto = new EventDto();
+        eventDto.setTitle("Test");
+        eventDto.setDate(new Date());
+        eventDto.setDescription("Test");
+        eventDto.setEuroAmount(5);
+        eventDto.setMaxAmountOfAttendees(1);
+        eventDto.setImageUrl("test.png");
+        var json = new ObjectMapper().writeValueAsString(eventDto);
+
+        //when
+        when(eventServiceImpl.update(eq(id), any(EventDto.class))).thenThrow(CategoryNotFoundException.class);
+
+        //then
+        mockMvc.perform(
+                put("/api/events/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
