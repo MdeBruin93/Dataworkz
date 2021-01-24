@@ -83,9 +83,14 @@ class EventServiceImplTest {
     @Test
     public void storeWhenUserIsLoggedIn_Store() {
         //given
+        var tagId = 1;
+        var tag = new Tag();
+        var tagIds = new ArrayList<Integer>();
+        tagIds.add(tagId);
         User foundLoggedInUser = user;
         eventDto = new EventDto();
         eventDto.setCategory(new CategoryDto());
+        eventDto.setTagIds(tagIds);
 
         //when
         when(authService.myDaoOrFail()).thenReturn(foundLoggedInUser);
@@ -93,6 +98,7 @@ class EventServiceImplTest {
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
         when(categoryRepository.findByIdAndDeletedIsFalse(any(Integer.class))).thenReturn(Optional.of(category));
+        when(tagRepository.findById(anyInt())).thenReturn(Optional.of(tag));
 
         //then
         var result = eventServiceImpl.store(eventDto);
@@ -103,6 +109,7 @@ class EventServiceImplTest {
         verify(eventRepository, times(1)).save(event);
         verify(eventMapper, times(1)).mapToEventDestination(event);
         verify(categoryRepository, times(1)).findByIdAndDeletedIsFalse(any(Integer.class));
+        verify(tagRepository, times(1)).findById(anyInt());
     }
 
     @Test
@@ -165,6 +172,8 @@ class EventServiceImplTest {
         verify(eventRepository, times(1)).findById(eventId);
         verify(eventRepository, times(0)).findByIdAndUser_Id(eventId, userId);
         verify(categoryRepository, times(1)).findByIdAndDeletedIsFalse(any(Integer.class));
+        verify(eventMapper, times(1)).mapToEventDestination(event);
+        verify(authService, times(1)).myDaoOrFail();
     }
 
     @Test
@@ -172,8 +181,18 @@ class EventServiceImplTest {
         //given
         var eventId = 1;
         var userId = 1;
+        var tagId = 1;
+        var tag = new Tag();
+        var tags = new ArrayList<Tag>();
+        tags.add(tag);
+        var tagIds = new ArrayList<Integer>();
+        tagIds.add(tagId);
+
         eventDto = new EventDto();
         eventDto.setCategory(new CategoryDto());
+        eventDto.setTagIds(tagIds);
+        event = new Event();
+        event.setTags(tags);
 
         //when
         when(authService.myDaoOrFail()).thenReturn(user);
@@ -183,6 +202,7 @@ class EventServiceImplTest {
         when(eventRepository.save(event)).thenReturn(event);
         when(eventMapper.mapToEventDestination(event)).thenReturn(eventDto);
         when(categoryRepository.findByIdAndDeletedIsFalse(any(Integer.class))).thenReturn(Optional.of(category));
+        when(tagRepository.findById(anyInt())).thenReturn(Optional.of(tag));
 
         //then
         var result = eventServiceImpl.update(eventId, eventDto);
@@ -190,6 +210,9 @@ class EventServiceImplTest {
         verify(eventRepository, times(0)).findById(eventId);
         verify(eventRepository, times(1)).findByIdAndUser_Id(eventId, userId);
         verify(categoryRepository, times(1)).findByIdAndDeletedIsFalse(any(Integer.class));
+        verify(tagRepository, times(1)).findById(anyInt());
+        verify(eventMapper, times(1)).mapToEventDestination(event);
+        verify(authService, times(1)).myDaoOrFail();
     }
 
     @Test
@@ -209,6 +232,7 @@ class EventServiceImplTest {
         eventOne.setId(1);
         // Don't ask. Java needs a shit ton of help to convert.
         eventOne.setDate(Date.from(dateOne.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+        eventOne.setTags(tags);
         events.add(eventOne);
 
         var eventTwo = new Event();

@@ -84,6 +84,25 @@ public class TagControllerTest {
 
     @Test
     @WithMockUser(username = "michael@hr.nl", password = "123456", roles = "USER")
+    void store_StoreTagShouldThrowBadrequest() throws Exception {
+        //given
+        var tagDto = new TagDto();
+        var json = new ObjectMapper().writeValueAsString(tagDto);
+
+        //when
+        when(tagService.store(any(TagDto.class))).thenReturn(tagDto);
+
+        //then
+        mockMvc.perform(
+                post("/api/tags/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "michael@hr.nl", password = "123456", roles = "USER")
     void store_ShouldThrowEventNotFoundException() throws Exception {
         //given
         var tagDto = new TagDto();
