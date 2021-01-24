@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -19,6 +20,9 @@ public class Category extends BaseDao {
     private String name;
     @NotNull
     private String color;
+    private LocalDate endDate;
+    @NotNull
+    private boolean deleted;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private List<Event> events;
 }

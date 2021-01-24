@@ -1,5 +1,6 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IUser, Category } from '@core/models';
+import { ITag } from './tag.model';
 
 export interface IEvent {
     title: string;
@@ -16,6 +17,7 @@ export interface IEventResponse extends IEvent {
     imageUrl: string;
     user: IUser;
     categoryId: number;
+    tags: ITag[];
 }
 
 export interface IFileResponse {

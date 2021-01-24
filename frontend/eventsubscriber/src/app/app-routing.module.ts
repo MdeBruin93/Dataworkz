@@ -15,10 +15,8 @@ import {
   ResetPasswordComponent
 } from './auth';
 
-import {
-  DashboardComponent
-} from './dashboard';
 import { ActivateAccountComponent } from '@auth/pages/activate-account/activate-account.component';
+import { NotFoundComponent } from '@core/components/not-found/not-found.component';
 
 
 export const routes: Routes = [
@@ -56,18 +54,12 @@ export const routes: Routes = [
         loadChildren: () => import('./events/events.module').then((m) => m.EventsModule),
       }
     ],
-
   },
   {
     path: '',
     component: AuthenticatedLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      {
-        path: 'dashboard',
-        component: DashboardComponent,
-        canActivate: [AuthGuard]
-      },
       {
         path: 'wishlists',
         loadChildren: () => import('./wishlists/wishlists.module').then((m) => m.WishlistsModule),
@@ -85,6 +77,10 @@ export const routes: Routes = [
         loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
       }
     ]
+  },
+  {
+    path: '**',
+    component: NotFoundComponent
   }
 ];
 

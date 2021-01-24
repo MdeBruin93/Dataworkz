@@ -12,4 +12,5 @@ public interface CategoryService {
     List<CategoryDto> findAll();
     CategoryDto findById(int id);
     void delete(int eventId);
+    void deleteExpired();
 }

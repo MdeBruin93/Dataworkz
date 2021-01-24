@@ -38,4 +38,6 @@ public class EventDto {
     private CategoryDto category;
     private List<UserDto> subscribedUsers;
     private List<QuestionDto> questions;
+    private List<TagDto> tags;
+    private List<Integer> tagIds;
 }
