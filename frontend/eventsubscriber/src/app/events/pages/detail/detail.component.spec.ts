@@ -3,13 +3,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import { EventsService } from '../../services';
 
 import { DetailComponent } from './detail.component';
-import {HttpClient} from '@angular/common/http';
-import {UsersService} from '@core/services';
 import SpyObj = jasmine.SpyObj;
-import {AuthService} from '@auth/services';
 import createSpyObj = jasmine.createSpyObj;
-import {IEvent, IEventResponse} from '../../models';
-import {Category} from '@core/models';
+import {IEventResponse} from '../../models';
 import {defer} from "rxjs";
 
 describe('DetailComponent', () => {

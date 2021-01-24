@@ -8,7 +8,7 @@ import {
 } from './pages';
 import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent

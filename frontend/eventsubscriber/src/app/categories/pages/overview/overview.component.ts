@@ -30,7 +30,7 @@ export class OverviewComponent implements OnInit {
     this.store.dispatch(new LoadCategories());
   }
 
-  edit(id: number) {
+  edit() {
     this.router.navigate(["categories/create"]);
   }
 }
