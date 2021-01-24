@@ -2,13 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { EventsService } from '../../services';
+import {EventsService, TagsService} from '../../services';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 
 import { FormComponent } from './form.component';
 import { IEventResponse } from '../../models';
 import { defer } from 'rxjs';
+import Spy = jasmine.Spy;
 
 describe('FormComponent', () => {
   let component: FormComponent;
@@ -17,7 +18,7 @@ describe('FormComponent', () => {
   let snackBarMock: SpyObj<MatSnackBar>;
   let storeMock: SpyObj<Store>;
   let eventServiceMock: SpyObj<EventsService>;
-  let tagsService: any;
+  let tagsServiceMock: SpyObj<TagsService>;
 
   const eventObject = {
     id: 1,
@@ -87,13 +88,14 @@ describe('FormComponent', () => {
     eventServiceMock = createSpyObj('EventService', ['subscribe', 'findById', 'save']);
     activateRouteMock = createSpyObj('ActivatedRoute', ['toStrings', 'navigate'], {snapshot: {params: {eventId: undefined}}});
     routerMock = createSpyObj('Router', ['navigate']);
+    tagsServiceMock = createSpyObj('TagService', ['getAll']);
     component = new FormComponent(
       eventServiceMock,
       activateRouteMock,
       routerMock,
       snackBarMock,
       storeMock,
-      tagsService
+      tagsServiceMock
     );
   });
 
@@ -123,6 +125,7 @@ describe('FormComponent', () => {
       Object.getOwnPropertyDescriptor(activateRouteMock, 'snapshot').get.and.returnValue({params: {eventId: eventObject.id}});
       eventServiceMock.findById.withArgs(eventObject.id)
         .and.returnValue(defer(() => Promise.reject()));
+      tagsServiceMock.getAll.and.returnValue(defer(() => Promise.reject()));
 
       component.ngOnInit();
       expect(eventServiceMock.findById).toHaveBeenCalled();
