@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { EventsService, UserService, TagsService } from '../../services';
 import { IEventResponse, IEvent } from '../../models/event.model';
 import { Store, Select } from '@ngxs/store';
-import { AuthState, CategoriesState, LoadFilterCategories } from '@core/store';
+import { AuthState, CategoriesState, LoadCategories } from '@core/store';
 import { Observable, of } from 'rxjs';
 import { switchMap, filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
