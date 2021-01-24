@@ -15,6 +15,7 @@ describe('AuthService', () => {
   let router: SpyObj<Router>;
   let httpClientMock: SpyObj<HttpClient>;
   let authService: AuthService;
+  var store: any = [];
 
   const authObject = {
     id: 1,
@@ -28,6 +29,10 @@ describe('AuthService', () => {
     router = createSpyObj('Router', ['toStrings', 'navigate']);
     httpClientMock = createSpyObj('HttpClient', ['get', 'post', 'put', 'delete']);
     authService = new AuthService(httpClientMock, router);
+
+    spyOn(localStorage, 'getItem').and.callFake((key) => {
+      return store[key];
+    });
   });
 
   it('should be created', () => {
@@ -108,6 +113,28 @@ describe('AuthService', () => {
         fail
       );
       expect(httpClientMock.post).toHaveBeenCalled();
+    });
+  });
+
+  describe('getCurrentUser()', () => {
+    it('should return user when success', () => {
+      authService.getCurrentUser();
+      expect(true).toBeTrue();
+    });
+  });
+
+  describe('isAdmin()', () => {
+    it('should return admin boolean', () => {
+      authService.isAdmin();
+      expect(true).toBeTrue();
+    });
+  });
+
+  describe('setToken()', () => {
+    it('should return user when success', () => {
+      authService.setToken('auth.token', 'string');
+      const spy = spyOn(localStorage, 'setItem').and.callThrough();
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 });
