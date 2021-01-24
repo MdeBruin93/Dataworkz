@@ -10,21 +10,12 @@
     </mat-select>
   </mat-form-field>
 
-
-<!-- <form [formGroup]="categoryForm">
-
-  <mat-form-field appearance="fill" *ngIf="categories$ | async as categories">
-    <mat-label>
-      Category
-    </mat-label>
-    <mat-select formControlName="id" (selectionChange)="selectCategory()">
-      <mat-option *ngFor="let category of categories" [value]="category.id">
-        {{category.name}}
-      </mat-option>
+  <mat-form-field appearance="fill" *ngIf="tags">
+    <mat-label>Tags</mat-label>
+    <mat-select (selectionChange)="selectTag($event)" multiple>
+      <mat-option *ngFor="let tag of tags" [value]="tag.id">{{tag.name}}</mat-option>
     </mat-select>
   </mat-form-field>
-</form> -->
-
 
   <mat-grid-list *ngIf="!showSubscribedToEvents; else subscribedToEvents" cols="4" rowHeight="1:1">
     <mat-grid-tile *ngFor="let event of filteredEvents">
