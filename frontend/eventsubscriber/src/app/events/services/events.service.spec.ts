@@ -3,7 +3,6 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { async, inject, TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IEventResponse } from '../models';
-
 import { EventsService } from './events.service';
 
 describe('EventsService', () => {
@@ -84,7 +83,7 @@ describe('EventsService', () => {
       httpMock.verify();
     }))
   );
-  
+
   it(`test create`, async(inject([HttpTestingController, EventsService],
     (httpClient: HttpTestingController, eventsService: EventsService) => {
       eventsService
