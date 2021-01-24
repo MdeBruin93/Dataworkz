@@ -2,11 +2,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { async, inject, TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
 import { IEventResponse } from '../models';
-
 import { EventsService } from './events.service';
-import { Observable, of } from 'rxjs';
 
 describe('EventsService', () => {
   let service: EventsService;
@@ -82,7 +79,7 @@ describe('EventsService', () => {
       httpMock.verify();
     }))
   );
-  
+
   it(`test create`, async(inject([HttpTestingController, EventsService],
     (httpClient: HttpTestingController, eventsService: EventsService) => {
       eventsService
