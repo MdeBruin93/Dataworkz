@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @Setter

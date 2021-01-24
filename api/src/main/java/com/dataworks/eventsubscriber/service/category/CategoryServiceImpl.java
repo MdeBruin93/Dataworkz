@@ -1,7 +1,6 @@
 package com.dataworks.eventsubscriber.service.category;
 
 import com.dataworks.eventsubscriber.exception.NotFoundException;
-import com.dataworks.eventsubscriber.exception.category.CategoryContainEventsException;
 import com.dataworks.eventsubscriber.exception.category.CategoryNotFoundException;
 import com.dataworks.eventsubscriber.mapper.CategoryMapper;
 import com.dataworks.eventsubscriber.model.dao.Category;
@@ -13,7 +12,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -72,7 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Scheduled(fixedDelay = 1000)
     public void deleteExpired() {
-        categoryRepository.findAllByEndDateAndDeletedIsFalse(LocalDate.now())
+        categoryRepository.findAllByEndDateLessThanEqualAndDeletedIsFalse(LocalDate.now())
                 .forEach((category) -> {
                     System.out.println("Delete category:" + category.getId());
 

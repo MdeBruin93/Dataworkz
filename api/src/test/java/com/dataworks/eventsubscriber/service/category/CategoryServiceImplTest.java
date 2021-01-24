@@ -1,11 +1,9 @@
 package com.dataworks.eventsubscriber.service.category;
 
 import com.dataworks.eventsubscriber.exception.NotFoundException;
-import com.dataworks.eventsubscriber.exception.category.CategoryContainEventsException;
 import com.dataworks.eventsubscriber.exception.category.CategoryNotFoundException;
 import com.dataworks.eventsubscriber.mapper.CategoryMapper;
 import com.dataworks.eventsubscriber.model.dao.Category;
-import com.dataworks.eventsubscriber.model.dao.Event;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -17,7 +15,6 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -177,11 +174,11 @@ public class CategoryServiceImplTest {
         //given
         var returnedList = new ArrayList<Category>();
         //when
-        when(categoryRepository.findAllByEndDateAndDeletedIsFalse(any(LocalDate.class))).thenReturn(returnedList);
+        when(categoryRepository.findAllByEndDateLessThanEqualAndDeletedIsFalse(any(LocalDate.class))).thenReturn(returnedList);
 
         //then
         categoryService.deleteExpired();
-        verify(categoryRepository, times(1)).findAllByEndDateAndDeletedIsFalse(any(LocalDate.class));
+        verify(categoryRepository, times(1)).findAllByEndDateLessThanEqualAndDeletedIsFalse(any(LocalDate.class));
         verify(categoryRepository, times(0)).findById(anyInt());
         verify(categoryRepository, times(0)).save(any(Category.class));
     }
@@ -194,12 +191,12 @@ public class CategoryServiceImplTest {
         var returnedList = new ArrayList<Category>();
         returnedList.add(category);
         //when
-        when(categoryRepository.findAllByEndDateAndDeletedIsFalse(any(LocalDate.class))).thenReturn(returnedList);
+        when(categoryRepository.findAllByEndDateLessThanEqualAndDeletedIsFalse(any(LocalDate.class))).thenReturn(returnedList);
         when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
 
         //then
         categoryService.deleteExpired();
-        verify(categoryRepository, times(1)).findAllByEndDateAndDeletedIsFalse(any(LocalDate.class));
+        verify(categoryRepository, times(1)).findAllByEndDateLessThanEqualAndDeletedIsFalse(any(LocalDate.class));
         verify(categoryRepository, times(1)).findById(category.getId());
         verify(categoryRepository, times(1)).save(any(Category.class));
     }
