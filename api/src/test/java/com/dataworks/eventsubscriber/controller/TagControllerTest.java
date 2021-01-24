@@ -13,11 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,6 +30,37 @@ public class TagControllerTest {
     WebAuthDetailService webAuthDetailService;
     @Autowired
     private MockMvc mockMvc;
+
+    @Test
+    @WithMockUser(username = "michael@hr.nl", password = "123456", roles = "USER")
+    void findAll_ShouldReturnAllTags() throws Exception {
+        // given
+        var tagDtos = new ArrayList<TagDto>();
+
+        // when
+        when(tagService.findAll()).thenReturn(tagDtos);
+
+        mockMvc.perform(
+                get("/api/tags/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findAll_ShouldReturnUnauthorized() throws Exception {
+        // given
+        var tagDtos = new ArrayList<TagDto>();
+
+        // when
+        when(tagService.findAll()).thenReturn(tagDtos);
+
+        mockMvc.perform(
+                get("/api/tags")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
 
     @Test
     @WithMockUser(username = "michael@hr.nl", password = "123456", roles = "USER")

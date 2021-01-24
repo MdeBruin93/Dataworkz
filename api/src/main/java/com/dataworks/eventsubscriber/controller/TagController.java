@@ -24,6 +24,16 @@ public class TagController {
     final TagService tagService;
 
     @GetMapping("")
+    @Operation(
+            summary = "Returns all tags",
+            description = "Returns a list of all available tags sorted by name",
+            tags = { "Tags" },
+            security = @SecurityRequirement(name = "basicAuth")
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "A list of tags has been returned"),
+            @ApiResponse(responseCode = "401", description = "User is not authorized")
+    })
     public ResponseEntity findAll(){
         return new ResponseEntity(tagService.findAll(), HttpStatus.OK);
     }

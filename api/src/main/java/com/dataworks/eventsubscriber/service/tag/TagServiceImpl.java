@@ -21,7 +21,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagDto> findAll() {
-        return tagRepository.findAll(Sort.by("Name"))
+        return tagRepository.findAll(Sort.by("Name").ascending())
                 .stream()
                 .map(tagMapper::mapToEventDestination)
                 .collect(Collectors.toList());

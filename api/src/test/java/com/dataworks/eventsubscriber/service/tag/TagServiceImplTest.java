@@ -9,7 +9,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +25,25 @@ class TagServiceImplTest {
     TagRepository tagRepository;
     @InjectMocks
     TagServiceImpl tagService;
+
+    @Test
+    void findAll_returnsAllAvailableTags() {
+        // given
+        var tag = new Tag();
+        var tags = new ArrayList<Tag>();
+        tags.add(tag);
+        var tagDto = new TagDto();
+
+        // when
+        when(tagRepository.findAll(Sort.by("Name").ascending())).thenReturn(tags);
+        when(tagMapper.mapToEventDestination(any(Tag.class))).thenReturn(tagDto);
+
+        // then
+        var tagDtos = tagService.findAll();
+        assertThat(tagDtos.size()).isEqualTo(1);
+        verify(tagRepository, times(1)).findAll(Sort.by("Name").ascending());
+        verify(tagMapper, times(1)).mapToEventDestination(any(Tag.class));
+    }
 
     @Test
     void store_whenTagExistsThenUpdate_ShouldBeSuccessful() {
