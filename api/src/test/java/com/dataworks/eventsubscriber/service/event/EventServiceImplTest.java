@@ -8,6 +8,7 @@ import com.dataworks.eventsubscriber.mapper.UserMapper;
 import com.dataworks.eventsubscriber.model.dao.Category;
 import com.dataworks.eventsubscriber.model.dao.Event;
 import com.dataworks.eventsubscriber.model.dao.Question;
+import com.dataworks.eventsubscriber.model.dao.User;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.model.dto.UserDto;
@@ -19,19 +20,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.dataworks.eventsubscriber.model.dao.User;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -294,13 +293,105 @@ class EventServiceImplTest {
         assertThat(result.stream().count()).isOne();
     }
 
-    public void deleteWhenEventIsFound_Delete() {
-        // given
+    @Test
+    public void findBySubscribedUsers_ThenReturnList() {
+        //given
+        var loggedInUserId = 1;
+        var loggedInUser = new User();
+        loggedInUser.setId(loggedInUserId);
+        var foundEvent = new Event();
+        var foundEventDto = new EventDto();
+        var foundEvents = new ArrayList<Event>();
+        foundEvents.add(foundEvent);
+
+        //when
+        when(authService.myDaoOrFail()).thenReturn(loggedInUser);
+        when(eventRepository.findBySubscribedUsers_Id(loggedInUserId)).thenReturn(foundEvents);
+        when(eventMapper.mapToEventDestination(foundEvent)).thenReturn(foundEventDto);
+        //then
+        var result = eventServiceImpl.findBySubscribedUsers();
+        assertThat(result).isInstanceOf(List.class);
+        assertThat(result.stream().findFirst().get()).isEqualTo(foundEventDto);
+    }
+
+    @Test
+    public void deleteWhenEventIsNotFound_ThenThrowNotFoundException() {
+        //given
         var eventId = 1;
+        //when
+        when(eventRepository.findById(eventId)).thenReturn(Optional.empty());
 
-        // when
+        //then
+        assertThatExceptionOfType(EventNotFoundException.class)
+                .isThrownBy(() -> eventServiceImpl.delete(eventId));
+        verify(eventRepository, times(1)).findById(eventId);
+        verify(eventRepository, times(0)).deleteById(eventId);
+    }
 
-        // then
-        assertDoesNotThrow(() -> eventServiceImpl.delete(eventId));
+    @Test
+    public void deleteWhenUserIsNotAdminOrOwner_ThenThrowNotFoundException() {
+        //given
+        var loggedInUser = new User();
+        loggedInUser.setId(1);
+        loggedInUser.setRole("ROLE_USER");
+        var eventOwner = new User();
+        eventOwner.setId(2);
+        eventOwner.setRole("ROLE_USER");
+        var eventId = 1;
+        var event = new Event();
+        event.setId(eventId);
+        event.setUser(eventOwner);
+        //when
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(authService.myDao()).thenReturn(loggedInUser);
+
+        //then
+        assertThatExceptionOfType(EventNotFoundException.class)
+                .isThrownBy(() -> eventServiceImpl.delete(eventId));
+        verify(eventRepository, times(1)).findById(eventId);
+        verify(eventRepository, times(0)).deleteById(eventId);
+    }
+
+    @Test
+    public void deleteWhenUserIsAdmin_ThenDelete() {
+        //given
+        var loggedInUser = new User();
+        loggedInUser.setId(1);
+        loggedInUser.setRole("ROLE_ADMIN");
+        var eventOwner = new User();
+        eventOwner.setId(2);
+        eventOwner.setRole("ROLE_USER");
+        var eventId = 1;
+        var event = new Event();
+        event.setId(eventId);
+        event.setUser(eventOwner);
+        //when
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(authService.myDao()).thenReturn(loggedInUser);
+
+        //then
+        eventServiceImpl.delete(eventId);
+        verify(eventRepository, times(1)).findById(eventId);
+        verify(eventRepository, times(1)).deleteById(eventId);
+    }
+
+    @Test
+    public void deleteWhenUserIsOwner_ThenDelete() {
+        //given
+        var loggedInUser = new User();
+        loggedInUser.setId(1);
+        loggedInUser.setRole("ROLE_USER");
+        var eventId = 1;
+        var event = new Event();
+        event.setId(eventId);
+        event.setUser(loggedInUser);
+        //when
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(authService.myDao()).thenReturn(loggedInUser);
+
+        //then
+        eventServiceImpl.delete(eventId);
+        verify(eventRepository, times(1)).findById(eventId);
+        verify(eventRepository, times(1)).deleteById(eventId);
     }
 }

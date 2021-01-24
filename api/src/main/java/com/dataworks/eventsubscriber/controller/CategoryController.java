@@ -2,9 +2,7 @@ package com.dataworks.eventsubscriber.controller;
 
 import com.dataworks.eventsubscriber.exception.NotFoundException;
 import com.dataworks.eventsubscriber.exception.category.CategoryContainEventsException;
-import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
-import com.dataworks.eventsubscriber.model.dto.EventDto;
 import com.dataworks.eventsubscriber.service.category.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
