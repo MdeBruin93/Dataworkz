@@ -15,7 +15,9 @@ describe('CategoriesService', () => {
   const categoryObject = {
     id: 1,
     name: 'Category',
-    color: 'Red'
+    color: 'Red',
+    endDate: undefined,
+    deleted: true
   };
 
   beforeEach(() => {

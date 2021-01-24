@@ -28,9 +28,17 @@ describe('EventsService', () => {
     category: {
       id: 1,
       name: 'string',
-      color: 'string'
+      color: 'string',
+      endDate: undefined,
+      deleted: false
     },
-    categoryId: 1
+    categoryId: 1,
+    tags: [
+      {
+        id: 1,
+        name: 'string'
+      }
+    ]
   }
 
   const formData: any = new FormData();

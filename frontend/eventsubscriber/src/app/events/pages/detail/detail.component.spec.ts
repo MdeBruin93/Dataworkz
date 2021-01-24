@@ -23,7 +23,9 @@ describe('DetailComponent', () => {
     category: {
       id: 1,
       name: 'Category',
-      color: 'Red'
+      color: 'Red',
+      endDate: undefined,
+      deleted: false
     },
     imageUrl: 'localhost:8080',
     user: {
@@ -33,7 +35,13 @@ describe('DetailComponent', () => {
       lastName: 'Lastname',
       role: 'ROLE_ADMIN'
     },
-    categoryId: 1
+    categoryId: 1,
+    tags: [
+      {
+        id: 1,
+        name: 'string'
+      }
+    ]
   };
 
   beforeEach(() => {

@@ -17,6 +17,7 @@ describe('FormComponent', () => {
   let snackBarMock: SpyObj<MatSnackBar>;
   let storeMock: SpyObj<Store>;
   let eventServiceMock: SpyObj<EventsService>;
+  let tagsService: any;
 
   const eventObject = {
     id: 1,
@@ -28,7 +29,9 @@ describe('FormComponent', () => {
     category: {
       id: 1,
       name: 'Category',
-      color: 'Red'
+      color: 'Red',
+      endDate: undefined,
+      deleted: false
     },
     imageUrl: 'localhost:8080',
     user: {
@@ -38,7 +41,13 @@ describe('FormComponent', () => {
       lastName: 'Lastname',
       role: 'ROLE_ADMIN'
     },
-    categoryId: 1
+    categoryId: 1,
+    tags: [
+      {
+        id: 1,
+        name: 'string'
+      }
+    ]
   };
 
   const event: IEventResponse = {
@@ -51,7 +60,9 @@ describe('FormComponent', () => {
     category: {
       id: 1,
       name: 'Category',
-      color: 'Red'
+      color: 'Red',
+      endDate: undefined,
+      deleted: false
     },
     imageUrl: 'localhost:8080',
     user: {
@@ -61,7 +72,13 @@ describe('FormComponent', () => {
       lastName: 'Lastname',
       role: 'ROLE_ADMIN'
     },
-    categoryId: 1
+    categoryId: 1,
+    tags: [
+      {
+        id: 1,
+        name: 'string'
+      }
+    ]
   };
 
   beforeEach(() => {
@@ -75,7 +92,8 @@ describe('FormComponent', () => {
       activateRouteMock,
       routerMock,
       snackBarMock,
-      storeMock
+      storeMock,
+      tagsService
     );
   });
 
@@ -101,7 +119,6 @@ describe('FormComponent', () => {
     });
 
     it('should not find an event', () => {
-      const expectedEvent: IEventResponse = eventObject;
       // @ts-ignore
       Object.getOwnPropertyDescriptor(activateRouteMock, 'snapshot').get.and.returnValue({params: {eventId: eventObject.id}});
       eventServiceMock.findById.withArgs(eventObject.id)

@@ -10,6 +10,7 @@ import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 import {defer} from 'rxjs';
 import {IEventResponse} from '../../models';
+import { TagsService } from '../../services/tags.service';
 
 describe('OverviewComponent', () => {
   let component: OverviewComponent;
@@ -19,28 +20,37 @@ describe('OverviewComponent', () => {
   let routerMock: SpyObj<Router>;
   let storeMock: SpyObj<Store>;
   let dialogMock: SpyObj<MatDialog>;
+  let tagsService: TagsService;
 
   const eventObject = {
     id: 1,
-    title: 'Test',
-    description: 'Test',
-    date: new Date(),
-    maxAmountOfAttendees: 1,
-    euroAmount: 1,
-    category: {
-      id: 1,
-      name: 'Category',
-      color: 'Red'
-    },
-    imageUrl: 'localhost:8080',
+    title: 'string',
+    description: 'string',
+    date: new Date(Date.now()),
+    imageUrl: 'string',
     user: {
       id: 1,
-      email: 'test@hr.nl',
-      firstName: 'Firstname',
-      lastName: 'Lastname',
-      role: 'ROLE_ADMIN'
+      email: 'string',
+      role: 'string',
+      firstName: 'string',
+      lastName: 'string',
     },
-    categoryId: 1
+    maxAmountOfAttendees: 10,
+    euroAmount: 10,
+    category: {
+      id: 1,
+      name: 'string',
+      color: 'string',
+      endDate: undefined,
+      deleted: false
+    },
+    categoryId: 1,
+    tags: [
+      {
+        id: 1,
+        name: 'string'
+      }
+    ]
   };
 
   beforeEach(() => {
@@ -56,7 +66,8 @@ describe('OverviewComponent', () => {
       userServiceMock,
       routerMock,
       storeMock,
-      dialogMock
+      dialogMock,
+      tagsService
     );
   });
 
@@ -101,7 +112,6 @@ describe('OverviewComponent', () => {
     it('should fail when error', () => {
       const eventId = 1;
       const event: any = createSpyObj(['stopPropagation', 'preventDefault']);
-      const expectedEvent: IEventResponse = eventObject;
 
       eventsServiceMock.subscribe.and.returnValue(defer(() => Promise.reject()));
 
