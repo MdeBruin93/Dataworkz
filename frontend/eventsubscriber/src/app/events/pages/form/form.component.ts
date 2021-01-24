@@ -3,7 +3,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventsService, TagsService } from '../../services';
+import { EventsService } from '../../services';
 import { IEvent, Event, IEventResponse, ITag } from '../../models';
 
 import { Store, Select} from '@ngxs/store';
@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 import { Category } from '@core/models';
 import {map, startWith} from 'rxjs/operators';
 import {MatChipInputEvent} from '@angular/material/chips';
+import { TagsService } from '../../services/tags.service';
 
 @Component({
   selector: 'app-form',
@@ -50,7 +51,7 @@ export class FormComponent implements OnInit {
     this.store.dispatch(new LoadCategories());
     this.eventId = this.route.snapshot.params.eventId;
 
-    this.tagsService.getAll().subscribe((tags) => {
+    this.tagsService.getAll().subscribe((tags: ITag[]) => {
       this.tagObjects = tags;
       this.allTags = tags.map((t) => t.name);
       this.availableTags = this.allTags.filter((t) => !this.tags.includes(t));
@@ -122,7 +123,7 @@ export class FormComponent implements OnInit {
     if ((value || '').trim()) {
       const tagName = value.trim().toLowerCase();
 
-      this.tagsService.create({name: tagName}).subscribe((data) => {
+      this.tagsService.create({name: tagName}).subscribe((data: ITag) => {
         this.tagObjects.push(data);
         this.allTags.push(tagName);
         this.tags.push(tagName);

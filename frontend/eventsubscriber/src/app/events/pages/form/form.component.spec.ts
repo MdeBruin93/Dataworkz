@@ -103,7 +103,7 @@ describe('FormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit()', () => {
+  xdescribe('ngOnInit()', () => {
     it('should do nothing when id is empty/undefined', () => {
       component.ngOnInit();
       expect(eventServiceMock.findById).not.toHaveBeenCalled();
