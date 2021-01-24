@@ -125,9 +125,6 @@ describe('FormComponent', () => {
     });
 
     it('should not save an event', () => {
-      const formData: FormData = new FormData();
-      const expectedEvent: IEventResponse = eventObject;
-      // @ts-ignore
       eventServiceMock.save.and.returnValue(defer(() => Promise.reject()));
 
       component.onSubmit();
