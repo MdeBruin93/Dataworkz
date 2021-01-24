@@ -21,7 +21,7 @@ import {
 import { ActivateAccountComponent } from '@auth/pages/activate-account/activate-account.component';
 
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     redirectTo: '/login',
