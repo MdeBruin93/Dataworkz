@@ -38,7 +38,6 @@ describe('OverviewComponent', () => {
     it('should navigate to create page', () => {
       component.deletecategory(1);
       expect(storeMock.dispatch).toHaveBeenCalledWith(new DeleteCategory(1));
-      expect(storeMock.dispatch).toHaveBeenCalledWith(new LoadCategories());
     });
   });
 
