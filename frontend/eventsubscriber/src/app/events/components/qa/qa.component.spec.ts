@@ -80,4 +80,86 @@ describe('QaComponent', () => {
       expect(qaServiceMock.create).toHaveBeenCalled();
     });
   });
+
+  describe('onSubmit', () => {
+    it('should do next when success', () => {
+      qaServiceMock.create.and.returnValue(defer(() => Promise.resolve({id: 1})));
+      component.onSubmit();
+
+      expect(qaServiceMock.create).toHaveBeenCalled();
+      //expect(qaCreateform.reset).toHaveBeenCalled();
+    });
+
+    it('should do error when failed', () => {
+      qaServiceMock.create.and.returnValue(defer(() => Promise.reject()));
+
+      component.onSubmit();
+      expect(qaServiceMock.create).toHaveBeenCalled();
+    });
+  });
+
+  describe('onSubmit', () => {
+    it('should do next when success', () => {
+      qaServiceMock.create.and.returnValue(defer(() => Promise.resolve({id: 1})));
+      component.onSubmit();
+
+      expect(qaServiceMock.create).toHaveBeenCalled();
+      //expect(qaCreateform.reset).toHaveBeenCalled();
+    });
+
+    it('should do error when failed', () => {
+      qaServiceMock.create.and.returnValue(defer(() => Promise.reject()));
+
+      component.onSubmit();
+      expect(qaServiceMock.create).toHaveBeenCalled();
+    });
+  });
+
+  describe('onSubmitEditForm', () => {
+    it('should do next when success', () => {
+      qaServiceMock.update.and.returnValue(defer(() => Promise.resolve({id: 1})));
+      component.onSubmitEditForm([]);
+
+      expect(qaServiceMock.update).toHaveBeenCalled();
+    });
+
+    it('should do error when failed', () => {
+      qaServiceMock.update.and.returnValue(defer(() => Promise.reject()));
+
+      component.onSubmitEditForm([]);
+      expect(qaServiceMock.update).toHaveBeenCalled();
+    });
+  });
+
+  describe('onSubmitEditForm', () => {
+    it('should do next when success', () => {
+      qaServiceMock.createAnswer.and.returnValue(defer(() => Promise.resolve({id: 1})));
+      component.onSubmitAnswer([]);
+
+      expect(qaServiceMock.createAnswer).toHaveBeenCalled();
+    });
+
+    it('should do error when failed', () => {
+      qaServiceMock.createAnswer.and.returnValue(defer(() => Promise.reject()));
+
+      component.onSubmitAnswer([]);
+      expect(qaServiceMock.createAnswer).toHaveBeenCalled();
+    });
+  });
+
+  describe('onSubmitEditAnswer', () => {
+    it('should do next when success', () => {
+      qaServiceMock.updateAnswer.and.returnValue(defer(() => Promise.resolve({id: 1})));
+      component.onSubmitEditAnswer([], []);
+
+      expect(qaServiceMock.updateAnswer).toHaveBeenCalled();
+    });
+
+    it('should do error when failed', () => {
+      qaServiceMock.updateAnswer.and.returnValue(defer(() => Promise.reject()));
+
+      component.onSubmitEditAnswer([], []);
+      expect(qaServiceMock.updateAnswer).toHaveBeenCalled();
+    });
+  });
 });
