@@ -69,6 +69,18 @@ describe('EventsService', () => {
       expect(spy).toHaveBeenCalled();
     }))
   );
+
+  it(`test storeEventImage()`, async(inject([HttpTestingController, EventsService],
+    (httpClient: HttpTestingController, eventsService: EventsService) => {
+      eventsService
+        .storeEventImage(formData)
+        .subscribe((_response: any) => {});
+
+      let req = httpMock.expectOne('http://localhost:8080/api/storage/upload');
+      expect(req.request.method).toBe("POST");
+      httpMock.verify();
+    }))
+  );
   
   it(`test create`, async(inject([HttpTestingController, EventsService],
     (httpClient: HttpTestingController, eventsService: EventsService) => {
@@ -78,6 +90,54 @@ describe('EventsService', () => {
 
       let req = httpMock.expectOne('http://localhost:8080/api/events/');
       expect(req.request.method).toBe("GET");
+      httpMock.verify();
+    }))
+  );
+
+  it(`test findByUser()`, async(inject([HttpTestingController, EventsService],
+    (httpClient: HttpTestingController, eventsService: EventsService) => {
+      eventsService
+        .findByUser()
+        .subscribe((_response: any) => {});
+
+      let req = httpMock.expectOne('http://localhost:8080/api/events/findbyuser');
+      expect(req.request.method).toBe("GET");
+      httpMock.verify();
+    }))
+  );
+
+  it(`test findById()`, async(inject([HttpTestingController, EventsService],
+    (httpClient: HttpTestingController, eventsService: EventsService) => {
+      eventsService
+        .findById(1)
+        .subscribe((_response: any) => {});
+
+      let req = httpMock.expectOne('http://localhost:8080/api/events/1');
+      expect(req.request.method).toBe("GET");
+      httpMock.verify();
+    }))
+  );
+
+  it(`test subscribe()`, async(inject([HttpTestingController, EventsService],
+    (httpClient: HttpTestingController, eventsService: EventsService) => {
+      eventsService
+        .subscribe(1)
+        .subscribe((_response: any) => {});
+
+      let req = httpMock.expectOne('http://localhost:8080/api/events/1/subscribe');
+      expect(req.request.method).toBe("POST");
+      httpMock.verify();
+    }))
+  );
+
+  it(`test delete()`, async(inject([HttpTestingController, EventsService],
+    (httpClient: HttpTestingController, eventsService: EventsService) => {
+      eventsService
+        .delete(1)
+        .subscribe((_response: any) => {});
+
+      let req = httpMock.expectOne('http://localhost:8080/api/events/1');
+      expect(req.request.method).toBe("DELETE");
       httpMock.verify();
     }))
   );
