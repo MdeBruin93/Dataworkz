@@ -136,4 +136,15 @@ describe('OverviewComponent', () => {
       expect(result).toEqual(expectedValue);
     });
   })
+
+  describe('selectCategory', () => {
+    it('should selectCategory', () => {
+      component.events = ['1', '2'];
+      component.categoriesFormControl.setValue([]);
+      console.log(component.categoriesFormControl.value.length);
+      
+
+      expect(component.filteredEvents).toEqual(undefined);
+    });
+  })
 });
