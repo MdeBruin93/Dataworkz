@@ -19,7 +19,7 @@ import { ActivateAccountComponent } from '@auth/pages/activate-account/activate-
 import { NotFoundComponent } from '@core/components/not-found/not-found.component';
 
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     redirectTo: '/login',

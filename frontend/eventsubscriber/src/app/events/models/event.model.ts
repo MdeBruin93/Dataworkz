@@ -13,7 +13,7 @@ export interface IEvent {
 }
 
 export interface IEventResponse extends IEvent {
-    id: number;
+    id: number | undefined;
     imageUrl: string;
     user: IUser;
     categoryId: number;

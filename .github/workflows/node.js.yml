@@ -18,6 +18,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+    
     - uses: actions/checkout@v2
     - name: Install dependencies
       working-directory: ./frontend/eventsubscriber
@@ -25,6 +26,15 @@ jobs:
     - name: Build project
       working-directory: ./frontend/eventsubscriber
       run: npm run build
-#    - name: Test project
-#      working-directory: ./frontend/eventsubscriber
-#      run: npm run test-headless
+    - name: Test project
+      working-directory: ./frontend/eventsubscriber
+      run: npm run test-headless
+    - name: Setup sonarqube
+      uses: warchant/setup-sonar-scanner@v3
+    - name: Run sonarqube
+      working-directory: ./frontend/eventsubscriber
+      env:
+        # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: sonar-scanner
+           -Dsonar.login=${{ secrets.SONAR_TOKEN }}

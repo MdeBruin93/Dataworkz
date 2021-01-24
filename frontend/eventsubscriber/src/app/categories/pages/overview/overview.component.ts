@@ -29,7 +29,7 @@ export class OverviewComponent implements OnInit {
     this.store.dispatch(new DeleteCategory(id));
   }
 
-  edit(id: number) {
+  edit() {
     this.router.navigate(["categories/create"]);
   }
 }

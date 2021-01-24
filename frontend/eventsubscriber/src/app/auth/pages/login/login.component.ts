@@ -33,12 +33,13 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.store);
     this.store.dispatch(new Login(this.loginForm.value.email, this.loginForm.value.password)).subscribe(
     (response) => {
       if (response.auth.token && response.auth.currentUser) {
         this.snackBar.open('Login succeeded');
         this.router.navigate(['/events']);
-      };
+      }
     },
     (error) => {
       this.loginForm.reset();
