@@ -34,9 +34,7 @@ public class TagControllerTest {
     @WithMockUser(username = "michael@hr.nl", password = "123456", roles = "USER")
     void store_StoreTagShouldBeSuccessful() throws Exception {
         //given
-        var eventId = 1;
         var tagDto = new TagDto();
-        tagDto.setEventId(eventId);
         tagDto.setName("test");
         var json = new ObjectMapper().writeValueAsString(tagDto);
 
@@ -56,9 +54,7 @@ public class TagControllerTest {
     @WithMockUser(username = "michael@hr.nl", password = "123456", roles = "USER")
     void store_ShouldThrowEventNotFoundException() throws Exception {
         //given
-        var eventId = 1;
         var tagDto = new TagDto();
-        tagDto.setEventId(eventId);
         tagDto.setName("test");
         var json = new ObjectMapper().writeValueAsString(tagDto);
 
@@ -77,9 +73,7 @@ public class TagControllerTest {
     @Test
     void store_ShouldThrowUnauthorized() throws Exception {
         //given
-        var eventId = 1;
         var tagDto = new TagDto();
-        tagDto.setEventId(eventId);
         tagDto.setName("test");
         var json = new ObjectMapper().writeValueAsString(tagDto);
 

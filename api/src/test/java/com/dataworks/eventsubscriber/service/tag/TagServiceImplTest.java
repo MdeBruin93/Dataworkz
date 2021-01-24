@@ -28,10 +28,8 @@ class TagServiceImplTest {
     void store_whenTagExistsThenUpdate_ShouldBeSuccessful() {
         // given
         var tagName = "Firstname";
-        var eventId = 1;
         var tagDto = new TagDto();
         tagDto.setName(tagName);
-        tagDto.setEventId(eventId);
         var tag = new Tag();
 
         // when
@@ -49,10 +47,8 @@ class TagServiceImplTest {
     void store_whenTagDoesNotExistsThenCreate_ShouldBeSuccessful() {
         // given
         var tagName = "Firstname";
-        var eventId = 1;
         var tagDto = new TagDto();
         tagDto.setName(tagName);
-        tagDto.setEventId(eventId);
 
         // when
         when(tagRepository.findByName(anyString())).thenReturn(Optional.empty());

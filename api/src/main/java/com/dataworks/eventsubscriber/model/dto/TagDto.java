@@ -14,6 +14,4 @@ import javax.validation.constraints.NotNull;
 public class TagDto extends BaseDto {
     @NotNull
     private String name;
-    @NotNull
-    private Integer eventId;
 }
