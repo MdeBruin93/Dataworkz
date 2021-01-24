@@ -4,7 +4,6 @@ export class LoadUsers {
   public constructor() {}
 }
 
-
 export class LoadBlockedUsers {
   static readonly type = '[Users] Load Blocked Users';
 
