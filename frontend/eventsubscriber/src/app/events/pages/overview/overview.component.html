@@ -3,7 +3,7 @@
     {{ !showSubscribedToEvents ?  'Subscribed to events' : 'All events' }}
   </button>
 
-  <mat-form-field appearance="fill" *ngIf="(categories$ | async) as categories">
+  <mat-form-field appearance="fill" *ngIf="(filterCategories$ | async) as categories">
     <mat-label>Categories</mat-label>
     <mat-select [formControl]="categoriesFormControl" (selectionChange)="selectCategory()" multiple>
       <mat-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</mat-option>

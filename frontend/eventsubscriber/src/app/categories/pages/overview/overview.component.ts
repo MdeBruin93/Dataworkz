@@ -27,7 +27,6 @@ export class OverviewComponent implements OnInit {
 
   deletecategory(id: number) {
     this.store.dispatch(new DeleteCategory(id));
-    this.store.dispatch(new LoadCategories());
   }
 
   edit(id: number) {

@@ -11,6 +11,7 @@ export {
 export {
   CategoriesState,
   LoadCategories,
+  LoadFilterCategories,
   LoadCategory,
   SaveCategory,
   DeleteCategory
