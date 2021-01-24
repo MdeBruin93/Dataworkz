@@ -48,7 +48,7 @@ export class FormComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(new LoadCategories());
-    this.eventId = this.route.snapshot.paramMap.get('eventId');
+    this.eventId = this.route.snapshot.params.eventId;
 
     this.tagsService.getAll().subscribe((tags) => {
       this.tagObjects = tags;
