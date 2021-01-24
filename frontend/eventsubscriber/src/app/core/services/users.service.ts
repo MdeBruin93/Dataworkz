@@ -23,7 +23,8 @@ export class UsersService {
   }
 
   public update(id: number, block: boolean): Observable<IUser> {
-    return this.http.put<IUser>(`${environment.apiUrl}/api/users/${id}`, { blocked: block });
+    const description = block ? "Admin has blocked your account" : "";
+    return this.http.put<IUser>(`${environment.apiUrl}/api/users/${id}`, { blocked: block, description: description});
   }
 
   public editAccount(data:any) {
