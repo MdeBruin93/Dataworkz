@@ -1,16 +1,16 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventsService, UserService, TagsService } from '../../services';
 import { IEventResponse, IEvent } from '../../models/event.model';
 import { Store, Select } from '@ngxs/store';
 import { AuthState, CategoriesState, LoadCategories } from '@core/store';
-import { Observable, of } from 'rxjs';
-import { switchMap, filter } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { WishlistComponent } from 'src/app/wishlists';
 import { WishlistService } from '../../../wishlists/services';
 import { Category } from '@core/models';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-overview',
