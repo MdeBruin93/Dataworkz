@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { IEventResponse } from '../models';
 
 import { EventsService } from './events.service';
+import { Observable, of } from 'rxjs';
 
 describe('EventsService', () => {
   let service: EventsService;
