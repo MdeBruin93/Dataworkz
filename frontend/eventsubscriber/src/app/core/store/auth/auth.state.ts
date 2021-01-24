@@ -6,9 +6,6 @@ import { Login, Logout, SetCurrentUser } from './auth.actions';
 import { IUser } from '@core/models/user.model';
 
 import { AuthService } from '@auth/services';
-
-
-
 @State<AuthStateModel>({
   name: 'auth',
   defaults: {
