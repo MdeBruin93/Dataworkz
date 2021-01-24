@@ -14,6 +14,7 @@ import Spy = jasmine.Spy;
 describe('AuthService', () => {
   let router: SpyObj<Router>;
   let httpClientMock: SpyObj<HttpClient>;
+  let authService: AuthService;
 
   const authObject = {
     id: 1,
