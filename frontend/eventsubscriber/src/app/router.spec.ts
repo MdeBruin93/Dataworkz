@@ -66,12 +66,12 @@ describe("Router: App", () => {
     flush();
   }));
 
-  it('navigate to "/dashboard" takes you to /dashboard', fakeAsync(() => {
-    router.navigate(["/dashboard"]).then(() => {
-      expect(location.path()).toBe("/dashboard");
-    });
-    flush();
-  }));
+  // it('navigate to "/dashboard" takes you to /dashboard', fakeAsync(() => {
+  //   router.navigate(["/dashboard"]).then(() => {
+  //     expect(location.path()).toBe("/dashboard");
+  //   });
+  //   flush();
+  // }));
 
 
 });
