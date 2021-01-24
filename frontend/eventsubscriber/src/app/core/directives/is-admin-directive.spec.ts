@@ -7,7 +7,7 @@ import {environment} from '@environments/environment';
 import {TemplateRef, ViewContainerRef} from '@angular/core';
 import {IsAdminDirective} from '@core/directives/is-admin.directive';
 
-describe('UsersService', () => {
+describe('IsAdminDirective', () => {
   let templateRefMock: SpyObj<TemplateRef<any>>;
   let viewContainerMock: ViewContainerRef;
   let component: IsAdminDirective;
