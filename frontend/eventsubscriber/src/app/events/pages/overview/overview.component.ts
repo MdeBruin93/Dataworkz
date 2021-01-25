@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { EventsService, UserService, TagsService } from '../../services';
 import { IEventResponse, IEvent } from '../../models/event.model';
 import { Store, Select } from '@ngxs/store';
-import { AuthState, CategoriesState, LoadCategories } from '@core/store';
+import { AuthState, CategoriesState, LoadFilterCategories, LoadCategories } from '@core/store';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -46,6 +46,7 @@ export class OverviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(new LoadCategories());
+    this.store.dispatch(new LoadFilterCategories());
     this.tagsService.getAll().subscribe((tags) => {
       this.tags = tags;
     });
