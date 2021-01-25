@@ -4,6 +4,7 @@ import com.dataworks.eventsubscriber.exception.storage.StorageException;
 import com.dataworks.eventsubscriber.model.dto.FileDto;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import com.dataworks.eventsubscriber.service.storage.StorageService;
+import com.dataworks.eventsubscriber.service.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,6 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(StorageController.class)
 public class StorageControllerTest {
+    @MockBean
+    UserService userService;
     @MockBean
     StorageService storageService;
     @MockBean

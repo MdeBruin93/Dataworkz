@@ -4,24 +4,24 @@
   </mat-card-title>
   <mat-card-content>
     <ng-container *ngIf="(users$ | async) as users">
-      <table mat-table [dataSource]="users" class="mat-elevation-z8">
+      <table mat-table [dataSource]="users" class="mat-elevation-z8" aria-label="unblocked-users">
         <ng-container matColumnDef="firstName">
-          <th mat-header-cell *matHeaderCellDef> Firstname </th>
+          <th scope="row" mat-header-cell *matHeaderCellDef> Firstname </th>
           <td mat-cell *matCellDef="let user"> {{user.firstName}} </td>
         </ng-container>
 
         <ng-container matColumnDef="lastName">
-          <th mat-header-cell *matHeaderCellDef> Lastname </th>
+          <th scope="row" mat-header-cell *matHeaderCellDef> Lastname </th>
           <td mat-cell *matCellDef="let user"> {{user.lastName}} </td>
         </ng-container>
 
         <ng-container matColumnDef="blocked">
-          <th mat-header-cell *matHeaderCellDef> Blocked </th>
+          <th scope="row" mat-header-cell *matHeaderCellDef> Blocked </th>
           <td mat-cell *matCellDef="let user"> {{user.blocked}} </td>
         </ng-container>
 
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef></th>
+          <th scope="row" mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let user">
             <button mat-raised-button color="green" (click)="blockUser(user.id)" *ngIf="(currentUser$ | async)?.id != user.id">block user</button>
           </td>
@@ -40,24 +40,24 @@
   </mat-card-title>
   <mat-card-content>
     <ng-container *ngIf="(blockedUsers$ | async) as users">
-      <table mat-table [dataSource]="users" class="mat-elevation-z8">
+      <table mat-table [dataSource]="users" class="mat-elevation-z8" aria-label="blocked-users">
         <ng-container matColumnDef="firstName">
-          <th mat-header-cell *matHeaderCellDef> Firstname </th>
+          <th scope="row" mat-header-cell *matHeaderCellDef> Firstname </th>
           <td mat-cell *matCellDef="let user"> {{user.firstName}} </td>
         </ng-container>
 
         <ng-container matColumnDef="lastName">
-          <th mat-header-cell *matHeaderCellDef> Lastname </th>
+          <th scope="row" mat-header-cell *matHeaderCellDef> Lastname </th>
           <td mat-cell *matCellDef="let user"> {{user.lastName}} </td>
         </ng-container>
 
         <ng-container matColumnDef="blocked">
-          <th mat-header-cell *matHeaderCellDef> Blocked </th>
+          <th scope="row" mat-header-cell *matHeaderCellDef> Blocked </th>
           <td mat-cell *matCellDef="let user"> {{user.blocked}} </td>
         </ng-container>
 
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef></th>
+          <th scope="row" mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let user">
             <button mat-raised-button color="red" (click)="deBlockUser(user.id)" *ngIf="(currentUser$ | async)?.id != user.id">deblock user</button>
           </td>

@@ -48,7 +48,7 @@ export class WishlistComponent implements OnInit {
 
   deleteEventFromWishlist(wishlist: any, eventId: number) {
     let currentEventIds = wishlist.events.map((event:any) => { return event.id });
-    
+
     const index = currentEventIds.indexOf(eventId);
     if (index > -1) {
       currentEventIds.splice(index, 1);
@@ -97,7 +97,7 @@ export class WishlistComponent implements OnInit {
       name: name.value,
       eventIds: currentEventIds
     }
-    
+
     this.wishlistService.update(wishlist.id, object).subscribe({
       next: _response => {
         this.snackBar.open('Event successfully updated');

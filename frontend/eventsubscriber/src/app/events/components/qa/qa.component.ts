@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Question, Answer } from '../../models';
 import { QaService } from '../../services/qa.service';
 
-import { Store, Select } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { AuthState } from '@core/store';
 import { Observable } from 'rxjs';
 

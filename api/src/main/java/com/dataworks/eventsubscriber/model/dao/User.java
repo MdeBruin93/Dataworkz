@@ -24,6 +24,7 @@ public class User extends BaseDao {
     private String password;
     @NotNull
     private boolean emailVerified;
+    private String blockedDescription;
     @NotNull
     private boolean blocked;
     @NotNull

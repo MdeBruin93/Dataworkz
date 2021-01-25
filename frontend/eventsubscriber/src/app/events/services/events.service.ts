@@ -23,7 +23,7 @@ export class EventsService {
     return this.create(event, formData);
   }
 
-  private create(event: IEvent, formData: FormData): Observable<IEventResponse> {
+  public create(event: IEvent, formData: FormData): Observable<IEventResponse> {
     return this.http.post<IFileResponse>(`${environment.apiUrl}/api/storage/upload`, formData)
       .pipe(
         switchMap((file: IFileResponse) => {
@@ -37,7 +37,7 @@ export class EventsService {
     return this.http.post<IFileResponse>(`${environment.apiUrl}/api/storage/upload`, formData);
   }
 
-  private update(event: IEventResponse, formData: FormData): Observable<IEventResponse> {
+  public update(event: IEventResponse, formData: FormData): Observable<IEventResponse> {
     if (formData.get('file')) {
       return this.http.post<IFileResponse>(`${environment.apiUrl}/api/storage/upload`, formData)
         .pipe(
@@ -62,7 +62,7 @@ export class EventsService {
     return this.http.get<IEventResponse>(`${environment.apiUrl}/api/events/${id}`);
   }
 
-  public subscribe(id: number): Observable<any> {
+  public subscribe(id: number | undefined): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/api/events/${id}/subscribe`, {});
   }
 

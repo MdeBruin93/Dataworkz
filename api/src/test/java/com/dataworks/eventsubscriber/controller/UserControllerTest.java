@@ -155,6 +155,7 @@ class UserControllerTest {
         var userId = 1;
         var userBlockDto = new UserBlockDto();
         userBlockDto.setBlocked(true);
+        userBlockDto.setDescription("Test");
         var userDto = new UserDto();
         var json = new ObjectMapper().writeValueAsString(userBlockDto);
         //when
@@ -175,6 +176,7 @@ class UserControllerTest {
         var userId = 1;
         var userBlockDto = new UserBlockDto();
         userBlockDto.setBlocked(true);
+        userBlockDto.setDescription("Description");
         var userDto = new UserDto();
 
         var json = new ObjectMapper().writeValueAsString(userBlockDto);

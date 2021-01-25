@@ -6,7 +6,7 @@ import {
   DetailComponent
 } from './pages';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: OverviewComponent

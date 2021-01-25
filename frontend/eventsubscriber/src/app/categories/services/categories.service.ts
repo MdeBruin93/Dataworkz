@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-
 import { Category } from '@core/models';
 
 @Injectable({
@@ -29,7 +27,7 @@ export class CategoriesService {
     if (category.id != null) {
       return this.http.put<Category>(`${environment.apiUrl}/api/categories/${category.id}`, category);
     }
-    return this.http.post<Category>(`${environment.apiUrl}/api/categories`, category);;
+    return this.http.post<Category>(`${environment.apiUrl}/api/categories`, category);
   }
 
   public delete(id: number): Observable<any> {
