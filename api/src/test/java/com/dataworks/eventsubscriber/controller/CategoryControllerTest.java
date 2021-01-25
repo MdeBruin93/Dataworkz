@@ -6,6 +6,7 @@ import com.dataworks.eventsubscriber.exception.category.CategoryNotFoundExceptio
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import com.dataworks.eventsubscriber.service.category.CategoryService;
+import com.dataworks.eventsubscriber.service.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class CategoryControllerTest {
 
     @MockBean
     BindingResult bindingResult;
+    @MockBean
+    UserService userService;
     @MockBean
     CategoryService categoryService;
     @MockBean

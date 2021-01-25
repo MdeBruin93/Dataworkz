@@ -5,6 +5,7 @@ import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.exception.user.UserNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.WishlistDto;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
+import com.dataworks.eventsubscriber.service.user.UserService;
 import com.dataworks.eventsubscriber.service.wishlist.WishlistService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(WishlistController.class)
 public class WishlistControllerTest {
+    @MockBean
+    UserService userService;
     @MockBean
     WebAuthDetailService webAuthService;
     @MockBean

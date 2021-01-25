@@ -46,7 +46,7 @@ export const routes: Routes = [
         component: ResetPasswordComponent
       },
       {
-        path: 'activate-password/:token',
+        path: 'activate-account/:token',
         component: ActivateAccountComponent
       },
       {

@@ -41,6 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category cat = category.get();
         cat.setName(categoryDto.getName());
         cat.setColor(categoryDto.getColor());
+        cat.setEndDate(categoryDto.getEndDate());
 
         return categoryMapper.mapToCategoryDestination(categoryRepository.save(cat));
     }

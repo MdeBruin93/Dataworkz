@@ -22,4 +22,6 @@ public class UserDto extends BaseDto {
     private String role;
 
     private boolean blocked;
+
+    private String blockedDescription;
 }

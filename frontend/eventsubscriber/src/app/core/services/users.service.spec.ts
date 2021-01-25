@@ -65,7 +65,7 @@ describe('UsersService', () => {
       const id = 1;
       const block = true;
 
-      httpClientMock.put.withArgs(`${environment.apiUrl}/api/users/` + id, {blocked: block})
+      httpClientMock.put.withArgs(`${environment.apiUrl}/api/users/` + id, {blocked: block, description: 'Admin has blocked your account'})
         .and.returnValue(defer(() => Promise.resolve(expectedUser)));
 
       usersService.update(id, true).subscribe(

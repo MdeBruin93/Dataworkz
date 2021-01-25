@@ -121,13 +121,6 @@ describe('OverviewComponent', () => {
     });
   });
 
-  describe('getFormData', () => {
-    it('should return formdata when success', () => {
-      const result = component.getFormData({event: 'Test'});
-      expect(result.get('event')).toEqual('Test');
-    });
-  });
-
   describe('deleteEvent', () => {
     it('should fail when error', () => {
       eventsServiceMock.delete.and.returnValue(defer(() => Promise.reject()));

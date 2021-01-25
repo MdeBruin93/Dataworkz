@@ -25,7 +25,6 @@ export class WishlistComponent implements OnInit {
   ngOnInit(): void {
     this.wishlistService.findByUser().subscribe({
       next: response => {
-        console.log('Hello world!');
         this.wishlists = response;
       },
       error: error => {

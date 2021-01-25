@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { EventsService, UserService, TagsService } from '../../services';
+import { EventsService, UserService } from '../../services';
 import { IEventResponse, IEvent } from '../../models/event.model';
 import { Store, Select } from '@ngxs/store';
-import { AuthState, CategoriesState, LoadCategories } from '@core/store';
+import { AuthState, CategoriesState, LoadFilterCategories, LoadCategories } from '@core/store';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,6 +11,7 @@ import { WishlistComponent } from 'src/app/wishlists';
 import { WishlistService } from '../../../wishlists/services';
 import { Category } from '@core/models';
 import { FormControl } from '@angular/forms';
+import { TagsService } from '../../services/tags.service';
 
 @Component({
   selector: 'app-overview',
@@ -46,6 +47,7 @@ export class OverviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(new LoadCategories());
+    this.store.dispatch(new LoadFilterCategories());
     this.tagsService.getAll().subscribe((tags) => {
       this.tags = tags;
     });
@@ -92,12 +94,6 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  getFormData(object: any) {
-    const formData = new FormData();
-    Object.keys(object).forEach(key => formData.append(key, object[key]));
-    return formData;
-  }
-
   openWishlistPicker(eventId: number): void {
     const dialogRef = this.dialog.open(WishlistComponent, {
       width: '1300px'
@@ -113,15 +109,9 @@ export class OverviewComponent implements OnInit {
         eventIds: currentEventIds
       }
 
-      const fromData = this.getFormData(object);
-
-      this.wishlistService.update(wishlist.id, fromData).subscribe({
-        next: _response => {
-          console.log(_response);
-        },
-        error: error => {
-          console.error('There was an error!', error);
-        }
+      this.wishlistService.update(wishlist.id, object).subscribe({
+        next: _response => {},
+        error: _error => {}
       });
     });
   }
