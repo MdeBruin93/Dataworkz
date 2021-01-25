@@ -7,6 +7,15 @@
               <mat-error *ngIf="categoryForm.controls.name.errors && categoryForm.controls.name.errors.required">Name is required</mat-error>
           </mat-form-field>
 
+          <br/>
+
+          <mat-form-field appearance="fill">
+              <mat-label>End date</mat-label>
+              <input matInput [matDatepicker]="picker1" formControlName="endDate">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+
           <mat-card-actions>
               <button mat-raised-button class="mr-2" type="submit" color="primary" [disabled]="!categoryForm.valid">Save</button>
           </mat-card-actions>

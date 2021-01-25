@@ -65,7 +65,6 @@ export class AuthService {
 
   public isAdmin(): boolean {
     const user = this.getCurrentUser();
-    console.log(user);
     if (!user) {
       return false;
     }

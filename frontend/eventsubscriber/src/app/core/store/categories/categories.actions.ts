@@ -6,6 +6,11 @@ export class LoadCategories {
   public constructor() {}
 }
 
+export class LoadFilterCategories {
+  static readonly type = '[Categories] Load filter categories';
+
+  public constructor() {}
+}
 
 export class LoadCategory {
   static readonly type = '[Categories] Load category';

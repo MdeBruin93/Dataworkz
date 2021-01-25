@@ -1,6 +1,7 @@
 package com.dataworks.eventsubscriber;
 
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,12 +17,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final WebAuthDetailService webAuthDetailService;
-
-    public SecurityConfiguration(WebAuthDetailService webAuthDetailService) {
-        this.webAuthDetailService = webAuthDetailService;
-    }
+    private final BasicAuthenticationEntryPoint basicAuthenticationEntryPoint;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -57,9 +56,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/users/blocked").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/api/users/{id}").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/api/users/subscriptions").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/tags").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/tags").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/tags/{id}").authenticated()
 //                .antMatchers("/post/create").authenticated()
                 .and()
-                .httpBasic();
+                .httpBasic().authenticationEntryPoint(basicAuthenticationEntryPoint);
 
         http.csrf().disable();
         http.headers().frameOptions().disable();

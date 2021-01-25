@@ -33,6 +33,6 @@ export class UserSettingsComponent implements OnInit {
 
   onSubmit() {
     this.store.dispatch(new EditAccount(this.userSettingsForm.value));
-    this.route.navigate(['/dashboard']);
+    this.route.navigate(['/events']);
   }
 }

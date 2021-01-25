@@ -31,11 +31,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto findByEmail(String email) {
+        var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+        return userMapper.mapToDestination(user);
+    }
+
+    @Override
     public UserDto update(int id, UserBlockDto userBlockDto) {
         var foundUser = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
-        foundUser.setBlocked(userBlockDto.isBlocked());
+        var isBlock = userBlockDto.isBlocked();
+        var blockDescription = userBlockDto.getDescription();
 
+        if (!isBlock) {
+            blockDescription = null;
+        }
+
+        foundUser.setBlocked(isBlock);
+        foundUser.setBlockedDescription(blockDescription);
         return userMapper.mapToDestination(userRepository.save(foundUser));
     }
 }

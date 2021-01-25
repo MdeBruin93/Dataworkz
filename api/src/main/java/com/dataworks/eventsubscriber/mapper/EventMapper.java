@@ -12,4 +12,3 @@ public abstract class EventMapper {
     public abstract EventDto mapToEventDestination(Event savedEvent);
     public abstract List<EventDto> mapToEventDestinationCollection(List<Event> savedEvents);
 }
-

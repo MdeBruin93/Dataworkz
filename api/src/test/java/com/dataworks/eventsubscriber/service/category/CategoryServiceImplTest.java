@@ -1,11 +1,9 @@
 package com.dataworks.eventsubscriber.service.category;
 
 import com.dataworks.eventsubscriber.exception.NotFoundException;
-import com.dataworks.eventsubscriber.exception.category.CategoryContainEventsException;
 import com.dataworks.eventsubscriber.exception.category.CategoryNotFoundException;
 import com.dataworks.eventsubscriber.mapper.CategoryMapper;
 import com.dataworks.eventsubscriber.model.dao.Category;
-import com.dataworks.eventsubscriber.model.dao.Event;
 import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -15,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -167,23 +166,38 @@ public class CategoryServiceImplTest {
 
         // then
         verify(categoryRepository, times(1)).findById(categoryId);
+        verify(categoryRepository, times(1)).save(category);
     }
 
     @Test
-    public void deleteDeleteASpecificCategory_ShouldThrowCategoryContainEventsException() {
-        // given
+    public void deleteExpiredWhenNoCategoriesFound_ThenDoNothing() {
+        //given
+        var returnedList = new ArrayList<Category>();
+        //when
+        when(categoryRepository.findAllByEndDateLessThanEqualAndDeletedIsFalse(any(LocalDate.class))).thenReturn(returnedList);
+
+        //then
+        categoryService.deleteExpired();
+        verify(categoryRepository, times(1)).findAllByEndDateLessThanEqualAndDeletedIsFalse(any(LocalDate.class));
+        verify(categoryRepository, times(0)).findById(anyInt());
+        verify(categoryRepository, times(0)).save(any(Category.class));
+    }
+
+    @Test
+    public void deleteExpiredWhenCategoriesFound_ThenDelete() {
+        //given
         var category = new Category();
-        var events = new ArrayList<Event>();
-        events.add(new Event());
-        category.setEvents(events);
+        category.setId(1);
+        var returnedList = new ArrayList<Category>();
+        returnedList.add(category);
+        //when
+        when(categoryRepository.findAllByEndDateLessThanEqualAndDeletedIsFalse(any(LocalDate.class))).thenReturn(returnedList);
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
 
-        when(categoryRepository.findById(anyInt())).thenReturn(Optional.of(category));
-
-        // when
-        assertThatExceptionOfType(CategoryContainEventsException.class)
-                .isThrownBy(() -> categoryService.delete(anyInt()));
-
-        // then
-        verify(categoryRepository, times(1)).findById(anyInt());
+        //then
+        categoryService.deleteExpired();
+        verify(categoryRepository, times(1)).findAllByEndDateLessThanEqualAndDeletedIsFalse(any(LocalDate.class));
+        verify(categoryRepository, times(1)).findById(category.getId());
+        verify(categoryRepository, times(1)).save(any(Category.class));
     }
 }

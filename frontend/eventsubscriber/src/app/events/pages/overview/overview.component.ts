@@ -1,16 +1,17 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventsService, UserService } from '../../services';
 import { IEventResponse, IEvent } from '../../models/event.model';
 import { Store, Select } from '@ngxs/store';
-import { AuthState, CategoriesState, LoadCategories } from '@core/store';
-import { Observable, of } from 'rxjs';
-import { switchMap, filter } from 'rxjs/operators';
+import { AuthState, CategoriesState, LoadFilterCategories, LoadCategories } from '@core/store';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { WishlistComponent } from 'src/app/wishlists';
 import { WishlistService } from '../../../wishlists/services';
 import { Category } from '@core/models';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
+import { TagsService } from '../../services/tags.service';
 
 @Component({
   selector: 'app-overview',
@@ -21,8 +22,8 @@ export class OverviewComponent implements OnInit {
   @Select(AuthState.isLoggedIn)
   public isLoggedIn$: Observable<boolean>;
 
-  @Select(CategoriesState.categories)
-  public categories$: Observable<Category[]>;
+  @Select(CategoriesState.filterCategories)
+  public filterCategories$: Observable<Category[]>;
 
   public events: any;
   public filteredEvents: any;
@@ -31,6 +32,8 @@ export class OverviewComponent implements OnInit {
   public showSubscribedToEvents: boolean = false;
 
   public categoriesFormControl = new FormControl([]);
+  public selectedTags: any[] = [];
+  public tags: any[] = [];
 
   constructor(
     private eventsService: EventsService,
@@ -38,11 +41,16 @@ export class OverviewComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private store: Store,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private tagsService: TagsService
   ) { }
 
   ngOnInit(): void {
     this.store.dispatch(new LoadCategories());
+    this.store.dispatch(new LoadFilterCategories());
+    this.tagsService.getAll().subscribe((tags) => {
+      this.tags = tags;
+    });
     this.eventsService.getAll().subscribe({
       next: _response => {
         console.log(_response);
@@ -86,12 +94,6 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  getFormData(object: any) {
-    const formData = new FormData();
-    Object.keys(object).forEach(key => formData.append(key, object[key]));
-    return formData;
-  }
-
   openWishlistPicker(eventId: number): void {
     const dialogRef = this.dialog.open(WishlistComponent, {
       width: '1300px'
@@ -107,15 +109,9 @@ export class OverviewComponent implements OnInit {
         eventIds: currentEventIds
       }
 
-      const fromData = this.getFormData(object);
-
-      this.wishlistService.update(wishlist.id, fromData).subscribe({
-        next: _response => {
-          console.log(_response);
-        },
-        error: error => {
-          console.error('There was an error!', error);
-        }
+      this.wishlistService.update(wishlist.id, object).subscribe({
+        next: _response => {},
+        error: _error => {}
       });
     });
   }
@@ -137,12 +133,42 @@ export class OverviewComponent implements OnInit {
   }
 
   selectCategory() {
-    if (this.categoriesFormControl.value.length == 0) {
+    this.filterEvents();
+  }
+
+  selectTag(tag: any) {
+    this.selectedTags = tag.value;
+    this.filterEvents();
+  }
+
+  filterEvents() {
+    if (this.categoriesFormControl.value.length == 0 && this.selectedTags.length == 0) {
       this.filteredEvents = this.events;
       return;
     }
-    this.filteredEvents = this.events.filter((event: any) => {
-      return this.categoriesFormControl.value.includes(event.category.id)
-    });
+
+    let tempFilterEvents = this.events;
+
+    if (this.categoriesFormControl.value.length > 0) {
+      tempFilterEvents = tempFilterEvents.filter((event: any) => {
+        return this.categoriesFormControl.value.includes(event.category.id)
+      });
+    }
+
+    if (this.selectedTags.length > 0) {
+      tempFilterEvents = tempFilterEvents.filter((e:IEventResponse) => {
+        let containTag = false;
+        for (var eventTag of e.tags) {
+          const index = this.selectedTags.findIndex((st:any) => {
+            return st == eventTag.id;
+          });
+          if (index != -1) {
+            containTag = true;
+          }
+        }
+        return containTag;
+      });
+    }
+    this.filteredEvents = tempFilterEvents;
   }
 }

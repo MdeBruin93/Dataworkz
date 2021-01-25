@@ -1,7 +1,6 @@
 package com.dataworks.eventsubscriber.service.category;
 
 import com.dataworks.eventsubscriber.exception.NotFoundException;
-import com.dataworks.eventsubscriber.exception.category.CategoryContainEventsException;
 import com.dataworks.eventsubscriber.exception.category.CategoryNotFoundException;
 import com.dataworks.eventsubscriber.mapper.CategoryMapper;
 import com.dataworks.eventsubscriber.model.dao.Category;
@@ -9,8 +8,10 @@ import com.dataworks.eventsubscriber.model.dto.CategoryDto;
 import com.dataworks.eventsubscriber.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,6 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category cat = category.get();
         cat.setName(categoryDto.getName());
         cat.setColor(categoryDto.getColor());
+        cat.setEndDate(categoryDto.getEndDate());
 
         return categoryMapper.mapToCategoryDestination(categoryRepository.save(cat));
     }
@@ -61,11 +63,19 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(int categoryId) {
         var foundCategory = categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
+        foundCategory.setDeleted(true);
 
-        var countedEvents = foundCategory.getEvents().size();
-        if (countedEvents > 0) {
-            throw new CategoryContainEventsException();
-        }
-        categoryRepository.deleteById(categoryId);
+        categoryRepository.save(foundCategory);
+    }
+
+    @Override
+    @Scheduled(fixedDelay = 1000)
+    public void deleteExpired() {
+        categoryRepository.findAllByEndDateLessThanEqualAndDeletedIsFalse(LocalDate.now())
+                .forEach((category) -> {
+                    System.out.println("Delete category:" + category.getId());
+
+                    this.delete(category.getId());
+                });
     }
 }

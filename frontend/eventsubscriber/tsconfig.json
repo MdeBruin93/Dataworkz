@@ -27,7 +27,8 @@
       "@shared/*": ["src/app/shared/*"],
       "@auth/*": ["src/app/auth/*"],
       "@dashboard/*": ["src/app/dashboard/*"],
-      "@categories/*": ["src/app/categories/*"]
+      "@categories/*": ["src/app/categories/*"],
+      "@events/*": ["src/app/events/*"]
     }
   },
   "angularCompilerOptions": {

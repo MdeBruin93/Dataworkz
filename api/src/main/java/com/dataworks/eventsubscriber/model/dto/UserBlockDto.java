@@ -14,4 +14,6 @@ import javax.validation.constraints.NotNull;
 public class UserBlockDto {
     @NotNull
     private boolean blocked;
+    @NotNull
+    private String description;
 }

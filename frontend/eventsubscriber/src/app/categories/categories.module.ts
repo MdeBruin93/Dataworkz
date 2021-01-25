@@ -7,7 +7,7 @@ import { DetailComponent } from './pages/detail/detail.component';
 import { CategoriesService } from './services';
 import { CategoriesRoutingModule } from './categories-routing.module';
 import { MaterialModule } from '../material/material.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
