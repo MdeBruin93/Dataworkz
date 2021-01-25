@@ -30,7 +30,7 @@ public class Event extends BaseDao {
     private double euroAmount;
     @NotNull
     private String imageUrl;
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
     private List<Question> questions;
     @ManyToMany()
     @JoinTable(
@@ -56,4 +56,5 @@ public class Event extends BaseDao {
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> subscribedUsers;
+
 }
