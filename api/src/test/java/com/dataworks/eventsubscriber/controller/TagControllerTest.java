@@ -4,6 +4,7 @@ import com.dataworks.eventsubscriber.exception.event.EventNotFoundException;
 import com.dataworks.eventsubscriber.model.dto.TagDto;
 import com.dataworks.eventsubscriber.service.auth.WebAuthDetailService;
 import com.dataworks.eventsubscriber.service.tag.TagServiceImpl;
+import com.dataworks.eventsubscriber.service.user.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class TagControllerTest {
     WebAuthDetailService webAuthDetailService;
     @Autowired
     private MockMvc mockMvc;
+    @MockBean
+    UserServiceImpl userService;
 
     @Test
     @WithMockUser(username = "michael@hr.nl", password = "123456", roles = "USER")
